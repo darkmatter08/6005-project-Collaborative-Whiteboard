@@ -9,10 +9,14 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Stroke;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -24,8 +28,13 @@ import javax.swing.SwingUtilities;
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private Image drawingBuffer;
-    
-    
+    private Color currentColor = Color.BLACK;
+    private final String DRAW_MODE = "Draw";
+    private final String ERASE_MODE = "Erase";
+    private final BasicStroke DRAW_MODE_STROKE = new BasicStroke(1);
+    private final BasicStroke ERASE_MODE_STROKE = new BasicStroke(15);
+    private Stroke currentStroke = DRAW_MODE_STROKE;
+    private String mode = DRAW_MODE;
     /**
      * Make a canvas.
      * @param width width in pixels
@@ -116,10 +125,9 @@ public class Canvas extends JPanel {
      */
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-        
-        g.setColor(Color.BLACK);
+        g.setColor(currentColor);
+        g.setStroke(currentStroke);
         g.drawLine(x1, y1, x2, y2);
-        
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
@@ -170,6 +178,39 @@ public class Canvas extends JPanel {
         public void mouseExited(MouseEvent e) { }
     }
     
+    /**
+     * 
+     * @param args
+     */
+    private JButton createEraseToggleButton() {
+    	final JButton toggle = new JButton();
+    	toggle.setText(ERASE_MODE);
+    	toggle.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    				toggleErase(toggle);
+    		}
+    	});
+    	return toggle;
+    }
+    
+    private void toggleErase(JButton button) {
+    	// we're currently in draw mode so set to erase mode.
+    	if (mode == DRAW_MODE) {
+    		System.out.println("here");
+    		currentColor = Color.WHITE;
+    		currentStroke = ERASE_MODE_STROKE;
+    		mode = ERASE_MODE;
+    		button.setText(DRAW_MODE);
+    	}
+    	// we're currently in erase mode so set to draw mode.
+    	else if (mode == ERASE_MODE) {
+    		System.out.println("there");
+    		currentColor = Color.BLACK;
+    		currentStroke = DRAW_MODE_STROKE;
+    		mode = DRAW_MODE;
+    		button.setText(ERASE_MODE);
+    	}
+    }
     
     /*
      * Main program. Make a window containing a Canvas.
@@ -182,6 +223,9 @@ public class Canvas extends JPanel {
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 window.setLayout(new BorderLayout());
                 Canvas canvas = new Canvas(800, 600);
+                JButton toggleButton = canvas.createEraseToggleButton();
+                window.add(toggleButton, BorderLayout.NORTH);
+                window.pack();
                 window.add(canvas, BorderLayout.CENTER);
                 window.pack();
                 window.setVisible(true);
