@@ -2,6 +2,7 @@ package canvas;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,12 +11,18 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class StartFrame extends JFrame {
-	private final DefaultTableModel whiteboardTabelModel = new DefaultTableModel();
-	private final JTable whiteboardTable = new JTable(whiteboardTabelModel);
-	private final JButton newWhiteboard = new JButton();
+	private final DefaultTableModel whiteBoardTableModel = new DefaultTableModel();
+	private final JTable whiteBoardTable = new JTable(whiteBoardTableModel);
+	private final JButton newWhiteBoard = new JButton();
 	private final JLabel headerText = new JLabel();
+	private final WhiteBoardServer server;
 	private final static int MIN_WIDTH = 400;
 	private final static int MIN_HEIGHT = 400;
+	
+	public StartFrame(WhiteBoardServer server) {
+		super();
+		this.server = server;
+	}
 	
 	public void init() {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -23,11 +30,21 @@ public class StartFrame extends JFrame {
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		headerText.setText("Click a whiteboard ID to begin");
 		this.add(headerText, BorderLayout.NORTH);
-		this.add(whiteboardTable, BorderLayout.CENTER);
-		newWhiteboard.setText("Create new Whiteboard");
-		this.add(newWhiteboard, BorderLayout.SOUTH);
+		this.add(whiteBoardTable, BorderLayout.CENTER);
+		newWhiteBoard.setText("Create new Whiteboard");
+		this.add(newWhiteBoard, BorderLayout.SOUTH);
 		this.pack();
 		this.setVisible(true);
+	}
+	
+	public void initWhiteboardTable() {
+		List<Integer> boardIds = server.getWhiteBoardIds();
+		whiteBoardTableModel.addColumn("boardId");
+		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		for (int boardId : boardIds) {
+			whiteBoardTableModel.addRow(new Object[] {boardId});
+		}
+		
 	}
 	
 	public static void main(String[] args) {
