@@ -69,7 +69,6 @@ public class Canvas extends JPanel {
     private void makeDrawingBuffer() {
         drawingBuffer = createImage(getWidth(), getHeight());
         fillWithWhite();
-        drawSmile();
     }
     
     /*
@@ -87,39 +86,6 @@ public class Canvas extends JPanel {
     }
     
     /*
-     * Draw a happy smile on the drawing buffer.
-     */
-    private void drawSmile() {
-        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-
-        // all positions and sizes below are in pixels
-        final Rectangle smileBox = new Rectangle(20, 20, 100, 100); // x, y, width, height
-        final Point smileCenter = new Point(smileBox.x + smileBox.width/2, smileBox.y + smileBox.height/2);
-        final int smileStrokeWidth = 3;
-        final Dimension eyeSize = new Dimension(9, 9);
-        final Dimension eyeOffset = new Dimension(smileBox.width/6, smileBox.height/6);
-        
-        g.setColor(Color.BLACK);
-        g.setStroke(new BasicStroke(smileStrokeWidth));
-        
-        // draw the smile -- an arc inscribed in smileBox, starting at -30 degrees (southeast)
-        // and covering 120 degrees
-        g.drawArc(smileBox.x, smileBox.y, smileBox.width, smileBox.height, -30, -120);
-        
-        // draw some eyes to make it look like a smile rather than an arc
-        for (int side: new int[] { -1, 1 }) {
-            g.fillOval(smileCenter.x + side * eyeOffset.width - eyeSize.width/2,
-                       smileCenter.y - eyeOffset.height - eyeSize.width/2,
-                       eyeSize.width,
-                       eyeSize.height);
-        }
-        
-        // IMPORTANT!  every time we draw on the internal drawing buffer, we
-        // have to notify Swing to repaint this component on the screen.
-        this.repaint();
-    }
-    
-    /*
      * Draw a line between two points (x1, y1) and (x2, y2), specified in
      * pixels relative to the upper-left corner of the drawing buffer.
      */
@@ -130,7 +96,7 @@ public class Canvas extends JPanel {
         g.drawLine(x1, y1, x2, y2);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
-        this.repaint();
+        this.repaint(); 
     }
     
     /*
@@ -196,7 +162,6 @@ public class Canvas extends JPanel {
     private void toggleErase(JButton button) {
     	// we're currently in draw mode so set to erase mode.
     	if (mode == DRAW_MODE) {
-    		System.out.println("here");
     		currentColor = Color.WHITE;
     		currentStroke = ERASE_MODE_STROKE;
     		mode = ERASE_MODE;
@@ -204,19 +169,26 @@ public class Canvas extends JPanel {
     	}
     	// we're currently in erase mode so set to draw mode.
     	else if (mode == ERASE_MODE) {
-    		System.out.println("there");
     		currentColor = Color.BLACK;
     		currentStroke = DRAW_MODE_STROKE;
     		mode = DRAW_MODE;
     		button.setText(ERASE_MODE);
     	}
     }
+ 
     
     /*
      * Main program. Make a window containing a Canvas.
      */
     public static void main(String[] args) {
         // set up the UI (on the event-handling thread)
+    	startCanvas();
+    }
+    
+    /*
+     * 
+     */
+    public static void startCanvas() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 JFrame window = new JFrame("Freehand Canvas");
