@@ -32,6 +32,7 @@ public class StartFrame extends JFrame {
 	}
 	
 	public void init() {
+		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		initHeader();
 		initWhiteBoardTable();
 		initNewWhiteBoardButton();
