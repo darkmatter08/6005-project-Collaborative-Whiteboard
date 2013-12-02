@@ -3,7 +3,7 @@ package server;
 import java.util.*;
 import canvas.*;
 
-public class Server implements canvas.WhiteBoardServer {
+public class Server implements WhiteBoardServer {
     private ArrayList<Canvas> whiteboards;
     
     public Server() {

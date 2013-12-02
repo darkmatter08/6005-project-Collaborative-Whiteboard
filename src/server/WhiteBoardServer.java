@@ -1,4 +1,4 @@
-package canvas;
+package server;
 
 import java.util.List;
 

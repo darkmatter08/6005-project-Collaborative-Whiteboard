@@ -15,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import server.Server;
+import server.WhiteBoardServer;
 
 public class StartFrame extends JFrame {
 	private final WhiteBoardTableModel whiteBoardTableModel = new WhiteBoardTableModel();
@@ -65,7 +66,7 @@ public class StartFrame extends JFrame {
 			      JTable target = (JTable)e.getSource();
 			      int row = target.getSelectedRow();
 			      int column = target.getSelectedColumn();
-			      openEditor((int)(target.getValueAt(row, column)));
+			      openEditor((Integer)(target.getValueAt(row, column)));
 			    }
 			  }
 			});
