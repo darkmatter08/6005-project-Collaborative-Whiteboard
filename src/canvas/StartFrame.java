@@ -90,8 +90,7 @@ public class StartFrame extends JFrame {
 	
 	public void openEditor(int boardId) {
 		System.out.println("TODO: Open editor " + boardId);
-		Canvas myCanvas = new Canvas(500 /* canvas width */, 500 /* canvas height */);
-		myCanvas.startCanvas();
+		Canvas.startCanvas();
 	}
 	
 	public static void main(String[] args) {
