@@ -13,7 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhiteboardConnectionHandler implements Runnable{
+public class WhiteboardConnectionHandler implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads
     // Every whiteboard instance is unique.
     private final List<Whiteboard> whiteboards;
@@ -93,7 +93,7 @@ public class WhiteboardConnectionHandler implements Runnable{
         
         try {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
-                String output = handleRequest(line);
+                handleRequest(line);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -105,7 +105,7 @@ public class WhiteboardConnectionHandler implements Runnable{
         }
     }
     
-    private String handleRequest(String input) throws IOException, ClassNotFoundException{
+    private void handleRequest(String input) throws IOException, ClassNotFoundException{
         final String getWhiteboardIds = "getWhiteboardIds";
         final String getWhiteboardById = "getWhiteboardById";
         final String drawLine = "drawLine";
@@ -115,10 +115,8 @@ public class WhiteboardConnectionHandler implements Runnable{
         
         if (tokens[0].equals(getWhiteboardIds)){
             objOut.writeObject(whiteboards);
-            return null;
         } else if (tokens[0].equals(getWhiteboardById)) {
             objOut.writeObject(getWhiteboardById(Integer.parseInt(tokens[1])));
-            return null;
         } else if (tokens[0].equals(createNewWhiteboard)) {
             Whiteboard newWhiteboard = (Whiteboard) objIn.readObject();
             createNewWhiteboard(newWhiteboard);
@@ -129,11 +127,9 @@ public class WhiteboardConnectionHandler implements Runnable{
             for (WhiteboardAction action : actions) {
                 board.applyAction(action);
             }
-        }
-        throw new IOException("Invalid input from user");
+        } else
+            throw new IOException("Invalid input from user");
     }
-
-    
 
     void announceNewWhiteboard(int newWhiteboardId) {
         final String newWhiteboardAvailiable = "newWhiteboardAvailiable";
