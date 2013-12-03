@@ -11,9 +11,13 @@ import java.awt.image.ImageProducer;
 public class Whiteboard {
     public Image drawingBuffer;
     private Graphics2D image;
+    private int width;
+    private int height;
     
-    public Whiteboard(Image drawingBuffer) {
+    public Whiteboard(Image drawingBuffer, int width, int height) {
         this.drawingBuffer = drawingBuffer;
+        this.width = width;
+        this.height = height;
     }
     
     /*
@@ -35,12 +39,10 @@ public class Whiteboard {
     }
     
     public int getWidth() {
-        //TODO: fix this
-        return 800;
+        return width;
     }
     
     public int getHeight() {
-        //TODO: fix this
-        return 600;
+        return height;
     }
 }

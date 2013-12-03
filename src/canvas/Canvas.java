@@ -73,7 +73,7 @@ public class Canvas extends JPanel {
      */
     private void makeDrawingBuffer() {
         Image drawingBuffer = createImage(getWidth(), getHeight());
-        board = new Whiteboard(drawingBuffer);
+        board = new Whiteboard(drawingBuffer, getWidth(), getHeight());
         fillWithWhite();
     }
     
