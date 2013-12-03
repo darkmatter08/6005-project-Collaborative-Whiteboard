@@ -7,8 +7,9 @@ import java.awt.Image;
 import java.awt.Stroke;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
+import java.io.Serializable;
 
-public class Whiteboard {
+public class Whiteboard implements Serializable {
     public Image drawingBuffer;
     private Graphics2D image;
     private int width;
