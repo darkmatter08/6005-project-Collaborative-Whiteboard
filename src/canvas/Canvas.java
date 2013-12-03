@@ -15,6 +15,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.*;
 
 import javax.swing.JButton;
@@ -39,21 +47,34 @@ public class Canvas extends JPanel {
     
     private ArrayList<WhiteboardAction> currentActions;
     
+    // IO
+    private BufferedReader in = null;
+    private PrintWriter out = null;
+    private ObjectOutputStream objOut = null;
+    private ObjectInputStream objIn = null;
+    
     /**
      * Make a canvas.
      * @param width width in pixels
      * @param height height in pixels
+     * @throws IOException 
+     * @throws UnknownHostException 
      */
-    public Canvas(int width, int height) {
+    public Canvas(int width, int height) throws UnknownHostException, IOException {
         this.setPreferredSize(new Dimension(width, height));
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
         currentActions = new ArrayList<WhiteboardAction>();
+        Socket socket = new Socket("127.0.0.1", 8888);
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        this.objIn = new ObjectInputStream(socket.getInputStream());
     }
     
-    public Canvas(int width, int height, Whiteboard board) {
+    public Canvas(int width, int height, Whiteboard board) throws UnknownHostException, IOException {
         this(width, height);
         this.board = board;
     }
@@ -108,12 +129,15 @@ public class Canvas extends JPanel {
         this.repaint(); 
     }
     
-    private void sendCurrentActionsAndUpdate() {
+    private void sendCurrentActionsAndUpdate() throws ClassNotFoundException, IOException {
         synchronized (currentActions) {
             ArrayList<WhiteboardAction> copyCurrentActions = (ArrayList)currentActions.clone();
             currentActions.clear();
         }
-        Whiteboard newBoard;
+        int boardId = 0;
+        out.println("drawLine" + " " + boardId); //TODO add in board id
+        Whiteboard newBoard = (Whiteboard) objIn.readObject();
+        //objOut.writeObject(object);
         // Whiteboard newBoard = "send copyCurrentActions to server"()
         for (WhiteboardAction action : currentActions) {
             newBoard.applyAction(action);
@@ -216,7 +240,16 @@ public class Canvas extends JPanel {
                 JFrame window = new JFrame("Freehand Canvas");
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 window.setLayout(new BorderLayout());
-                Canvas canvas = new Canvas(800, 600);
+                Canvas canvas = null;
+                try {
+                    canvas = new Canvas(800, 600);
+                } catch (UnknownHostException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
                 JButton toggleButton = canvas.createEraseToggleButton();
                 window.add(toggleButton, BorderLayout.NORTH);
                 window.pack();

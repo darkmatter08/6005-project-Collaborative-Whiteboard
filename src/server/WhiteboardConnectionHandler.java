@@ -127,6 +127,7 @@ public class WhiteboardConnectionHandler implements Runnable {
             for (WhiteboardAction action : actions) {
                 board.applyAction(action);
             }
+            objOut.writeObject(board);
         } else
             throw new IOException("Invalid input from user");
     }
