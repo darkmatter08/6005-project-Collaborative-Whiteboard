@@ -45,8 +45,4 @@ public class Whiteboard implements Serializable {
     public int getHeight() {
         return height;
     }
-    
-    public Whiteboard() {
-        
-    }
 }
