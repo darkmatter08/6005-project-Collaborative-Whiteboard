@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -15,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import server.Server;
+import server.WhiteBoardServer;
 
 public class StartFrame extends JFrame {
 	private final WhiteBoardTableModel whiteBoardTableModel = new WhiteBoardTableModel();
@@ -66,7 +68,7 @@ public class StartFrame extends JFrame {
 			      JTable target = (JTable)e.getSource();
 			      int row = target.getSelectedRow();
 			      int column = target.getSelectedColumn();
-			      openEditor((int)(target.getValueAt(row, column)));
+			      openEditor((Integer)(target.getValueAt(row, column)));
 			    }
 			  }
 			});
@@ -94,7 +96,7 @@ public class StartFrame extends JFrame {
 		myCanvas.startCanvas();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
 		Server myServer = new Server();
 		StartFrame myFrame = new StartFrame(myServer);
 		myFrame.init();

@@ -11,7 +11,6 @@ import java.io.Serializable;
 
 public class Whiteboard implements Serializable {
     public Image drawingBuffer;
-    private Graphics2D image;
     private int width;
     private int height;
     
@@ -45,5 +44,9 @@ public class Whiteboard implements Serializable {
     
     public int getHeight() {
         return height;
+    }
+    
+    public Whiteboard() {
+        
     }
 }
