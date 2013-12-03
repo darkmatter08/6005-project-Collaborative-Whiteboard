@@ -37,8 +37,7 @@ public class Canvas extends JPanel {
     private Stroke currentStroke = DRAW_MODE_STROKE;
     private String mode = DRAW_MODE;
     
-    private Queue<List<WhiteboardAction>> actions;
-    private List<WhiteboardAction> currentActions;
+    private ArrayList<WhiteboardAction> currentActions;
     
     /**
      * Make a canvas.
@@ -51,7 +50,6 @@ public class Canvas extends JPanel {
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
-        actions = new LinkedList<List<WhiteboardAction>>();
         currentActions = new ArrayList<WhiteboardAction>();
     }
     
@@ -102,15 +100,25 @@ public class Canvas extends JPanel {
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
         WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor, currentStroke);
         board.applyAction(action);
-        currentActions.add(action);
+        synchronized(currentActions) {
+            currentActions.add(action);
+        }
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint(); 
     }
     
-    private void sendCurrentActions() {
-        // send currentActions to server
-        actions.add(currentActions);
+    private void sendCurrentActionsAndUpdate() {
+        synchronized (currentActions) {
+            ArrayList<WhiteboardAction> copyCurrentActions = (ArrayList)currentActions.clone();
+            currentActions.clear();
+        }
+        Whiteboard newBoard;
+        // Whiteboard newBoard = "send copyCurrentActions to server"()
+        for (WhiteboardAction action : currentActions) {
+            newBoard.applyAction(action);
+        }
+        
     }
     
     /*
