@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -95,7 +96,7 @@ public class StartFrame extends JFrame {
 		myCanvas.startCanvas();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
 		Server myServer = new Server();
 		StartFrame myFrame = new StartFrame(myServer);
 		myFrame.init();
