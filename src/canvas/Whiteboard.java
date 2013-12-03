@@ -9,7 +9,8 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
 public class Whiteboard {
-    private Image drawingBuffer;
+    public Image drawingBuffer;
+    private Graphics2D image;
     
     public Whiteboard(Image drawingBuffer) {
         this.drawingBuffer = drawingBuffer;
@@ -24,5 +25,22 @@ public class Whiteboard {
         g.setColor(action.color);
         g.setStroke(action.stroke);
         g.drawLine(action.x1, action.y1, action.x2, action.y2);
+    }
+    
+    public void fillWithWhite() {
+        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
+    
+        g.setColor(Color.WHITE);
+        g.fillRect(0,  0,  getWidth(), getHeight());
+    }
+    
+    public int getWidth() {
+        //TODO: fix this
+        return 800;
+    }
+    
+    public int getHeight() {
+        //TODO: fix this
+        return 600;
     }
 }

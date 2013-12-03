@@ -27,7 +27,7 @@ import javax.swing.SwingUtilities;
  */
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
-    private Image drawingBuffer;
+    private Whiteboard board;
     private Color currentColor = Color.BLACK;
     private final String DRAW_MODE = "Draw";
     private final String ERASE_MODE = "Erase";
@@ -48,6 +48,11 @@ public class Canvas extends JPanel {
         // wait until paintComponent() is first called.
     }
     
+    public Canvas(int width, int height, Whiteboard board) {
+        this(width, height);
+        this.board = board;
+    }
+    
     /**
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
@@ -55,19 +60,20 @@ public class Canvas extends JPanel {
     public void paintComponent(Graphics g) {
         // If this is the first time paintComponent() is being called,
         // make our drawing buffer.
-        if (drawingBuffer == null) {
+        if (board == null) {
             makeDrawingBuffer();
         }
         
         // Copy the drawing buffer to the screen.
-        g.drawImage(drawingBuffer, 0, 0, null);
+        g.drawImage(board.drawingBuffer, 0, 0, null);
     }
     
     /*
      * Make the drawing buffer and draw some starting content for it.
      */
     private void makeDrawingBuffer() {
-        drawingBuffer = createImage(getWidth(), getHeight());
+        Image drawingBuffer = createImage(getWidth(), getHeight());
+        board = new Whiteboard(drawingBuffer);
         fillWithWhite();
     }
     
@@ -75,10 +81,7 @@ public class Canvas extends JPanel {
      * Make the drawing buffer entirely white.
      */
     private void fillWithWhite() {
-        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-
-        g.setColor(Color.WHITE);
-        g.fillRect(0,  0,  getWidth(), getHeight());
+        board.fillWithWhite();
         
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
@@ -90,10 +93,8 @@ public class Canvas extends JPanel {
      * pixels relative to the upper-left corner of the drawing buffer.
      */
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
-        Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-        g.setColor(currentColor);
-        g.setStroke(currentStroke);
-        g.drawLine(x1, y1, x2, y2);
+        WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor, currentStroke);
+        board.applyAction(action);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint(); 
