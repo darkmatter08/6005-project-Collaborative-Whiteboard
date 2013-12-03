@@ -1,6 +1,7 @@
 package server;
 
 import canvas.Whiteboard;
+import canvas.WhiteboardAction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class WhiteboardConnectionHandler implements Runnable{
      * @param id The index of the desired canvas in the server's list
      * @return A Canvas object
      */
-    private Whiteboard getWhiteboardByID(int id) {
+    private Whiteboard getWhiteboardById(int id) {
         return whiteboards.get(id);
     }
     
@@ -116,11 +117,18 @@ public class WhiteboardConnectionHandler implements Runnable{
             objOut.writeObject(whiteboards);
             return null;
         } else if (tokens[0].equals(getWhiteboardById)) {
-            objOut.writeObject(getWhiteboardByID(Integer.parseInt(tokens[1])));
+            objOut.writeObject(getWhiteboardById(Integer.parseInt(tokens[1])));
             return null;
         } else if (tokens[0].equals(createNewWhiteboard)) {
             Whiteboard newWhiteboard = (Whiteboard) objIn.readObject();
             createNewWhiteboard(newWhiteboard);
+        } else if (tokens[0].equals(drawLine)) {
+            int boardId = Integer.parseInt(tokens[1]);
+            ArrayList<WhiteboardAction> actions = (ArrayList<WhiteboardAction>) objIn.readObject();
+            Whiteboard board = getWhiteboardById(boardId);
+            for (WhiteboardAction action : actions) {
+                board.applyAction(action);
+            }
         }
         throw new IOException("Invalid input from user");
     }
