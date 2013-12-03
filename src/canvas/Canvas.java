@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,6 +36,10 @@ public class Canvas extends JPanel {
     private final BasicStroke ERASE_MODE_STROKE = new BasicStroke(15);
     private Stroke currentStroke = DRAW_MODE_STROKE;
     private String mode = DRAW_MODE;
+    
+    private Queue<List<WhiteboardAction>> actions;
+    private List<WhiteboardAction> currentActions;
+    
     /**
      * Make a canvas.
      * @param width width in pixels
@@ -46,6 +51,8 @@ public class Canvas extends JPanel {
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
+        actions = new LinkedList<List<WhiteboardAction>>();
+        currentActions = new ArrayList<WhiteboardAction>();
     }
     
     public Canvas(int width, int height, Whiteboard board) {
@@ -95,9 +102,15 @@ public class Canvas extends JPanel {
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
         WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor, currentStroke);
         board.applyAction(action);
+        currentActions.add(action);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint(); 
+    }
+    
+    private void sendCurrentActions() {
+        // send currentActions to server
+        actions.add(currentActions);
     }
     
     /*
