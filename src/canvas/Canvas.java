@@ -144,39 +144,7 @@ public class Canvas extends JPanel {
         public void mouseExited(MouseEvent e) { }
     }
     
-    /**
-     * 
-     * @param args
-     */
-    private JButton createEraseToggleButton() {
-    	final JButton toggle = new JButton();
-    	toggle.setText(ERASE_MODE);
-    	toggle.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    				toggleErase(toggle);
-    		}
-    	});
-    	return toggle;
-    }
-    
-    private void toggleErase(JButton button) {
-    	// we're currently in draw mode so set to erase mode.
-    	if (mode == DRAW_MODE) {
-    		currentColor = Color.WHITE;
-    		currentStroke = ERASE_MODE_STROKE;
-    		mode = ERASE_MODE;
-    		button.setText(DRAW_MODE);
-    	}
-    	// we're currently in erase mode so set to draw mode.
-    	else if (mode == ERASE_MODE) {
-    		currentColor = Color.BLACK;
-    		currentStroke = DRAW_MODE_STROKE;
-    		mode = DRAW_MODE;
-    		button.setText(ERASE_MODE);
-    	}
-    }
  
-    
     /*
      * Main program. Make a window containing a Canvas.
      */
@@ -195,8 +163,6 @@ public class Canvas extends JPanel {
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 window.setLayout(new BorderLayout());
                 Canvas canvas = new Canvas(800, 600);
-                JButton toggleButton = canvas.createEraseToggleButton();
-                window.add(toggleButton, BorderLayout.NORTH);
                 window.pack();
                 window.add(canvas, BorderLayout.CENTER);
                 window.pack();

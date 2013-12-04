@@ -1,6 +1,5 @@
 package canvas;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -11,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class ClientWhiteboardGUI extends JPanel {
+public class ClientWhiteBoardGUI extends JPanel {
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private GroupLayout layout;
 	private JButton blackButton = new JButton();
@@ -60,6 +59,8 @@ public class ClientWhiteboardGUI extends JPanel {
 			button.setOpaque(true);
 		}
 	}
+	
+	
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -67,7 +68,7 @@ public class ClientWhiteboardGUI extends JPanel {
 				JFrame window = new JFrame(
 						"Freehand Canvas");
 				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI();
+				ClientWhiteBoardGUI clientGUI = new ClientWhiteBoardGUI();
 				window.add(clientGUI);
 				clientGUI.init();
 				window.pack();
@@ -75,4 +76,6 @@ public class ClientWhiteboardGUI extends JPanel {
 			}
 		});
 	}
+	
+	
 }
