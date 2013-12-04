@@ -73,9 +73,8 @@ public class Server /*implements WhiteBoardServer */{
 //        return createNewWhiteBoard(800, 600);
 //    }
     
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
-
+    public static void main(String[] args) throws IOException {
+        new Server().serve();
     }
     
     void announceNewWhiteboard(int newWhiteboardId) {
@@ -98,5 +97,4 @@ public class Server /*implements WhiteBoardServer */{
             new Thread(wch).run();
         }
     }
-
 }
