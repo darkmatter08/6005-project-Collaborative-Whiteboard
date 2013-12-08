@@ -79,6 +79,18 @@ public class Canvas extends JPanel {
         this.board = board;
     }
     
+    public Color getPenColor() {
+    	return currentColor;
+    }
+    
+    public void setPenColor(Color color) {
+    	currentColor = color;
+    }
+    
+    public void setPenThickness(int thickness) {
+    	currentStroke = new BasicStroke(thickness);
+    }
+    
     /**
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */

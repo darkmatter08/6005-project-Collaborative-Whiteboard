@@ -1,6 +1,8 @@
 package canvas;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Group;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -15,6 +18,7 @@ import javax.swing.SwingUtilities;
 public class ClientWhiteBoardGUI extends JPanel {
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private GroupLayout layout;
+	private JButton colorChooser = new JButton();
 	private JButton blackButton = new JButton();
 	private JButton redButton = new JButton();
 	private JButton blueButton = new JButton();
@@ -51,20 +55,24 @@ public class ClientWhiteBoardGUI extends JPanel {
 	}
 	
 	public void initButtons() {
-		blackButton.setText("Black Pen");
-		redButton.setText("Red Pen");
-		blueButton.setText("Blue Pen");
-		greenButton.setText("Green Pen");
+		colorChooser.setText("Choose color");
 		eraseButton.setText("Eraser");
-		blackButton.setBackground(Color.BLACK);
-		redButton.setBackground(Color.RED);
-		blueButton.setBackground(Color.BLUE);
-		greenButton.setBackground(Color.GREEN);
+		colorChooser.setBackground(Color.BLACK);
 		eraseButton.setBackground(Color.WHITE);
-		buttons.add(blackButton);
-		buttons.add(redButton);
-		buttons.add(blueButton);
-		buttons.add(greenButton);
+		final JPanel parentGui = this;
+		colorChooser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					canvas.setPenColor(JColorChooser.showDialog(parentGui, "Choose Pen Color", canvas.getPenColor()));
+					canvas.setPenThickness(1);
+				}
+		});
+		eraseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.setPenColor(Color.WHITE);
+				canvas.setPenThickness(15);
+			}
+		});
+		buttons.add(colorChooser);
 		buttons.add(eraseButton);
 		for (JButton button : buttons) {
 			button.setOpaque(true);
