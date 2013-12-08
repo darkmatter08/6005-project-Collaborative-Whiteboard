@@ -30,6 +30,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import shared.Ports;
+import shared.WhiteboardAction;
+
 /**
  * Canvas represents a drawing surface that allows the user to draw
  * on it freehand, with the mouse.
@@ -67,7 +70,7 @@ public class Canvas extends JPanel {
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
         currentActions = new ArrayList<WhiteboardAction>();
-        Socket socket = new Socket("127.0.0.1", 8888);
+        Socket socket = new Socket("127.0.0.1", Ports.STATE_PORT);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.objOut = new ObjectOutputStream(socket.getOutputStream());

@@ -1,7 +1,6 @@
 package server;
 
 import canvas.Whiteboard;
-import canvas.WhiteboardAction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +12,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhiteboardConnectionHandler implements Runnable {
+import shared.WhiteboardAction;
+
+public class SlaveServer implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads
     // Every whiteboard instance is unique.
     private final List<Whiteboard> whiteboards;
@@ -31,7 +32,7 @@ public class WhiteboardConnectionHandler implements Runnable {
      * @param w
      * @param s
      */
-    public WhiteboardConnectionHandler(List<Whiteboard> w, Socket s, Server god) {
+    public SlaveServer(List<Whiteboard> w, Socket s, Server god) {
         whiteboards = w;
         socket = s;
         server = god;

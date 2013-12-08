@@ -9,6 +9,8 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.io.Serializable;
 
+import shared.WhiteboardAction;
+
 public class Whiteboard implements Serializable {
     public Image drawingBuffer;
     private int width;
