@@ -19,7 +19,7 @@ public class SlaveServer implements Runnable {
     // Every whiteboard instance is unique.
     private final List<Whiteboard> whiteboards;
     private final Socket socket;
-    private final Server server;
+    private final MasterServer server;
     
     // IO
     private BufferedReader in = null;
@@ -32,7 +32,7 @@ public class SlaveServer implements Runnable {
      * @param w
      * @param s
      */
-    public SlaveServer(List<Whiteboard> w, Socket s, Server god) {
+    public SlaveServer(List<Whiteboard> w, Socket s, MasterServer god) {
         whiteboards = w;
         socket = s;
         server = god;
