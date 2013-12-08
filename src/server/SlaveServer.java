@@ -21,8 +21,6 @@ public class SlaveServer implements Runnable {
     private final Socket socket;
     
     // IO
-    private BufferedReader in = null;
-    private PrintWriter out = null;
     private ObjectOutputStream objOut = null;
     private ObjectInputStream objIn = null;
     
@@ -57,48 +55,19 @@ public class SlaveServer implements Runnable {
         this.objIn = new ObjectInputStream(socket.getInputStream());
         
         try {
-            for (String line = in.readLine(); line != null; line = in.readLine()) {
-                handleRequest(line);
+            for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
+                    actions = (List<WhiteboardAction>)objIn.readObject()) {
+                handleRequest(actions);
             }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
-            out.close();
-            in.close();
             objOut.close();
             socket.close();
         }
     }
     
-    private void handleRequest(String input) throws IOException, ClassNotFoundException{
-        
-        final String drawLine = "drawLine";
-        final String createNewWhiteboard = "createNewWhiteboard";
-        
-        String[] tokens = input.split(" ");
-        
-        if (tokens[0].equals(getWhiteboardIds)){
-            objOut.writeObject(whiteboards);
-        } else if (tokens[0].equals(getWhiteboardById)) {
-            objOut.writeObject(getWhiteboardById(Integer.parseInt(tokens[1])));
-        } else if (tokens[0].equals(createNewWhiteboard)) {
-            Whiteboard newWhiteboard = (Whiteboard) objIn.readObject();
-            createNewWhiteboard(newWhiteboard);
-        } else if (tokens[0].equals(drawLine)) {
-            int boardId = Integer.parseInt(tokens[1]);
-            ArrayList<WhiteboardAction> actions = (ArrayList<WhiteboardAction>) objIn.readObject();
-            Whiteboard board = getWhiteboardById(boardId);
-            for (WhiteboardAction action : actions) {
-                board.applyAction(action);
-            }
-            objOut.writeObject(board);
-        } else
-            throw new IOException("Invalid input from user");
+    private void handleRequest(List<WhiteboardAction> actions) {
+        whiteboard.applyActions(actions);
     }
-
-    void announceNewWhiteboard(int newWhiteboardId) {
-        final String newWhiteboardAvailiable = "newWhiteboardAvailiable";
-        out.write(newWhiteboardAvailiable + " " + Integer.toString(newWhiteboardId));
-    }
-    
 }
