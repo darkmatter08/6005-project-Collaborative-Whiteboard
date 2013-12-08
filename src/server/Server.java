@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-import canvas.*;
+import shared.*;
 
 /**
  * The Server class accepts requests from clients to connect
@@ -16,14 +16,16 @@ import canvas.*;
  *
  */
 public class Server /*implements WhiteBoardServer */{
-    private final List<Whiteboard> whiteboards;
+    private final List<MasterWhiteboard> whiteboards;
     private final ServerSocket serverSocket;
     private final List<WhiteboardConnectionHandler> clients;
+    private final Map<MasterWhiteboard, List<WhiteboardConnectionHandler>> whiteboardToUsers;
     
     public Server(int port) throws IOException{
-        whiteboards = new ArrayList<Whiteboard>();
+        whiteboards = new ArrayList<MasterWhiteboard>();
         serverSocket = new ServerSocket(port);
         clients = new ArrayList<WhiteboardConnectionHandler>();
+        whiteboardToUsers = new HashMap<MasterWhiteboard, List<WhiteboardConnectionHandler>>();
     }
     
     /**

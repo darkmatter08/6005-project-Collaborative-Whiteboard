@@ -1,7 +1,6 @@
 package server;
 
 import canvas.Whiteboard;
-import canvas.WhiteboardAction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +11,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import shared.WhiteboardAction;
 
 public class WhiteboardConnectionHandler implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads

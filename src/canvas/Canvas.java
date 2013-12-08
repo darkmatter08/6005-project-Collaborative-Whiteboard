@@ -30,6 +30,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import shared.WhiteboardAction;
+
 /**
  * Canvas represents a drawing surface that allows the user to draw
  * on it freehand, with the mouse.
