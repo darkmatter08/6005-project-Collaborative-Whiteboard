@@ -32,7 +32,7 @@ public class MasterServer {
      * Start server, default port 8888
      */
     public MasterServer() throws IOException{
-        this(Ports.MAIN_PORT);
+        this(Ports.MASTER_PORT);
     }
     
 //    public List<Integer> getWhiteBoardIds() {

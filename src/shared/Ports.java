@@ -1,6 +1,6 @@
 package shared;
 
 public class Ports {
-    public static int MAIN_PORT = 8888;
-    public static int STATE_PORT = 8889;
+    public static int MASTER_PORT = 8888;
+    public static int SLAVE_PORT = 8889;
 }
