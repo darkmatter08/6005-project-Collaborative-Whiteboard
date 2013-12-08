@@ -34,7 +34,6 @@ public class SlaveServer implements Runnable {
     public SlaveServer(MasterWhiteboard whiteboard, Socket socket) {
         this.whiteboard = whiteboard;
         this.socket = socket;
-        this.server = server;
     }
     
     public void run() {
