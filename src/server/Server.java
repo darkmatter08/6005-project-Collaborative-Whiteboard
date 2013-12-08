@@ -15,7 +15,7 @@ import canvas.*;
  * @author jains
  *
  */
-public class Server /*implements WhiteBoardServer */{
+public class Server {
     private final List<Whiteboard> whiteboards;
     private final ServerSocket serverSocket;
     private final List<WhiteboardConnectionHandler> clients;
