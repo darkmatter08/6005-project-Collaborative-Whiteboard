@@ -19,7 +19,6 @@ public class SlaveServer implements Runnable {
     // Every whiteboard instance is unique.
     private final MasterWhiteboard whiteboard;
     private final Socket socket;
-    private final MasterServer server;
     
     // IO
     private BufferedReader in = null;
@@ -31,9 +30,8 @@ public class SlaveServer implements Runnable {
      * Constructor for a new ConnectionHandler. 
      * @param whiteboard
      * @param socket
-     * @param server
      */
-    public SlaveServer(MasterWhiteboard whiteboard, Socket socket, MasterServer server) {
+    public SlaveServer(MasterWhiteboard whiteboard, Socket socket) {
         this.whiteboard = whiteboard;
         this.socket = socket;
         this.server = server;
@@ -56,13 +54,8 @@ public class SlaveServer implements Runnable {
     }
 
     private void handleConnection() throws IOException {
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.out = new PrintWriter(socket.getOutputStream(), true);
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
-        
-        // Send list of Whiteboards
-        objOut.writeObject(whiteboards);
         
         try {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
