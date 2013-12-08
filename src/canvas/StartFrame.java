@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import server.Server;
@@ -23,15 +24,10 @@ public class StartFrame extends JFrame {
 	private final JTable whiteBoardTable = new JTable(whiteBoardTableModel);
 	private final JButton newWhiteBoard = new JButton();
 	private final JLabel headerText = new JLabel();
-	private final WhiteBoardServer server;
+	private final ServerHandler server = new ServerHandler();
 	private final static int MIN_WIDTH = 400;
 	private final static int MIN_HEIGHT = 400;
-	
-	public StartFrame(WhiteBoardServer server) {
-		super();
-		this.server = server;
-	}
-	
+
 	public void init() {
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		initHeader();
@@ -43,38 +39,38 @@ public class StartFrame extends JFrame {
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
 	public void initMainFrame() {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 	}
-	
+
 	public void initHeader() {
 		headerText.setText("Click a whiteboard ID to begin");
 	}
-	
+
 	public void initWhiteBoardTable() {
 		List<Integer> boardIds = server.getWhiteBoardIds();
 		whiteBoardTableModel.addColumn("boardId");
 		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		for (int boardId : boardIds) {
-			whiteBoardTableModel.addRow(new Object[] {boardId});
+			whiteBoardTableModel.addRow(new Object[] { boardId });
 		}
 		// TODO Add an action listener for the table.
-		
+
 		whiteBoardTable.addMouseListener(new MouseAdapter() {
-			  public void mouseClicked(MouseEvent e) {
-			    if (e.getClickCount() == 2) {
-			      JTable target = (JTable)e.getSource();
-			      int row = target.getSelectedRow();
-			      int column = target.getSelectedColumn();
-			      openEditor((Integer)(target.getValueAt(row, column)));
-			    }
-			  }
-			});
-		
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					JTable target = (JTable) e.getSource();
+					int row = target.getSelectedRow();
+					int column = target.getSelectedColumn();
+					openEditor((Integer) (target.getValueAt(row, column)));
+				}
+			}
+		});
+
 	}
-	
+
 	public void initNewWhiteBoardButton() {
 		newWhiteBoard.setText("Create new Whiteboard");
 		newWhiteBoard.addActionListener(new ActionListener() {
@@ -83,21 +79,25 @@ public class StartFrame extends JFrame {
 			}
 		});
 	}
-	
+
 	public void addWhiteBoard() {
-		int id = server.createNewWhiteBoard();
-		whiteBoardTableModel.addRow(new Object[] {id});
-		this.pack();
+		final StartFrame myFrame = this;
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				int id = server.createNewWhiteBoard();
+				whiteBoardTableModel.addRow(new Object[] { id });
+				myFrame.pack();
+			}
+		});
 	}
-	
+
 	public void openEditor(int boardId) {
 		System.out.println("TODO: Open editor " + boardId);
 		Canvas.startCanvas();
 	}
-	
-	public static void main(String[] args) throws IOException{
-		Server myServer = new Server();
-		StartFrame myFrame = new StartFrame(myServer);
+
+	public static void main(String[] args) throws IOException {
+		StartFrame myFrame = new StartFrame();
 		myFrame.init();
 	}
 
