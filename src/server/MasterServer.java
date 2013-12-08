@@ -20,6 +20,7 @@ public class MasterServer {
     private final ServerSocket serverSocket;
     private final List<SlaveServer> clients;
     private final Map<MasterWhiteboard, List<SlaveServer>> whiteboardToUsers;
+    private int whiteboardIdIncrementer = 0;
     
     /**
      * Start server
@@ -53,21 +54,12 @@ public class MasterServer {
      * @param id The index of the desired canvas in the server's list
      * @return A Canvas object
      */
-    public Whiteboard getWhiteboardByID(int id) {
-        return whiteboards.get(id);
-    }
-    
-    /**
-     * Create a new blank whiteboard and return its ID number.
-     * @param width The width of the whiteboard to create, in pixels
-     * @param height The height of the whiteboard to create, in pixels
-     * @return The ID number of the newly created canvas
-     */
-    public synchronized int createNewWhiteBoard(int width, int height) {
-        Whiteboard w = new Whiteboard();//createImage(BOARD_WIDTH, BOARD_HEIGHT));
-        w.fillWithWhite();
-        whiteboards.add(w);
-        return whiteboards.size() - 1;
+    private MasterWhiteboard getWhiteboardById(int id) {
+        for (MasterWhiteboard b : whiteboards) {
+            if (b.hasSameId(id))
+                return b;
+        }
+        throw new RuntimeException("no whiteboard match");
     }
     
     /**
@@ -77,7 +69,9 @@ public class MasterServer {
      * @return The ID number of the newly created canvas
      */
     public synchronized int createNewWhiteBoard() {
-        return createNewWhiteBoard(800, 600);
+        MasterWhiteboard w = new MasterWhiteboard(++whiteboardIdIncrementer);
+        whiteboards.add(w);
+        return w.getId();
     }
     
     public static void main(String[] args) throws IOException {
