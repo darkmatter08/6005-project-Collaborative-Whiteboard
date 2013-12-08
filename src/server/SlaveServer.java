@@ -17,9 +17,8 @@ import shared.WhiteboardAction;
 public class SlaveServer implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads
     // Every whiteboard instance is unique.
-    private final List<Whiteboard> whiteboards;
+    private final MasterWhiteboard whiteboard;
     private final Socket socket;
-    private final MasterServer server;
     
     // IO
     private BufferedReader in = null;
@@ -29,42 +28,12 @@ public class SlaveServer implements Runnable {
     
     /**
      * Constructor for a new ConnectionHandler. 
-     * @param w
-     * @param s
+     * @param whiteboard
+     * @param socket
      */
-    public SlaveServer(List<Whiteboard> w, Socket s, MasterServer god) {
-        whiteboards = w;
-        socket = s;
-        server = god;
-    }
-    
-    /**
-     * @return a list of all whiteboard IDs
-     */
-    private List<Integer> getWhiteBoardIds() {
-        ArrayList<Integer> ids = new ArrayList<Integer>();
-        for (int i = 0; i < whiteboards.size(); ++i) {
-            ids.add(i);
-        }
-        return ids;
-    }
-    
-    /**
-     * Retrieve a canvas with a particular ID number
-     * @param id The index of the desired canvas in the server's list
-     * @return A Canvas object
-     */
-    private Whiteboard getWhiteboardById(int id) {
-        return whiteboards.get(id);
-    }
-    
-    private int getWhiteboardByInstance(Whiteboard w) {
-        return whiteboards.indexOf(w);
-    }
-    
-    private void createNewWhiteboard(Whiteboard newWhiteboard) {
-        whiteboards.add(newWhiteboard);
-        server.announceNewWhiteboard(getWhiteboardByInstance(newWhiteboard));
+    public SlaveServer(MasterWhiteboard whiteboard, Socket socket) {
+        this.whiteboard = whiteboard;
+        this.socket = socket;
     }
     
     public void run() {
@@ -84,13 +53,8 @@ public class SlaveServer implements Runnable {
     }
 
     private void handleConnection() throws IOException {
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.out = new PrintWriter(socket.getOutputStream(), true);
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
-        
-        // Send list of Whiteboards
-        objOut.writeObject(whiteboards);
         
         try {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
