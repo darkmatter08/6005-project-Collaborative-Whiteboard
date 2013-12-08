@@ -21,6 +21,11 @@ public class MasterServer {
     private final List<SlaveServer> clients;
     private final Map<MasterWhiteboard, List<SlaveServer>> whiteboardToUsers;
     
+    /**
+     * Start server
+     * @param port int port to start server.
+     * @throws IOException
+     */
     public MasterServer(int port) throws IOException{
         whiteboards = new ArrayList<MasterWhiteboard>();
         serverSocket = new ServerSocket(port);
@@ -35,45 +40,45 @@ public class MasterServer {
         this(Ports.MASTER_PORT);
     }
     
-//    public List<Integer> getWhiteBoardIds() {
-//        ArrayList<Integer> ids = new ArrayList<Integer>();
-//        for (int i = 0; i < whiteboards.size(); ++i) {
-//            ids.add(i);
-//        }
-//        return ids;
-//    }
-//    
-//    /**
-//     * Retrieve a canvas with a particular ID number
-//     * @param id The index of the desired canvas in the server's list
-//     * @return A Canvas object
-//     */
-//    public Whiteboard getWhiteboardByID(int id) {
-//        return whiteboards.get(id);
-//    }
-//    
-//    /**
-//     * Create a new blank whiteboard and return its ID number.
-//     * @param width The width of the whiteboard to create, in pixels
-//     * @param height The height of the whiteboard to create, in pixels
-//     * @return The ID number of the newly created canvas
-//     */
-//    public synchronized int createNewWhiteBoard(int width, int height) {
-//        Whiteboard w = new Whiteboard();//createImage(BOARD_WIDTH, BOARD_HEIGHT));
-//        w.fillWithWhite();
-//        whiteboards.add(w);
-//        return whiteboards.size() - 1;
-//    }
-//    
-//    /**
-//     * Create a new canvas with dimensions 800 (width) by 600 (height) and return its ID number.
-//     * @param width The width of the canvas to create, in pixels
-//     * @param height The height of the canvas to create, in pixels
-//     * @return The ID number of the newly created canvas
-//     */
-//    public synchronized int createNewWhiteBoard() {
-//        return createNewWhiteBoard(800, 600);
-//    }
+    public List<Integer> getWhiteboardIds() {
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+        for (int i = 0; i < whiteboards.size(); ++i) {
+            ids.add(i);
+        }
+        return ids;
+    }
+    
+    /**
+     * Retrieve a canvas with a particular ID number
+     * @param id The index of the desired canvas in the server's list
+     * @return A Canvas object
+     */
+    public Whiteboard getWhiteboardByID(int id) {
+        return whiteboards.get(id);
+    }
+    
+    /**
+     * Create a new blank whiteboard and return its ID number.
+     * @param width The width of the whiteboard to create, in pixels
+     * @param height The height of the whiteboard to create, in pixels
+     * @return The ID number of the newly created canvas
+     */
+    public synchronized int createNewWhiteBoard(int width, int height) {
+        Whiteboard w = new Whiteboard();//createImage(BOARD_WIDTH, BOARD_HEIGHT));
+        w.fillWithWhite();
+        whiteboards.add(w);
+        return whiteboards.size() - 1;
+    }
+    
+    /**
+     * Create a new canvas with dimensions 800 (width) by 600 (height) and return its ID number.
+     * @param width The width of the canvas to create, in pixels
+     * @param height The height of the canvas to create, in pixels
+     * @return The ID number of the newly created canvas
+     */
+    public synchronized int createNewWhiteBoard() {
+        return createNewWhiteBoard(800, 600);
+    }
     
     public static void main(String[] args) throws IOException {
         new MasterServer().serve();
