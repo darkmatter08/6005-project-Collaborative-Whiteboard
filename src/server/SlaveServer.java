@@ -71,8 +71,7 @@ public class SlaveServer implements Runnable {
     }
     
     private void handleRequest(String input) throws IOException, ClassNotFoundException{
-        final String getWhiteboardIds = "getWhiteboardIds";
-        final String getWhiteboardById = "getWhiteboardById";
+        
         final String drawLine = "drawLine";
         final String createNewWhiteboard = "createNewWhiteboard";
         
