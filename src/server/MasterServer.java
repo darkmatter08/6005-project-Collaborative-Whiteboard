@@ -10,28 +10,28 @@ import shared.*;
 /**
  * The Server class accepts requests from clients to connect
  *  The handling of each connection is abstracted into 
- *  WhiteboardConnectionHandler.java. This is a shell for all
+ *  SlaveServer.java. This is a shell for all
  *  the connections the server has, and contains all whiteboards.
  * @author jains
  *
  */
-public class WhiteboardServer {
+public class MasterServer {
     private final List<MasterWhiteboard> whiteboards;
     private final ServerSocket serverSocket;
-    private final List<WhiteboardConnectionHandler> clients;
-    private final Map<MasterWhiteboard, List<WhiteboardConnectionHandler>> whiteboardToUsers;
+    private final List<SlaveServer> clients;
+    private final Map<MasterWhiteboard, List<SlaveServer>> whiteboardToUsers;
     
-    public WhiteboardServer(int port) throws IOException{
+    public MasterServer(int port) throws IOException{
         whiteboards = new ArrayList<MasterWhiteboard>();
         serverSocket = new ServerSocket(port);
-        clients = new ArrayList<WhiteboardConnectionHandler>();
-        whiteboardToUsers = new HashMap<MasterWhiteboard, List<WhiteboardConnectionHandler>>();
+        clients = new ArrayList<SlaveServer>();
+        whiteboardToUsers = new HashMap<MasterWhiteboard, List<SlaveServer>>();
     }
     
     /**
      * Start server, default port 8888
      */
-    public WhiteboardServer() throws IOException{
+    public MasterServer() throws IOException{
         this(Ports.MAIN_PORT);
     }
     
@@ -76,11 +76,11 @@ public class WhiteboardServer {
 //    }
     
     public static void main(String[] args) throws IOException {
-        new WhiteboardServer().serve();
+        new MasterServer().serve();
     }
     
     void announceNewWhiteboard(int newWhiteboardId) {
-        for (WhiteboardConnectionHandler client : clients) {
+        for (SlaveServer client : clients) {
             client.announceNewWhiteboard(newWhiteboardId);
         }
     }
@@ -93,8 +93,8 @@ public class WhiteboardServer {
     public void serve() throws IOException {
         while(true) {
             final Socket socket = serverSocket.accept();
-            WhiteboardConnectionHandler wch = 
-                    new WhiteboardConnectionHandler(whiteboards, socket, this);
+            SlaveServer wch = 
+                    new SlaveServer(whiteboards, socket, this);
             clients.add(wch);
             new Thread(wch).run();
         }

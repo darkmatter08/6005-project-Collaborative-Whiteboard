@@ -14,7 +14,7 @@ import java.util.List;
 
 import shared.WhiteboardAction;
 
-public class WhiteboardConnectionHandler implements Runnable {
+public class SlaveServer implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads
     // Every whiteboard instance is unique.
     private final List<Whiteboard> whiteboards;
@@ -32,7 +32,7 @@ public class WhiteboardConnectionHandler implements Runnable {
      * @param w
      * @param s
      */
-    public WhiteboardConnectionHandler(List<Whiteboard> w, Socket s, Server god) {
+    public SlaveServer(List<Whiteboard> w, Socket s, Server god) {
         whiteboards = w;
         socket = s;
         server = god;
