@@ -15,7 +15,7 @@ public class MasterWhiteboard {
     final private int id;
     
     /**
-     * Initializes new blank whiteboard
+     * Initializes new blank whiteboard, with an id
      */
     public MasterWhiteboard(int id) {
         this.id = id;
