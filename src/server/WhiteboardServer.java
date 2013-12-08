@@ -15,13 +15,13 @@ import shared.*;
  * @author jains
  *
  */
-public class Server /*implements WhiteBoardServer */{
+public class WhiteboardServer {
     private final List<MasterWhiteboard> whiteboards;
     private final ServerSocket serverSocket;
     private final List<WhiteboardConnectionHandler> clients;
     private final Map<MasterWhiteboard, List<WhiteboardConnectionHandler>> whiteboardToUsers;
     
-    public Server(int port) throws IOException{
+    public WhiteboardServer(int port) throws IOException{
         whiteboards = new ArrayList<MasterWhiteboard>();
         serverSocket = new ServerSocket(port);
         clients = new ArrayList<WhiteboardConnectionHandler>();
@@ -31,7 +31,7 @@ public class Server /*implements WhiteBoardServer */{
     /**
      * Start server, default port 8888
      */
-    public Server() throws IOException{
+    public WhiteboardServer() throws IOException{
         this(8888);
     }
     
@@ -76,7 +76,7 @@ public class Server /*implements WhiteBoardServer */{
 //    }
     
     public static void main(String[] args) throws IOException {
-        new Server().serve();
+        new WhiteboardServer().serve();
     }
     
     void announceNewWhiteboard(int newWhiteboardId) {
