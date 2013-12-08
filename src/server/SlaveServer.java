@@ -17,9 +17,9 @@ import shared.WhiteboardAction;
 public class SlaveServer implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads
     // Every whiteboard instance is unique.
-    private final List<Whiteboard> whiteboards;
+    private final MasterWhiteboard whiteboard;
     private final Socket socket;
-    private final Server server;
+    private final MasterServer server;
     
     // IO
     private BufferedReader in = null;
@@ -29,42 +29,14 @@ public class SlaveServer implements Runnable {
     
     /**
      * Constructor for a new ConnectionHandler. 
-     * @param w
-     * @param s
+     * @param whiteboard
+     * @param socket
+     * @param server
      */
-    public SlaveServer(List<Whiteboard> w, Socket s, Server god) {
-        whiteboards = w;
-        socket = s;
-        server = god;
-    }
-    
-    /**
-     * @return a list of all whiteboard IDs
-     */
-    private List<Integer> getWhiteBoardIds() {
-        ArrayList<Integer> ids = new ArrayList<Integer>();
-        for (int i = 0; i < whiteboards.size(); ++i) {
-            ids.add(i);
-        }
-        return ids;
-    }
-    
-    /**
-     * Retrieve a canvas with a particular ID number
-     * @param id The index of the desired canvas in the server's list
-     * @return A Canvas object
-     */
-    private Whiteboard getWhiteboardById(int id) {
-        return whiteboards.get(id);
-    }
-    
-    private int getWhiteboardByInstance(Whiteboard w) {
-        return whiteboards.indexOf(w);
-    }
-    
-    private void createNewWhiteboard(Whiteboard newWhiteboard) {
-        whiteboards.add(newWhiteboard);
-        server.announceNewWhiteboard(getWhiteboardByInstance(newWhiteboard));
+    public SlaveServer(MasterWhiteboard whiteboard, Socket socket, MasterServer server) {
+        this.whiteboard = whiteboard;
+        this.socket = socket;
+        this.server = server;
     }
     
     public void run() {
