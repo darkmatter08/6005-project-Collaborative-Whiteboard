@@ -32,7 +32,7 @@ public class WhiteboardServer {
      * Start server, default port 8888
      */
     public WhiteboardServer() throws IOException{
-        this(8888);
+        this(Ports.MAIN_PORT);
     }
     
 //    public List<Integer> getWhiteBoardIds() {
