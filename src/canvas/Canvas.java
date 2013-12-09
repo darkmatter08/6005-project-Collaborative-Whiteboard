@@ -5,13 +5,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Stroke;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -25,12 +20,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import shared.Ports;
 import shared.WhiteboardAction;
 
 /**
@@ -70,7 +63,7 @@ public class Canvas extends JPanel {
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
         currentActions = new ArrayList<WhiteboardAction>();
-        Socket socket = new Socket("127.0.0.1", Ports.STATE_PORT);
+        Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
@@ -80,6 +73,18 @@ public class Canvas extends JPanel {
     public Canvas(int width, int height, Whiteboard board) throws UnknownHostException, IOException {
         this(width, height);
         this.board = board;
+    }
+    
+    public Color getPenColor() {
+    	return currentColor;
+    }
+    
+    public void setPenColor(Color color) {
+    	currentColor = color;
+    }
+    
+    public void setPenThickness(int thickness) {
+    	currentStroke = new BasicStroke(thickness);
     }
     
     /**
@@ -195,39 +200,7 @@ public class Canvas extends JPanel {
         public void mouseExited(MouseEvent e) { }
     }
     
-    /**
-     * 
-     * @param args
-     */
-    private JButton createEraseToggleButton() {
-    	final JButton toggle = new JButton();
-    	toggle.setText(ERASE_MODE);
-    	toggle.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    				toggleErase(toggle);
-    		}
-    	});
-    	return toggle;
-    }
-    
-    private void toggleErase(JButton button) {
-    	// we're currently in draw mode so set to erase mode.
-    	if (mode == DRAW_MODE) {
-    		currentColor = Color.WHITE;
-    		currentStroke = ERASE_MODE_STROKE;
-    		mode = ERASE_MODE;
-    		button.setText(DRAW_MODE);
-    	}
-    	// we're currently in erase mode so set to draw mode.
-    	else if (mode == ERASE_MODE) {
-    		currentColor = Color.BLACK;
-    		currentStroke = DRAW_MODE_STROKE;
-    		mode = DRAW_MODE;
-    		button.setText(ERASE_MODE);
-    	}
-    }
  
-    
     /*
      * Main program. Make a window containing a Canvas.
      */
@@ -255,8 +228,6 @@ public class Canvas extends JPanel {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                JButton toggleButton = canvas.createEraseToggleButton();
-                window.add(toggleButton, BorderLayout.NORTH);
                 window.pack();
                 window.add(canvas, BorderLayout.CENTER);
                 window.pack();
