@@ -56,8 +56,12 @@ public class MasterServer implements Runnable{
         god = shawn;
         open_client_boards = new ArrayList<SlaveServer>();
         serverSocket = new ServerSocket(Ports.MASTER_PORT);
-        this.out = new PrintWriter(socket.getOutputStream(), true);
+        
+        // order of the following two statements questionable
+        // which order to construct stream readers for Socket input vs. output?
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
         System.out.println("finished constructing masterserver");
@@ -89,22 +93,29 @@ public class MasterServer implements Runnable{
     }
     
     private void pushAllWhiteboardIds() throws IOException {
+        System.out.println("push all whiteboard ID - MasterServer.pushAllWhiteboardIds()");
         objOut.writeObject(getWhiteboardIds());
     }
     
     /** 
      * @throws IOException
+     * @throws InterruptedException 
      */
-    public void serve() throws IOException {
+    public void serve() throws IOException, InterruptedException {
         // request a connection to a specific board
         // wait on the serverSocket for a new connection 
         // accept on the serverSocket, and spawn a new thread
         // and pass the accepted socket to SlaveServer
         System.out.println("Started MasterServer");
+        Thread.sleep(300);
+        System.out.println("woke up MasterServer.serve()");
         while (true){
             for (String line = in.readLine(); line != null; line = in.readLine()) {
+                System.out.println("entering for loop");
                 String[] tokens = line.split(" ");
+                System.out.println(tokens);
                 if (tokens[0].equals(getWhiteboardById)) {
+                    
                     Socket whiteboard_client_socket = serverSocket.accept();
                     SlaveServer ss = new SlaveServer(
                             getWhiteboardById(Integer.parseInt(tokens[1])), whiteboard_client_socket);
@@ -112,13 +123,18 @@ public class MasterServer implements Runnable{
                     ss.run();
                 }
                 if (tokens[0].equals(getWhiteboardIds)) {
+                    System.out.println("getWhiteboardIds - in MasterServer.serve()");
                     pushAllWhiteboardIds();
                 }
                 if (tokens[0].equals(createNewWhiteboard)) {
-                    god.createNewWhiteboard();
+                    System.out.println("createNewWhiteboard - in MasterServer.serve()");
+                    out.println("it sorta works");
+                    //god.createNewWhiteboard();
                 }
             }
+            System.out.println("Exited for loop in MasterServer.java");
         }
+        
     }
 
     public void run() {
@@ -129,6 +145,9 @@ public class MasterServer implements Runnable{
             // TODO Auto-generated catch block
             e.printStackTrace();
             throw new RuntimeException();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 }

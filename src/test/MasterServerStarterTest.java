@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MasterServerStarterTest {
@@ -23,23 +24,35 @@ public class MasterServerStarterTest {
     private PrintWriter out; 
     
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         TestUtility.startServer(); // starts MasterServerStarter
         socket = TestUtility.connect();
+        Thread.sleep(300);
+        
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.out = new PrintWriter(socket.getOutputStream(), true);
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
+        this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        this.out = new PrintWriter(socket.getOutputStream(), true);
     }
     
     @Test
-    public void testServerStart() throws IOException {
-        out.write("createNewWhiteboard");
+    public void testServerStart() throws IOException, InterruptedException {
+        Thread.sleep(300);
+        System.out.println(this.out);
+        out.write("createNewWhiteboard\n");
+        System.out.println("sent createNewWhiteboard");
         try {
+            while(objIn.available() == 0){
+            }
             List<Integer> allWhiteboards = (List<Integer>) objIn.readObject();
+            List<Integer> expected = new ArrayList<Integer>();
+            expected.add(1);
+            assert(allWhiteboards.equals(expected));
         } catch (ClassNotFoundException e) {
             fail("unexpected object returned");
         }
     }
+    
+
     
 }
