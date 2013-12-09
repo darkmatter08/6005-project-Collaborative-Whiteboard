@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 public class ServerHandler {
 	private final String getIdMessage = "getWhiteboardIds";
@@ -26,10 +27,8 @@ public class ServerHandler {
 		try {
 			mySocket = new Socket("127.0.0.1", shared.Ports.CONNECTION_PORT);
 			out = new PrintWriter(mySocket.getOutputStream(), true);
-			System.out.println("2");
 			in = new ObjectInputStream(mySocket.getInputStream());
 			this.watchForNewWhiteboards();
-			System.out.println("3");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -56,13 +55,9 @@ public class ServerHandler {
 			@SuppressWarnings("unchecked")
 			public void run() {
 				while (true) {
-					List<Integer> boardIds;
-					System.out.println("got here!!!");
 					try {
-						//Don't do anything if there are no bytes to read.
-						System.out.println("before in.readObject");
-						boardIds = (List<Integer>) in.readObject();
-						System.out.println(boardIds);
+						List<Integer> boardIds = (List<Integer>) in
+								.readObject();
 						tableModel.removeAllRows();
 						for (int boardId : boardIds) {
 							tableModel.addRow(new Object[] { boardId });

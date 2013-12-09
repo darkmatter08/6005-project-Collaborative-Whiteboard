@@ -27,9 +27,8 @@ public class StartFrame extends JFrame {
 	
 	public void init() {
 		server = new ServerHandler(this, whiteBoardTableModel);
-		System.out.println("hey");
+		whiteBoardTableModel.addColumn("boardId");
 		server.init();
-		System.out.println("there");
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		initHeader();
 		initWhiteBoardTable();
@@ -39,7 +38,6 @@ public class StartFrame extends JFrame {
 		this.add(newWhiteBoard, BorderLayout.SOUTH);
 		this.pack();
 		this.setVisible(true);
-		System.out.println("sup");
 	}
 	
 	public JTable getWhiteboardTable() {
