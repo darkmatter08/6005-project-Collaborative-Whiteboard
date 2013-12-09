@@ -85,7 +85,6 @@ public class StartFrame extends JFrame {
 	}
 
 	public void addWhiteBoard() {
-		final StartFrame myFrame = this;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				server.createNewWhiteBoard();
