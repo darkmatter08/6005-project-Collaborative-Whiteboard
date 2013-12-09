@@ -50,6 +50,7 @@ public class StartFrameTest {
 					mockIds.add(1);
 					mockIds.add(2);
 					objOut.writeObject(mockIds);
+					objOut.flush();
 				} else if (msg.equals(createNewWhiteboardMessage)) {
 					ArrayList<Integer> mockIds = new ArrayList<Integer>();
 					mockIds.add(0);
@@ -57,6 +58,7 @@ public class StartFrameTest {
 					mockIds.add(2);
 					mockIds.add(3);
 					objOut.writeObject(mockIds);
+					objOut.flush();
 				}
 			}
 		} catch (IOException e) {
@@ -81,7 +83,7 @@ public class StartFrameTest {
 		myFrame.addWhiteBoard();
 		// TODO Make it so we get rid of Thread Sleeping
 		try {
-			Thread.sleep(200);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

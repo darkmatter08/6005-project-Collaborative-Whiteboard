@@ -95,6 +95,7 @@ public class MasterServer implements Runnable{
     private void pushAllWhiteboardIds() throws IOException {
         System.out.println("push all whiteboard ID - MasterServer.pushAllWhiteboardIds()");
         objOut.writeObject(getWhiteboardIds());
+        objOut.flush();
     }
     
     /** 

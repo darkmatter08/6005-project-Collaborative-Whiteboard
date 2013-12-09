@@ -39,7 +39,7 @@ public class StartFrame extends JFrame {
 		this.add(newWhiteBoard, BorderLayout.SOUTH);
 		this.pack();
 		this.setVisible(true);
-		server.watchForNewWhiteboards();
+		System.out.println("sup");
 	}
 	
 	public JTable getWhiteboardTable() {
@@ -56,17 +56,6 @@ public class StartFrame extends JFrame {
 	}
 
 	public void initWhiteBoardTable() {
-		/**
-		System.out.println("sup");
-		List<Integer> boardIds = server.getWhiteBoardIds();
-		System.out.println("yo");
-		whiteBoardTableModel.addColumn("boardId");
-		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		for (int boardId : boardIds) {
-			whiteBoardTableModel.addRow(new Object[] { boardId });
-		}
-		// TODO Add an action listener for the table.
-		 **/
 		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		whiteBoardTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {

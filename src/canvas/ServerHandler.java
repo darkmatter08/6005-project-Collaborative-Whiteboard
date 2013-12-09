@@ -28,6 +28,7 @@ public class ServerHandler {
 			out = new PrintWriter(mySocket.getOutputStream(), true);
 			System.out.println("2");
 			in = new ObjectInputStream(mySocket.getInputStream());
+			this.watchForNewWhiteboards();
 			System.out.println("3");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,7 +38,6 @@ public class ServerHandler {
 	@SuppressWarnings("unchecked")
 	public synchronized List<Integer> getWhiteBoardIds() {
 		out.println(getIdMessage);
-		out.flush();
 		List<Integer> boards = null;
 		try {
 			boards = (List<Integer>) in.readObject();
@@ -49,7 +49,6 @@ public class ServerHandler {
 
 	public synchronized void createNewWhiteBoard() {
 		out.println(createNewWhiteboardMessage);
-		out.flush();
 	}
 
 	public void watchForNewWhiteboards() {
@@ -61,8 +60,11 @@ public class ServerHandler {
 					System.out.println("got here!!!");
 					try {
 						//Don't do anything if there are no bytes to read.
+						System.out.println("before in.available() == 0");
 						while (in.available() == 0) {};
+						System.out.println("before in.readObject");
 						boardIds = (List<Integer>) in.readObject();
+						System.out.println("after in.readObject()");
 						tableModel.removeAllRows();
 						for (int boardId : boardIds) {
 							tableModel.addRow(new Object[] { boardId });
