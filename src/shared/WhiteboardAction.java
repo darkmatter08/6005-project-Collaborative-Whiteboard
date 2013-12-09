@@ -1,5 +1,6 @@
 package shared;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 
@@ -23,5 +24,13 @@ public class WhiteboardAction {
         this.y2 = y2;
         this.color = color;
         this.stroke = stroke;
+    }
+    
+    public String toString() {
+        return "";
+    }
+    
+    public static WhiteboardAction parse(String s) {
+        return new WhiteboardAction(0, 0, 0, 0, new Color(0, 0, 0), new BasicStroke());
     }
 }
