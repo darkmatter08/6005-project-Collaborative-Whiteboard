@@ -68,8 +68,8 @@ public class MasterServer implements Runnable{
     
     public List<Integer> getWhiteboardIds() {
         ArrayList<Integer> ids = new ArrayList<Integer>();
-        for (int i = 0; i < whiteboards.size(); ++i) {
-            ids.add(i);
+        for ( MasterWhiteboard w : whiteboards) {
+            ids.add(w.getId());
         }
         return ids;
     }
