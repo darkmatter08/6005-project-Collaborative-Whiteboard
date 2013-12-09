@@ -1,6 +1,4 @@
-package canvas.slave;
-
-import canvas.Whiteboard;
+package canvas;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,10 +9,10 @@ import java.util.ArrayList;
 
 import server.MasterWhiteboard;
 
-public class SlaveServer implements Runnable {
+public class SlaveClient implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads
     // Every whiteboard instance is unique.
-    public final MasterWhiteboard whiteboard;
+    public final Canvas canvas;
     public final Socket socket;
     
     // IO
@@ -27,10 +25,9 @@ public class SlaveServer implements Runnable {
      * @param whiteboard
      * @param socket
      */
-    public SlaveServer(MasterWhiteboard whiteboard, Socket socket) {
-        this.whiteboard = whiteboard;
+    public SlaveClient(Canvas canvas, Socket socket) {
+        this.canvas = canvas;
         this.socket = socket;
-        lastHistorySize = 0;
     }
     
     public void run() {

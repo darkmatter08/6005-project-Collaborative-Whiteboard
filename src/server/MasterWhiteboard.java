@@ -3,6 +3,7 @@ package server;
 import shared.*;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public class MasterWhiteboard {
      */
     public MasterWhiteboard(int id) {
         this.id = id;
+        history = new LinkedBlockingQueue<WhiteboardAction>();
     }
     
     public synchronized void applyAction(WhiteboardAction action) {

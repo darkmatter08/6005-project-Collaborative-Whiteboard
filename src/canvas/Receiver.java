@@ -1,4 +1,4 @@
-package canvas.slave;
+package canvas;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -7,21 +7,21 @@ import java.util.List;
 import shared.WhiteboardAction;
 
 class Receiver extends Thread {
-    private SlaveServer server;
+    private SlaveClient client;
     private ObjectInputStream objIn = null;
     
-    public Receiver(SlaveServer server) {
-        this.server = server;
+    public Receiver(SlaveClient client) {
+        this.client = client;
     }
     
     public void run() {
         try {
-            receiveClientActions();
+            receiveServerActions();
         } catch (IOException e) {
             e.printStackTrace(); // but don't terminate serve()
         } finally {
             try {
-                server.socket.close();
+                client.socket.close();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -29,18 +29,18 @@ class Receiver extends Thread {
         }
     }
     
-    private void receiveClientActions() throws IOException {
-        this.objIn = new ObjectInputStream(server.socket.getInputStream());
+    private void receiveServerActions() throws IOException {
+        this.objIn = new ObjectInputStream(client.socket.getInputStream());
         
         try {
             for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
                     actions = (List<WhiteboardAction>)objIn.readObject()) {
-                server.whiteboard.applyActions(actions);
+                client.canvas.applyActions(actions);
             }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
-            server.socket.close();
+            client.socket.close();
         }
     }
 }

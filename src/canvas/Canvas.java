@@ -64,13 +64,8 @@ public class Canvas extends JPanel {
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
-        currentActions = new ArrayList<WhiteboardAction>();
-        Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
-        System.out.println("Created the socket");
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.out = new PrintWriter(socket.getOutputStream(), true);
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
-        this.objIn = new ObjectInputStream(socket.getInputStream());
+        setCurrentActions(new ArrayList<WhiteboardAction>());
+        
         System.out.println("finished canvas");
     }
     
@@ -142,25 +137,9 @@ public class Canvas extends JPanel {
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
         
-        synchronized(currentActions) {
-            currentActions.add(action);
+        synchronized(getCurrentActions()) {
+            getCurrentActions().add(action);
             System.out.println("added action");
-        }
-        
-    }
-    
-    public void sendCurrentActionsAndUpdate() throws ClassNotFoundException, IOException {
-        synchronized (currentActions) {
-            ArrayList<WhiteboardAction> copyCurrentActions = (ArrayList)currentActions.clone();
-            currentActions.clear();
-        }
-        int boardId = 0;
-        out.println("drawLine" + " " + boardId); //TODO add in board id
-        Whiteboard newBoard = (Whiteboard) objIn.readObject();
-        //objOut.writeObject(object);
-        // Whiteboard newBoard = "send copyCurrentActions to server"()
-        for (WhiteboardAction action : currentActions) {
-            newBoard.applyAction(action);
         }
         
     }
@@ -208,5 +187,23 @@ public class Canvas extends JPanel {
         public void mouseReleased(MouseEvent e) { }
         public void mouseEntered(MouseEvent e) { }
         public void mouseExited(MouseEvent e) { }
+    }
+
+    public void applyActions(List<WhiteboardAction> actions) {
+        board.applyActions(actions);
+    }
+
+    /**
+     * @return the currentActions
+     */
+    public ArrayList<WhiteboardAction> getCurrentActions() {
+        return currentActions;
+    }
+
+    /**
+     * @param currentActions the currentActions to set
+     */
+    private void setCurrentActions(ArrayList<WhiteboardAction> currentActions) {
+        this.currentActions = currentActions;
     }
 }

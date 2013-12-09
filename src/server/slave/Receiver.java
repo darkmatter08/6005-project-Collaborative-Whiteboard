@@ -3,6 +3,7 @@ package server.slave;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import shared.WhiteboardAction;
 
@@ -36,6 +37,11 @@ class Receiver extends Thread {
             for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
                     actions = (List<WhiteboardAction>)objIn.readObject()) {
                 server.whiteboard.applyActions(actions);
+                BlockingQueue<WhiteboardAction> history = server.whiteboard.getHistory();
+                synchronized (history) {
+                    server.whiteboard.getHistory().addAll(actions);
+                }
+                System.out.println(history);
             }
         } catch (Exception e){
             e.printStackTrace();

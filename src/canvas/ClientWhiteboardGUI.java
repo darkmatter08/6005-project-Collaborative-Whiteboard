@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -31,23 +32,29 @@ public class ClientWhiteboardGUI extends JPanel {
 	public void init() {
 		 try {
              canvas = new Canvas(boardId);
-             new Thread() {
-                 @Override
-                 public void run() {
-                     while (true) {
-                         try {
-                            canvas.sendCurrentActionsAndUpdate();
-                            Thread.sleep(10);
-                        } catch (ClassNotFoundException | IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                     }
-                 }
-             }.start();
+             Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
+             new SlaveClient(canvas, socket).run();
+//             new Thread() {
+//                 @Override
+//                 public void run() {
+//                     while (true) {
+//                         try {
+//                            canvas.sendCurrentActionsAndUpdate();
+//                            Thread.sleep(10);
+//                        } catch (InterruptedException e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        } catch (ClassNotFoundException e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        } catch (IOException e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        }
+//                     }
+//                 }
+//             }.start();
+             
          } catch (Exception e) {
              // TODO Auto-generated catch block
              e.printStackTrace();
