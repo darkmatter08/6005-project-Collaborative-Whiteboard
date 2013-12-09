@@ -17,7 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StartFrameTest {
+public class WhiteboardPickerClientTest {
 	private ServerSocket serverSocket;
 	final String getIdMessage = "getWhiteboardIds";
 	final String createNewWhiteboardMessage = "createNewWhiteboard";

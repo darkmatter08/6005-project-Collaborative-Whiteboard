@@ -119,6 +119,10 @@ public class ClientWhiteboardGUI extends JPanel {
 			}
 		});
 	}
+	
+	public Canvas getCanvas() {
+		return canvas;
+	}
 
 	public static void main(String[] args) {
 		openEditor(0);

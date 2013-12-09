@@ -74,6 +74,10 @@ public class Canvas extends JPanel {
         System.out.println("finished canvas");
     }
     
+    public Whiteboard getWhiteboard() {
+    	return board;
+    }
+    
     public Canvas(int boardId) throws Exception {
     	this(800, 600);
     	this.boardId = boardId;
