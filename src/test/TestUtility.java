@@ -57,7 +57,7 @@ public class TestUtility {
       ObjectOutputStream objOut;
       ObjectInputStream objIn;
       BufferedReader in; 
-      PrintWriter out; 
+      PrintWriter out;
       
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 //      objIn = new ObjectInputStream(socket.getInputStream());
@@ -65,6 +65,8 @@ public class TestUtility {
       out = new PrintWriter(socket.getOutputStream(), true);
       
       out.write("createNewWhiteboard\n");
+      out.flush();
+      
       //while(objIn.available() == 0){}
       System.out.println("wrote createnewwhiteboard");
       String s = in.readLine();
