@@ -84,7 +84,7 @@ public class MasterServer implements Runnable{
         throw new RuntimeException("no whiteboard match");
     }
     
-    void announceNewWhiteboard(int newWhiteboardId) throws IOException {
+    void announceNewWhiteboard() throws IOException {
         pushAllWhiteboardIds();
     }
     
@@ -92,9 +92,7 @@ public class MasterServer implements Runnable{
         objOut.writeObject(getWhiteboardIds());
     }
     
-    /**
-     * TODO Will cause problems because it'll block forever. Need a new connection
-     *  handler 
+    /** 
      * @throws IOException
      */
     public void serve() throws IOException {
