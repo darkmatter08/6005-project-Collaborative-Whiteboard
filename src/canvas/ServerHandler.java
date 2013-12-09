@@ -14,12 +14,12 @@ public class ServerHandler {
 	private final String createNewWhiteboardMessage = "createNewWhiteboard";
 	private final String getWhiteboardById = "getWhiteboardById";
 	private WhiteBoardTableModel tableModel;
-	private StartFrame parentFrame;
+	private WhiteboardPickerClient parentFrame;
 	private Socket mySocket;
 	private PrintWriter out;
 	private ObjectInputStream in;
 
-	public ServerHandler(StartFrame parentFrame, WhiteBoardTableModel tableModel) {
+	public ServerHandler(WhiteboardPickerClient parentFrame, WhiteBoardTableModel tableModel) {
 		this.parentFrame = parentFrame;
 		this.tableModel = tableModel;
 	}

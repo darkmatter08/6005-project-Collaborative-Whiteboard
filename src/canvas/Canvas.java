@@ -149,7 +149,7 @@ public class Canvas extends JPanel {
         
     }
     
-    private void sendCurrentActionsAndUpdate() throws ClassNotFoundException, IOException {
+    public void sendCurrentActionsAndUpdate() throws ClassNotFoundException, IOException {
         synchronized (currentActions) {
             ArrayList<WhiteboardAction> copyCurrentActions = (ArrayList)currentActions.clone();
             currentActions.clear();

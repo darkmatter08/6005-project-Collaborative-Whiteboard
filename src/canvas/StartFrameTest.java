@@ -68,7 +68,7 @@ public class StartFrameTest {
 
 	@Test
 	public void testConstructor() {
-		StartFrame myFrame = new StartFrame();
+		WhiteboardPickerClient myFrame = new WhiteboardPickerClient();
 		myFrame.init();
 		// TODO Make it so we get rid of Thread Sleeping
 		try {
@@ -85,7 +85,7 @@ public class StartFrameTest {
 
 	@Test
 	public void testAddWhiteboard() {
-		StartFrame myFrame = new StartFrame();
+		WhiteboardPickerClient myFrame = new WhiteboardPickerClient();
 		myFrame.init();
 		myFrame.addWhiteBoard();
 		// TODO Make it so we get rid of Thread Sleeping

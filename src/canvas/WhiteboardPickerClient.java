@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 
 
 
-public class StartFrame extends JFrame {
+public class WhiteboardPickerClient extends JFrame {
 	private final WhiteBoardTableModel whiteBoardTableModel = new WhiteBoardTableModel();
 	private final JTable whiteBoardTable = new JTable(whiteBoardTableModel);
 	private final JButton newWhiteBoard = new JButton();
@@ -94,7 +94,7 @@ public class StartFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		StartFrame myFrame = new StartFrame();
+		WhiteboardPickerClient myFrame = new WhiteboardPickerClient();
 		myFrame.init();
 	}
 
