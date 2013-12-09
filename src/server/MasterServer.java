@@ -28,11 +28,10 @@ public class MasterServer implements Runnable{
     private final Socket socket;
     private final ServerSocket serverSocket;
     private final List<SlaveServer> open_client_boards;
-    private int whiteboardIdIncrementer = 0;
     private final MasterServerStarter god;
     
     // IO
-    private ObjectOutputStream objOut = null;
+    private ObjectOutputStream objOut = null; // Only writes List<Integer> of whiteboardIds
     private ObjectInputStream objIn = null;
     private BufferedReader in = null; 
     private PrintWriter out = null; 
@@ -42,25 +41,6 @@ public class MasterServer implements Runnable{
     private final String createNewWhiteboard = "createNewWhiteboard";
     private final String getWhiteboardById = "getWhiteboardById";
     
-//    /**
-//     * Start server
-//     * @param port int port to start server.
-//     * @throws IOException
-//     */
-//    public MasterServer(int port) throws IOException{
-//        whiteboards = new ArrayList<MasterWhiteboard>();
-//        //serverSocket = new ServerSocket(port);
-//        open_client_boards = new ArrayList<SlaveServer>();
-//        whiteboardToUsers = new HashMap<MasterWhiteboard, List<SlaveServer>>();
-//    }
-//    
-//    /**
-//     * Start server, default port 8888
-//     */
-//    public MasterServer() throws IOException{
-//        this(Ports.MASTER_PORT);
-//    }
-//    
     /**
      * clientSocket's request comes from the main method in the client package(pre gui) 
      * clientSocket <=> MasterClient (Whiteboard Selector Frame)
@@ -104,23 +84,12 @@ public class MasterServer implements Runnable{
         throw new RuntimeException("no whiteboard match");
     }
     
-    /**
-     * Create a new canvas with dimensions 800 (width) by 600 (height) and return its ID number.
-     * @param width The width of the canvas to create, in pixels
-     * @param height The height of the canvas to create, in pixels
-     * @return The ID number of the newly created canvas
-     */
-    public synchronized int createNewWhiteBoard() {
-        MasterWhiteboard w = new MasterWhiteboard(++whiteboardIdIncrementer);
-        whiteboards.add(w);
-        return w.getId();
+    void announceNewWhiteboard(int newWhiteboardId) throws IOException {
+        pushAllWhiteboardIds();
     }
     
-    void announceNewWhiteboard(int newWhiteboardId) {
-        for (SlaveServer client : open_client_boards) {
-            //client.announceNewWhiteboard(newWhiteboardId);
-            //TODO write out of a new whiteboard
-        }
+    private void pushAllWhiteboardIds() throws IOException {
+        objOut.writeObject(getWhiteboardIds());
     }
     
     /**
@@ -136,22 +105,21 @@ public class MasterServer implements Runnable{
         while (true){
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 String[] tokens = line.split(" ");
-                if (tokens[0].equals(getWhiteboardById)){
+                if (tokens[0].equals(getWhiteboardById)) {
                     Socket whiteboard_client_socket = serverSocket.accept();
                     SlaveServer ss = new SlaveServer(
                             getWhiteboardById(Integer.parseInt(tokens[1])), whiteboard_client_socket);
                     open_client_boards.add(ss);
                     ss.run();
                 }
+                if (tokens[0].equals(getWhiteboardIds)) {
+                    pushAllWhiteboardIds();
+                }
+                if (tokens[0].equals(createNewWhiteboard)) {
+                    god.createNewWhiteboard();
+                }
             }
         }
-//        while(true) {
-//            final Socket socket = serverSocket.accept();
-//            SlaveServer wch = 
-//                    new SlaveServer(whiteboards, socket, this); 
-//            open_client_boards.add(wch);
-//            new Thread(wch).run();
-//        }
     }
 
     public void run() {
@@ -162,6 +130,5 @@ public class MasterServer implements Runnable{
             e.printStackTrace();
             throw new RuntimeException();
         }
-        
     }
 }

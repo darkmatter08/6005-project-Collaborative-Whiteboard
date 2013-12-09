@@ -19,6 +19,7 @@ public class MasterServerStarter {
     private final List<MasterWhiteboard> whiteboards;
     private final ServerSocket serverSocket;
     private final List<MasterServer> clients;
+    private int whiteboardIdIncrementer = 0;
     //private final Map<MasterWhiteboard, List<SlaveServer>> whiteboardToUsers;
     
     public static void main(String[] args) throws IOException {
@@ -39,6 +40,19 @@ public class MasterServerStarter {
                     new MasterServer(whiteboards, socket, this);
             clients.add(wch);
             new Thread(wch).run();
+        }
+    }
+    
+    /**
+     * Create a new whiteboard and notify all the clients of the new whiteboard
+     * @throws IOException 
+     */
+    synchronized void createNewWhiteboard() throws IOException {
+        MasterWhiteboard w = new MasterWhiteboard(++whiteboardIdIncrementer);
+        whiteboards.add(w);
+        
+        for (MasterServer client: clients) {
+            client.announceNewWhiteboard(w.getId());
         }
     }
 }
