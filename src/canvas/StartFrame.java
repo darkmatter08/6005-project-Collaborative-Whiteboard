@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,10 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
-import server.Server;
-import server.WhiteBoardServer;
+
 
 public class StartFrame extends JFrame {
 	private final WhiteBoardTableModel whiteBoardTableModel = new WhiteBoardTableModel();
@@ -27,8 +24,9 @@ public class StartFrame extends JFrame {
 	private final ServerHandler server = new ServerHandler();
 	private final static int MIN_WIDTH = 400;
 	private final static int MIN_HEIGHT = 400;
-
+	
 	public void init() {
+		server.init();
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		initHeader();
 		initWhiteBoardTable();
@@ -38,6 +36,10 @@ public class StartFrame extends JFrame {
 		this.add(newWhiteBoard, BorderLayout.SOUTH);
 		this.pack();
 		this.setVisible(true);
+	}
+	
+	public JTable getWhiteboardTable() {
+		return whiteBoardTable;
 	}
 
 	public void initMainFrame() {
@@ -96,7 +98,7 @@ public class StartFrame extends JFrame {
 		Canvas.startCanvas();
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		StartFrame myFrame = new StartFrame();
 		myFrame.init();
 	}

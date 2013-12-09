@@ -19,10 +19,6 @@ public class ClientWhiteBoardGUI extends JPanel {
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private GroupLayout layout;
 	private JButton colorChooser = new JButton();
-	private JButton blackButton = new JButton();
-	private JButton redButton = new JButton();
-	private JButton blueButton = new JButton();
-	private JButton greenButton = new JButton();
 	private JButton eraseButton = new JButton();
 	private Canvas canvas;
 
@@ -59,17 +55,14 @@ public class ClientWhiteBoardGUI extends JPanel {
 		eraseButton.setText("Eraser");
 		colorChooser.setBackground(Color.BLACK);
 		eraseButton.setBackground(Color.WHITE);
-		final JPanel parentGui = this;
 		colorChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-					canvas.setPenColor(JColorChooser.showDialog(parentGui, "Choose Pen Color", canvas.getPenColor()));
-					canvas.setPenThickness(1);
+					newDialogColor();
 				}
 		});
 		eraseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canvas.setPenColor(Color.WHITE);
-				canvas.setPenThickness(15);
+				setEraserColor();
 			}
 		});
 		buttons.add(colorChooser);
@@ -77,6 +70,19 @@ public class ClientWhiteBoardGUI extends JPanel {
 		for (JButton button : buttons) {
 			button.setOpaque(true);
 		}
+	}
+	
+	public void newDialogColor() {
+		Color newColor = JColorChooser.showDialog(this, "Choose Pen Color", canvas.getPenColor());
+		canvas.setPenColor(newColor);
+		colorChooser.setBackground(newColor);
+		canvas.setPenThickness(1);	
+	}
+	
+	public void setEraserColor() {
+		canvas.setPenColor(Color.WHITE);
+		colorChooser.setBackground(Color.WHITE);
+		canvas.setPenThickness(15);
 	}
 	
 	

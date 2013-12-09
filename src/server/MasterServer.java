@@ -15,13 +15,9 @@ import shared.*;
  * @author jains
  *
  */
-<<<<<<< HEAD:src/server/Server.java
-public class Server {
-    private final List<Whiteboard> whiteboards;
-=======
+
 public class MasterServer {
     private final List<MasterWhiteboard> whiteboards;
->>>>>>> 009a52d11f42d4f667bf1eafcc3f9d10cc574b9b:src/server/MasterServer.java
     private final ServerSocket serverSocket;
     private final List<SlaveServer> clients;
     private final Map<MasterWhiteboard, List<SlaveServer>> whiteboardToUsers;

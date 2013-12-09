@@ -11,10 +11,10 @@ public class ServerHandler {
 	Socket mySocket;
 	PrintWriter out;
 	ObjectInputStream in;
-
-	public ServerHandler() {
+	
+	public synchronized void init() {
 		try {
-			mySocket = new Socket("localhost", 8888);
+			mySocket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
 			out = new PrintWriter(mySocket.getOutputStream());
 			in = new ObjectInputStream(mySocket.getInputStream());
 		}
@@ -24,8 +24,9 @@ public class ServerHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Integer> getWhiteBoardIds() {
+	public synchronized List<Integer> getWhiteBoardIds() {
 		out.println(getIdMessage);
+		System.out.println("sent a message");
 		List<Integer> boards = null;
 		try {
 			boards = (List<Integer>)in.readObject();
@@ -35,7 +36,7 @@ public class ServerHandler {
 		return boards;
 	}
 
-	public int createNewWhiteBoard() {
+	public synchronized int createNewWhiteBoard() {
 		out.println(createNewWhiteboardMessage);
 		Integer boardId = null;
 		try {
