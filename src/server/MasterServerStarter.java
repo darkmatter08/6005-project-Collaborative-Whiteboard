@@ -52,7 +52,7 @@ public class MasterServerStarter {
         whiteboards.add(w);
         
         for (MasterServer client: clients) {
-            client.announceNewWhiteboard(w.getId());
+            client.announceNewWhiteboard();
         }
     }
 }
