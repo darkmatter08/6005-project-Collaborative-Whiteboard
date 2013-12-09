@@ -56,6 +56,8 @@ public class MasterServer implements Runnable{
         serverSocket = new ServerSocket(Ports.MASTER_PORT);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.objIn = new ObjectInputStream(socket.getInputStream());
+        this.objOut = new ObjectOutputStream(socket.getOutputStream());
         try {
             serve();
         } catch (IOException e) {
@@ -100,6 +102,7 @@ public class MasterServer implements Runnable{
         // wait on the serverSocket for a new connection 
         // accept on the serverSocket, and spawn a new thread
         // and pass the accepted socket to SlaveServer
+        System.out.println("Started MasterServer");
         while (true){
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 String[] tokens = line.split(" ");
