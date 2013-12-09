@@ -35,7 +35,7 @@ public class MasterServer implements Runnable{
     private ObjectOutputStream objOut = null; // Only writes List<Integer> of whiteboardIds
     private ObjectInputStream objIn = null;
     private BufferedReader in = null; 
-    private PrintWriter out = null; 
+    private PrintWriter out = null;
     
     // Server Strings
     private final String getWhiteboardIds = "getWhiteboardIds";
@@ -62,8 +62,8 @@ public class MasterServer implements Runnable{
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
         
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
-        this.objIn = new ObjectInputStream(socket.getInputStream());
+        //this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        //this.objIn = new ObjectInputStream(socket.getInputStream());
         System.out.println("finished constructing masterserver");
     }
     
@@ -94,6 +94,7 @@ public class MasterServer implements Runnable{
     
     private void pushAllWhiteboardIds() throws IOException {
         System.out.println("push all whiteboard ID - MasterServer.pushAllWhiteboardIds()");
+        System.out.println(getWhiteboardIds().toString());
         objOut.writeObject(getWhiteboardIds());
         objOut.flush();
     }
@@ -130,10 +131,10 @@ public class MasterServer implements Runnable{
                 if (tokens[0].equals(createNewWhiteboard)) {
                     System.out.println("createNewWhiteboard - in MasterServer.serve()");
                     out.println("it sorta works");
-                    //god.createNewWhiteboard();
+                    god.createNewWhiteboard();
                 }
             }
-            System.out.println("Exited for loop in MasterServer.java");
+            //System.out.println("Exited for loop in MasterServer.java");
         }
         
     }

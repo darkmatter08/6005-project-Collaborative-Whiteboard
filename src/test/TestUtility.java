@@ -57,17 +57,18 @@ public class TestUtility {
       ObjectOutputStream objOut;
       ObjectInputStream objIn;
       BufferedReader in; 
-      PrintWriter out; 
+      PrintWriter out;
       
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//      objIn = new ObjectInputStream(socket.getInputStream());
-//      objOut = new ObjectOutputStream(socket.getOutputStream());
+      objIn = new ObjectInputStream(socket.getInputStream());
+      objOut = new ObjectOutputStream(socket.getOutputStream());
       out = new PrintWriter(socket.getOutputStream(), true);
       
-      out.write("createNewWhiteboard\n");
-      //while(objIn.available() == 0){}
+      out.println("createNewWhiteboard");
       System.out.println("wrote createnewwhiteboard");
-      String s = in.readLine();
-      System.out.println(s);
+      System.out.println(in.readLine());
+      //while(objIn.available() == 0){}
+      List<Integer> list = (List<Integer>)objIn.readObject();
+      System.out.println(list);
   }
 }

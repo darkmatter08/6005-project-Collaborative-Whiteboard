@@ -49,10 +49,12 @@ public class MasterServerStarter implements Runnable {
      * @throws IOException 
      */
     synchronized void createNewWhiteboard() throws IOException {
+        System.out.println("in MasterServerStarter.createNewWhiteboard()");
         MasterWhiteboard w = new MasterWhiteboard(++whiteboardIdIncrementer);
         whiteboards.add(w);
         
         for (MasterServer client: clients) {
+            System.out.println("before client.announceNewWhiteboard()");
             client.announceNewWhiteboard();
         }
     }
