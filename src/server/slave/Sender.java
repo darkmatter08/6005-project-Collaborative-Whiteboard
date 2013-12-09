@@ -39,7 +39,7 @@ class Sender extends Thread {
             while (true) {
                 int newHistorySize;
                 LinkedList<WhiteboardAction> actionList;
-                synchronized (server.whiteboard) {
+                synchronized (server.whiteboard.getHistory()) {
                     newHistorySize = server.whiteboard.getHistory().size();
                     actionList = new LinkedList<WhiteboardAction>(server.whiteboard.getHistory());
                 }
