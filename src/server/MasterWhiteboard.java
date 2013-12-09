@@ -39,4 +39,8 @@ public class MasterWhiteboard {
     public int getId() {
         return id;
     }
+    
+    public boolean hasSameId(int otherID) {
+        return id == otherID;
+    }
 }
