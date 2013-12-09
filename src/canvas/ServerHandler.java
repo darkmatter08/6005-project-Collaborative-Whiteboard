@@ -60,11 +60,9 @@ public class ServerHandler {
 					System.out.println("got here!!!");
 					try {
 						//Don't do anything if there are no bytes to read.
-						System.out.println("before in.available() == 0");
-						while (in.available() == 0) {};
 						System.out.println("before in.readObject");
 						boardIds = (List<Integer>) in.readObject();
-						System.out.println("after in.readObject()");
+						System.out.println(boardIds);
 						tableModel.removeAllRows();
 						for (int boardId : boardIds) {
 							tableModel.addRow(new Object[] { boardId });

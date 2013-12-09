@@ -59,11 +59,11 @@ public class MasterServer implements Runnable{
         
         // order of the following two statements questionable
         // which order to construct stream readers for Socket input vs. output?
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.out = new PrintWriter(socket.getOutputStream(), true);
+        //this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        //this.out = new PrintWriter(socket.getOutputStream(), true);
         
-        //this.objOut = new ObjectOutputStream(socket.getOutputStream());
-        //this.objIn = new ObjectInputStream(socket.getInputStream());
+        this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         System.out.println("finished constructing masterserver");
     }
     
@@ -130,7 +130,6 @@ public class MasterServer implements Runnable{
                 }
                 if (tokens[0].equals(createNewWhiteboard)) {
                     System.out.println("createNewWhiteboard - in MasterServer.serve()");
-                    out.println("it sorta works");
                     god.createNewWhiteboard();
                 }
             }
