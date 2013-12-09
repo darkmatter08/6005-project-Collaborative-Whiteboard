@@ -27,7 +27,9 @@ public class StartFrame extends JFrame {
 	
 	public void init() {
 		server = new ServerHandler(this, whiteBoardTableModel);
+		System.out.println("hey");
 		server.init();
+		System.out.println("there");
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		initHeader();
 		initWhiteBoardTable();
@@ -54,7 +56,9 @@ public class StartFrame extends JFrame {
 	}
 
 	public void initWhiteBoardTable() {
+		System.out.println("sup");
 		List<Integer> boardIds = server.getWhiteBoardIds();
+		System.out.println("yo");
 		whiteBoardTableModel.addColumn("boardId");
 		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		for (int boardId : boardIds) {
