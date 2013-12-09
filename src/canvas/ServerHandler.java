@@ -58,7 +58,10 @@ public class ServerHandler {
 			public void run() {
 				while (true) {
 					List<Integer> boardIds;
+					System.out.println("got here!!!");
 					try {
+						//Don't do anything if there are no bytes to read.
+						while (in.available() == 0) {};
 						boardIds = (List<Integer>) in.readObject();
 						tableModel.removeAllRows();
 						for (int boardId : boardIds) {
