@@ -56,6 +56,7 @@ public class StartFrame extends JFrame {
 	}
 
 	public void initWhiteBoardTable() {
+		/**
 		System.out.println("sup");
 		List<Integer> boardIds = server.getWhiteBoardIds();
 		System.out.println("yo");
@@ -65,7 +66,8 @@ public class StartFrame extends JFrame {
 			whiteBoardTableModel.addRow(new Object[] { boardId });
 		}
 		// TODO Add an action listener for the table.
-
+		 **/
+		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		whiteBoardTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
