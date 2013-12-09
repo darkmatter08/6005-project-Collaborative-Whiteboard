@@ -32,8 +32,8 @@ public class MasterServer implements Runnable{
     private final MasterServerStarter god;
     
     // IO
-    private ObjectOutputStream objOut = null; // Only writes List<Integer> of whiteboardIds
-    private ObjectInputStream objIn = null;
+//    private ObjectOutputStream objOut = null; // Only writes List<Integer> of whiteboardIds
+//    private ObjectInputStream objIn = null;
     private BufferedReader in = null; 
     private PrintWriter out = null;
     
@@ -59,9 +59,9 @@ public class MasterServer implements Runnable{
         // order of the following two statements questionable
         // which order to construct stream readers for Socket input vs. output?
         //this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        //this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.out = new PrintWriter(socket.getOutputStream(), true);
         
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        //this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
     
@@ -91,8 +91,9 @@ public class MasterServer implements Runnable{
     }
     
     private void pushAllWhiteboardIds() throws IOException {
-        objOut.writeObject(getWhiteboardIds());
-        objOut.flush();
+//        objOut.writeObject(getWhiteboardIds());
+//        objOut.flush();
+        out.println(ProtocolUtility.serialize(getWhiteboardIds()));
     }
     
     /** 
@@ -109,7 +110,6 @@ public class MasterServer implements Runnable{
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 String[] tokens = line.split(" ");
                 if (tokens[0].equals(getWhiteboardById)) {
-                    
                     Socket whiteboard_client_socket = serverSocket.accept();
                     SlaveServer ss = new SlaveServer(
                             getWhiteboardById(Integer.parseInt(tokens[1])), whiteboard_client_socket);

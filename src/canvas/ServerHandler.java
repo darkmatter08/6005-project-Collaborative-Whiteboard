@@ -1,6 +1,8 @@
 package canvas;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -9,6 +11,8 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 
+import shared.ProtocolUtility;
+
 public class ServerHandler {
 	private final String getIdMessage = "getWhiteboardIds";
 	private final String createNewWhiteboardMessage = "createNewWhiteboard";
@@ -16,9 +20,11 @@ public class ServerHandler {
 	private WhiteBoardTableModel tableModel;
 	private WhiteboardPickerClient parentFrame;
 	private Socket mySocket;
-	private PrintWriter out;
-	private ObjectInputStream in;
-
+//	private PrintWriter out;
+//	private ObjectInputStream in;
+	private BufferedReader in = null; 
+	private PrintWriter out = null;
+	
 	public ServerHandler(WhiteboardPickerClient parentFrame, WhiteBoardTableModel tableModel) {
 		this.parentFrame = parentFrame;
 		this.tableModel = tableModel;
@@ -27,8 +33,8 @@ public class ServerHandler {
 	public synchronized void init() {
 		try {
 			mySocket = new Socket("127.0.0.1", shared.Ports.CONNECTION_PORT);
-			out = new PrintWriter(mySocket.getOutputStream(), true);
-			in = new ObjectInputStream(mySocket.getInputStream());
+			this.out = new PrintWriter(mySocket.getOutputStream(), true);
+			this.in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 			watchForNewWhiteboards();
 			askForWhiteboardIds();
 		} catch (Exception e) {
@@ -51,10 +57,9 @@ public class ServerHandler {
 			public void run() {
 				while (true) {
 					try {
-						List<Integer> boardIds = (List<Integer>) in
-								.readObject();
+					    List<String> boardIds = ProtocolUtility.deserialize(in.readLine());
 						tableModel.removeAllRows();
-						for (int boardId : boardIds) {
+						for (String boardId : boardIds) {
 							tableModel.addRow(new Object[] { boardId });
 						}
 						parentFrame.pack();
