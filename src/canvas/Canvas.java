@@ -36,10 +36,10 @@ public class Canvas extends JPanel {
     private Color currentColor = Color.BLACK;
     private final String DRAW_MODE = "Draw";
     private final String ERASE_MODE = "Erase";
-    private final BasicStroke DRAW_MODE_STROKE = new BasicStroke(1);
-    private final BasicStroke ERASE_MODE_STROKE = new BasicStroke(15);
+    private final float drawStrokeWidth = 1;
+    private final float eraseStrokeWidth = 15;
     private int boardId;
-    private Stroke currentStroke = DRAW_MODE_STROKE;
+    private float currentStrokeWidth = drawStrokeWidth;
     private String mode = DRAW_MODE;
 
     
@@ -88,7 +88,7 @@ public class Canvas extends JPanel {
     }
     
     public void setPenThickness(int thickness) {
-    	currentStroke = new BasicStroke(thickness);
+    	currentStrokeWidth = thickness;
     }
     
     /**
@@ -131,7 +131,7 @@ public class Canvas extends JPanel {
      * pixels relative to the upper-left corner of the drawing buffer.
      */
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
-        WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor, currentStroke);
+        WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor.getRGB(), currentStrokeWidth);
         board.applyAction(action);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.

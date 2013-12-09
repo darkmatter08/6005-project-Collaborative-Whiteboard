@@ -1,5 +1,6 @@
 package canvas;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -30,7 +31,7 @@ public class Whiteboard implements Serializable {
     public void applyAction(WhiteboardAction action) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         g.setColor(action.color);
-        g.setStroke(action.stroke);
+        g.setStroke(new BasicStroke(action.strokeWidth));
         g.drawLine(action.x1, action.y1, action.x2, action.y2);
     }
     
