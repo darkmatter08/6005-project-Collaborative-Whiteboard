@@ -27,12 +27,10 @@ public class StartFrameTest {
 		new Thread() {
 			public void run() {
 				try {
-				serverSocket = new ServerSocket(shared.Ports.MASTER_PORT);
-				final Socket mySocket = serverSocket.accept();
-				System.out.println("accepted a connection");
-				handleMessages(mySocket);
-				}
-				catch (Exception e) {
+					serverSocket = new ServerSocket(shared.Ports.CONNECTION_PORT);
+					final Socket mySocket = serverSocket.accept();
+					handleMessages(mySocket);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -45,18 +43,20 @@ public class StartFrameTest {
 					socket.getInputStream()));
 			ObjectOutputStream objOut = new ObjectOutputStream(
 					socket.getOutputStream());
-			System.out.println("entered for loop");
-			for(String msg = in.readLine(); msg != null; msg = in
-					.readLine()) {
-				System.out.println("Got a message!");
-				if (msg == getIdMessage) {
+			for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
+				if (msg.equals(getIdMessage)) {
 					ArrayList<Integer> mockIds = new ArrayList<Integer>();
 					mockIds.add(0);
 					mockIds.add(1);
 					mockIds.add(2);
 					objOut.writeObject(mockIds);
-				} else if (msg == createNewWhiteboardMessage) {
-					objOut.writeObject(4);
+				} else if (msg.equals(createNewWhiteboardMessage)) {
+					ArrayList<Integer> mockIds = new ArrayList<Integer>();
+					mockIds.add(0);
+					mockIds.add(1);
+					mockIds.add(2);
+					mockIds.add(3);
+					objOut.writeObject(mockIds);
 				}
 			}
 		} catch (IOException e) {
@@ -68,13 +68,27 @@ public class StartFrameTest {
 	public void testConstructor() {
 		StartFrame myFrame = new StartFrame();
 		myFrame.init();
-		System.out.println("got here");
 		JTable table = myFrame.getWhiteboardTable();
 		for (int i = 0; i < 3; i++) {
 			assertEquals(table.getValueAt(i, 0), i);
 		}
 	}
-	
+
+	@Test
+	public void testAddWhiteboard() {
+		StartFrame myFrame = new StartFrame();
+		myFrame.init();
+		myFrame.addWhiteBoard();
+		// TODO Make it so we get rid of Thread Sleeping
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(myFrame.getWhiteboardTable().getValueAt(3, 0), 3);
+	}
+
 	@After
 	public void tearDown() {
 		try {

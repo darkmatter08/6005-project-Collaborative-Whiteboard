@@ -55,10 +55,9 @@ public class MasterServer implements Runnable{
         god = shawn;
         open_client_boards = new ArrayList<SlaveServer>();
         serverSocket = new ServerSocket(Ports.MASTER_PORT);
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
-        this.objIn = new ObjectInputStream(socket.getInputStream());
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        this.objIn = new ObjectInputStream(socket.getInputStream());
         try {
             serve();
         } catch (IOException e) {

@@ -21,12 +21,15 @@ public class StartFrame extends JFrame {
 	private final JTable whiteBoardTable = new JTable(whiteBoardTableModel);
 	private final JButton newWhiteBoard = new JButton();
 	private final JLabel headerText = new JLabel();
-	private final ServerHandler server = new ServerHandler();
+	private ServerHandler server;
 	private final static int MIN_WIDTH = 400;
 	private final static int MIN_HEIGHT = 400;
 	
 	public void init() {
+		server = new ServerHandler(this, whiteBoardTableModel);
+		System.out.println("hey");
 		server.init();
+		System.out.println("there");
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		initHeader();
 		initWhiteBoardTable();
@@ -36,6 +39,7 @@ public class StartFrame extends JFrame {
 		this.add(newWhiteBoard, BorderLayout.SOUTH);
 		this.pack();
 		this.setVisible(true);
+		server.watchForNewWhiteboards();
 	}
 	
 	public JTable getWhiteboardTable() {
@@ -52,14 +56,18 @@ public class StartFrame extends JFrame {
 	}
 
 	public void initWhiteBoardTable() {
+		/**
+		System.out.println("sup");
 		List<Integer> boardIds = server.getWhiteBoardIds();
+		System.out.println("yo");
 		whiteBoardTableModel.addColumn("boardId");
 		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		for (int boardId : boardIds) {
 			whiteBoardTableModel.addRow(new Object[] { boardId });
 		}
 		// TODO Add an action listener for the table.
-
+		 **/
+		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		whiteBoardTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
@@ -83,12 +91,9 @@ public class StartFrame extends JFrame {
 	}
 
 	public void addWhiteBoard() {
-		final StartFrame myFrame = this;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				int id = server.createNewWhiteBoard();
-				whiteBoardTableModel.addRow(new Object[] { id });
-				myFrame.pack();
+				server.createNewWhiteBoard();
 			}
 		});
 	}
@@ -96,6 +101,10 @@ public class StartFrame extends JFrame {
 	public void openEditor(int boardId) {
 		System.out.println("TODO: Open editor " + boardId);
 		Canvas.startCanvas();
+	}
+	
+	public ServerHandler getServerHandler() {
+		return server;
 	}
 
 	public static void main(String[] args) {
