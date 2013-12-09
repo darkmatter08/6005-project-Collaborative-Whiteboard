@@ -17,13 +17,13 @@ import shared.WhiteboardAction;
 public class SlaveServer implements Runnable {
     // Must synchronize on whiteboard, as it is shared across multiple threads
     // Every whiteboard instance is unique.
-    private final MasterWhiteboard whiteboard;
-    private final Socket socket;
+    public final MasterWhiteboard whiteboard;
+    public final Socket socket;
     
     // IO
     private ObjectOutputStream objOut = null;
-    private ObjectInputStream objIn = null;
-    private int lastHistorySize;
+    
+    public int lastHistorySize;
     
     /**
      * Constructor for a new ConnectionHandler. 
@@ -37,80 +37,97 @@ public class SlaveServer implements Runnable {
     }
     
     public void run() {
-        // handle the client
-        
-        // receive client draw actions
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    receiveClientActions();
-                } catch (IOException e) {
-                    e.printStackTrace(); // but don't terminate serve()
-                } finally {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
-        
-        // send client draw actions
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    sendActions();
-                } catch (IOException e) {
-                    e.printStackTrace(); // but don't terminate serve()
-                } finally {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
+        new Sender(this).start();
+        new Receiver(this).start();
     }
 
-    private void receiveClientActions() throws IOException {
-        this.objIn = new ObjectInputStream(socket.getInputStream());
-        
+    
+    
+    
+}
+
+class Sender extends Thread {
+    private SlaveServer server;
+    private ObjectInputStream objIn = null;
+    private ObjectOutputStream objOut = null;
+    
+    public Sender(SlaveServer server) {
+        this.server = server;
+    }
+    
+    public void run() {
         try {
-            for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
-                    actions = (List<WhiteboardAction>)objIn.readObject()) {
-                whiteboard.applyActions(actions);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
+            sendActions();
+        } catch (IOException e) {
+            e.printStackTrace(); // but don't terminate serve()
         } finally {
-            socket.close();
+            try {
+                server.socket.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
     
     private void sendActions() throws IOException {
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        this.objIn = new ObjectInputStream(server.socket.getInputStream());
+        this.objOut = new ObjectOutputStream(server.socket.getOutputStream());
         
         try {
             for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
                     actions = (List<WhiteboardAction>)objIn.readObject()) {
                 int newHistorySize;
-                synchronized (whiteboard) {
-                    newHistorySize = whiteboard.getHistory().size();
+                synchronized (server.whiteboard) {
+                    newHistorySize = server.whiteboard.getHistory().size();
                 }
-                List<WhiteboardAction> newActions = ((List<WhiteboardAction>)whiteboard.getHistory()).subList(lastHistorySize, newHistorySize - 1);
+                List<WhiteboardAction> newActions = ((List<WhiteboardAction>)server.whiteboard.getHistory()).subList(server.lastHistorySize, newHistorySize - 1);
                 objOut.writeObject(newActions);
-                this.lastHistorySize = newHistorySize;
+                server.lastHistorySize = newHistorySize;
             }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
-            socket.close();
+            server.socket.close();
+        }
+    }
+}
+
+class Receiver extends Thread {
+    private SlaveServer server;
+    private ObjectInputStream objIn = null;
+    
+    public Receiver(SlaveServer server) {
+        this.server = server;
+    }
+    
+    public void run() {
+        try {
+            receiveClientActions();
+        } catch (IOException e) {
+            e.printStackTrace(); // but don't terminate serve()
+        } finally {
+            try {
+                server.socket.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private void receiveClientActions() throws IOException {
+        this.objIn = new ObjectInputStream(server.socket.getInputStream());
+        
+        try {
+            for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
+                    actions = (List<WhiteboardAction>)objIn.readObject()) {
+                server.whiteboard.applyActions(actions);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            server.socket.close();
         }
     }
 }

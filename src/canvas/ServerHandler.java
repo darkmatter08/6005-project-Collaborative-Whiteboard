@@ -14,7 +14,7 @@ public class ServerHandler {
 	
 	public synchronized void init() {
 		try {
-			mySocket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
+			mySocket = new Socket("127.0.0.1", shared.Ports.CONNECTION_PORT);
 			out = new PrintWriter(mySocket.getOutputStream());
 			in = new ObjectInputStream(mySocket.getInputStream());
 		}
