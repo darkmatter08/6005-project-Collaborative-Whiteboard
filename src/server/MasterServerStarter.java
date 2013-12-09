@@ -14,7 +14,7 @@ import java.util.Map;
  * @author jains
  *
  */
-public class MasterServerStarter {
+public class MasterServerStarter implements Runnable {
     
     private final List<MasterWhiteboard> whiteboards;
     private final ServerSocket serverSocket;
@@ -40,7 +40,7 @@ public class MasterServerStarter {
             MasterServer wch = 
                     new MasterServer(whiteboards, socket, this);
             clients.add(wch);
-            new Thread(wch).run();
+            new Thread(wch).start();
         }
     }
     
@@ -54,6 +54,15 @@ public class MasterServerStarter {
         
         for (MasterServer client: clients) {
             client.announceNewWhiteboard();
+        }
+    }
+    
+    public void run() {
+        try {
+            serve();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 }

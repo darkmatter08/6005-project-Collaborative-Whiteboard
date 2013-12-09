@@ -50,6 +50,7 @@ public class MasterServer implements Runnable{
      * @throws IOException 
      */
     public MasterServer(List<MasterWhiteboard> masterWhiteboards, Socket clientSocket, MasterServerStarter shawn) throws IOException {
+        System.out.println("constructing masterserver");
         whiteboards = masterWhiteboards;
         socket = clientSocket; // implicitly on Ports.CONNECTION_PORT
         god = shawn;
@@ -59,11 +60,7 @@ public class MasterServer implements Runnable{
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
-        try {
-            serve();
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
+        System.out.println("finished constructing masterserver");
     }
     
     public List<Integer> getWhiteboardIds() {
@@ -125,6 +122,7 @@ public class MasterServer implements Runnable{
     }
 
     public void run() {
+        System.out.println("called run");
         try {
             serve();
         } catch (IOException e) {
