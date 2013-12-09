@@ -144,6 +144,7 @@ public class Canvas extends JPanel {
         
         synchronized(currentActions) {
             currentActions.add(action);
+            System.out.println("added action");
         }
         
     }
@@ -207,41 +208,5 @@ public class Canvas extends JPanel {
         public void mouseReleased(MouseEvent e) { }
         public void mouseEntered(MouseEvent e) { }
         public void mouseExited(MouseEvent e) { }
-    }
-    
- 
-    /*
-     * Main program. Make a window containing a Canvas.
-     */
-    public static void main(String[] args) {
-        // set up the UI (on the event-handling thread)
-    	startCanvas();
-    }
-    
-    /*
-     * 
-     */
-    public static void startCanvas() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JFrame window = new JFrame("Freehand Canvas");
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                window.setLayout(new BorderLayout());
-                Canvas canvas = null;
-                try {
-                    canvas = new Canvas(800, 600);
-                } catch (UnknownHostException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                window.pack();
-                window.add(canvas, BorderLayout.CENTER);
-                window.pack();
-                window.setVisible(true);
-            }
-        });
     }
 }
