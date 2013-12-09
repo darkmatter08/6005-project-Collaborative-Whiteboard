@@ -56,6 +56,7 @@ public class MasterServer implements Runnable{
         open_client_boards = new ArrayList<SlaveServer>();
         serverSocket = new ServerSocket(Ports.MASTER_PORT);
         this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
         try {
@@ -67,8 +68,8 @@ public class MasterServer implements Runnable{
     
     public List<Integer> getWhiteboardIds() {
         ArrayList<Integer> ids = new ArrayList<Integer>();
-        for (int i = 0; i < whiteboards.size(); ++i) {
-            ids.add(i);
+        for ( MasterWhiteboard w : whiteboards) {
+            ids.add(w.getId());
         }
         return ids;
     }

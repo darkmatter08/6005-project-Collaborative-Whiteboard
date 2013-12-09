@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -21,13 +22,14 @@ public class MasterServerStarterTest {
     private BufferedReader in; 
     private PrintWriter out; 
     
+    @Before
     public void setup() throws IOException {
         TestUtility.startServer(); // starts MasterServerStarter
         socket = TestUtility.connect();
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
-        this.objIn = new ObjectInputStream(socket.getInputStream());
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        this.objIn = new ObjectInputStream(socket.getInputStream());
     }
     
     @Test
