@@ -11,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+import server.slave.SlaveServer;
 import shared.*;
 
 /**
@@ -55,8 +56,8 @@ public class MasterServer implements Runnable{
         open_client_boards = new ArrayList<SlaveServer>();
         serverSocket = new ServerSocket(Ports.MASTER_PORT);
         this.out = new PrintWriter(socket.getOutputStream(), true);
-        this.out.flush();
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        this.objIn = new ObjectInputStream(socket.getInputStream());
         try {
             serve();
         } catch (IOException e) {
@@ -101,6 +102,7 @@ public class MasterServer implements Runnable{
         // wait on the serverSocket for a new connection 
         // accept on the serverSocket, and spawn a new thread
         // and pass the accepted socket to SlaveServer
+        System.out.println("Started MasterServer");
         while (true){
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 String[] tokens = line.split(" ");

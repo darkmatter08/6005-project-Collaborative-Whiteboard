@@ -34,6 +34,7 @@ public class MasterServerStarter {
     }
     
     public void serve() throws IOException {
+        System.out.println("started server");
         while(true) {
             final Socket socket = serverSocket.accept();
             MasterServer wch = 
