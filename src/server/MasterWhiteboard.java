@@ -3,6 +3,7 @@ package server;
 import shared.*;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.List;
 
 /**
  * Represents the state of a whiteboard with a unique id, as a complete 
@@ -15,7 +16,7 @@ public class MasterWhiteboard {
     final private int id;
     
     /**
-     * Initializes new blank whiteboard
+     * Initializes new blank whiteboard, with an id
      */
     public MasterWhiteboard(int id) {
         this.id = id;
@@ -23,6 +24,12 @@ public class MasterWhiteboard {
     
     public synchronized void applyAction(WhiteboardAction action) {
         history.add(action);
+    }
+    
+    public synchronized void applyActions(List<WhiteboardAction> actions) {
+        for (WhiteboardAction action : actions) {
+            applyAction(action);
+        }
     }
     
     public BlockingQueue<WhiteboardAction> getHistory() {

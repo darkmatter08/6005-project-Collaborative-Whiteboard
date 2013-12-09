@@ -21,10 +21,9 @@ public class SlaveServer implements Runnable {
     private final Socket socket;
     
     // IO
-    private BufferedReader in = null;
-    private PrintWriter out = null;
     private ObjectOutputStream objOut = null;
     private ObjectInputStream objIn = null;
+    private int lastHistorySize;
     
     /**
      * Constructor for a new ConnectionHandler. 
@@ -34,72 +33,84 @@ public class SlaveServer implements Runnable {
     public SlaveServer(MasterWhiteboard whiteboard, Socket socket) {
         this.whiteboard = whiteboard;
         this.socket = socket;
+        lastHistorySize = 0;
     }
     
     public void run() {
         // handle the client
-        try {
-            handleConnection();
-        } catch (IOException e) {
-            e.printStackTrace(); // but don't terminate serve()
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        
+        // receive client draw actions
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    receiveClientActions();
+                } catch (IOException e) {
+                    e.printStackTrace(); // but don't terminate serve()
+                } finally {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
             }
-        }
+        }.start();
+        
+        // send client draw actions
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sendActions();
+                } catch (IOException e) {
+                    e.printStackTrace(); // but don't terminate serve()
+                } finally {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
-    private void handleConnection() throws IOException {
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
+    private void receiveClientActions() throws IOException {
         this.objIn = new ObjectInputStream(socket.getInputStream());
         
         try {
-            for (String line = in.readLine(); line != null; line = in.readLine()) {
-                handleRequest(line);
+            for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
+                    actions = (List<WhiteboardAction>)objIn.readObject()) {
+                whiteboard.applyActions(actions);
             }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
-            out.close();
-            in.close();
-            objOut.close();
             socket.close();
         }
     }
     
-    private void handleRequest(String input) throws IOException, ClassNotFoundException{
-        final String getWhiteboardIds = "getWhiteboardIds";
-        final String getWhiteboardById = "getWhiteboardById";
-        final String drawLine = "drawLine";
-        final String createNewWhiteboard = "createNewWhiteboard";
+    private void sendActions() throws IOException {
+        this.objOut = new ObjectOutputStream(socket.getOutputStream());
         
-        String[] tokens = input.split(" ");
-        
-        if (tokens[0].equals(getWhiteboardIds)){
-            objOut.writeObject(whiteboards);
-        } else if (tokens[0].equals(getWhiteboardById)) {
-            objOut.writeObject(getWhiteboardById(Integer.parseInt(tokens[1])));
-        } else if (tokens[0].equals(createNewWhiteboard)) {
-            Whiteboard newWhiteboard = (Whiteboard) objIn.readObject();
-            createNewWhiteboard(newWhiteboard);
-        } else if (tokens[0].equals(drawLine)) {
-            int boardId = Integer.parseInt(tokens[1]);
-            ArrayList<WhiteboardAction> actions = (ArrayList<WhiteboardAction>) objIn.readObject();
-            Whiteboard board = getWhiteboardById(boardId);
-            for (WhiteboardAction action : actions) {
-                board.applyAction(action);
+        try {
+            for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
+                    actions = (List<WhiteboardAction>)objIn.readObject()) {
+                int newHistorySize;
+                synchronized (whiteboard) {
+                    newHistorySize = whiteboard.getHistory().size();
+                }
+                List<WhiteboardAction> newActions = ((List<WhiteboardAction>)whiteboard.getHistory()).subList(lastHistorySize, newHistorySize - 1);
+                objOut.writeObject(newActions);
+                this.lastHistorySize = newHistorySize;
             }
-            objOut.writeObject(board);
-        } else
-            throw new IOException("Invalid input from user");
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            socket.close();
+        }
     }
-
-    void announceNewWhiteboard(int newWhiteboardId) {
-        final String newWhiteboardAvailiable = "newWhiteboardAvailiable";
-        out.write(newWhiteboardAvailiable + " " + Integer.toString(newWhiteboardId));
-    }
-    
 }
