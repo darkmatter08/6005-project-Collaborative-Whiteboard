@@ -18,7 +18,7 @@ public class SlaveServer implements Runnable {
     public final Socket socket;
     
     // IO
-    private ObjectOutputStream objOut = null;
+    //private ObjectOutputStream objOut = null;
     
     public int lastHistorySize;
     

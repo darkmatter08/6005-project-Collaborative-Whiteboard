@@ -32,8 +32,8 @@ class Sender extends Thread {
     }
     
     private void sendActions() throws IOException {
-        this.objIn = new ObjectInputStream(server.socket.getInputStream());
         this.objOut = new ObjectOutputStream(server.socket.getOutputStream());
+        this.objIn = new ObjectInputStream(server.socket.getInputStream());
         
         try {
             for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;

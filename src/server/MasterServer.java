@@ -56,6 +56,7 @@ public class MasterServer implements Runnable{
         open_client_boards = new ArrayList<SlaveServer>();
         serverSocket = new ServerSocket(Ports.MASTER_PORT);
         this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
         try {
