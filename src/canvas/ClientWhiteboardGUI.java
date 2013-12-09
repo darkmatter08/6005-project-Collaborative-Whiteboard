@@ -15,24 +15,26 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class ClientWhiteBoardGUI extends JPanel {
+public class ClientWhiteboardGUI extends JPanel {
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private GroupLayout layout;
 	private JButton colorChooser = new JButton();
 	private JButton eraseButton = new JButton();
 	private Canvas canvas;
-
+	private int boardId;
+	
+	public ClientWhiteboardGUI(int boardId) {
+		super();
+		this.boardId = boardId;
+	}
 	
 	public void init() {
 		 try {
-             canvas = new Canvas(800, 600);
-         } catch (UnknownHostException e) {
+             canvas = new Canvas(boardId);
+         } catch (Exception e) {
              // TODO Auto-generated catch block
              e.printStackTrace();
-         } catch (IOException e) {
-             // TODO Auto-generated catch block
-             e.printStackTrace();
-         }
+         } 
 		layout = new GroupLayout(this);
 		this.setLayout(layout);
 		initButtons();
@@ -85,21 +87,24 @@ public class ClientWhiteBoardGUI extends JPanel {
 		canvas.setPenThickness(15);
 	}
 	
-	
-
-	public static void main(String[] args) {
+	public static void openEditor(int boardId) {
+		final int boardToOpen = boardId;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame window = new JFrame(
 						"Freehand Canvas");
 				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				ClientWhiteBoardGUI clientGUI = new ClientWhiteBoardGUI();
+				ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(boardToOpen);
 				window.add(clientGUI);
 				clientGUI.init();
 				window.pack();
 				window.setVisible(true);
 			}
 		});
+	}
+
+	public static void main(String[] args) {
+		openEditor(0);
 	}
 	
 	

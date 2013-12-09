@@ -70,6 +70,13 @@ public class StartFrameTest {
 	public void testConstructor() {
 		StartFrame myFrame = new StartFrame();
 		myFrame.init();
+		// TODO Make it so we get rid of Thread Sleeping
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		JTable table = myFrame.getWhiteboardTable();
 		for (int i = 0; i < 3; i++) {
 			assertEquals(table.getValueAt(i, 0), i);

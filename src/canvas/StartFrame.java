@@ -86,8 +86,7 @@ public class StartFrame extends JFrame {
 	}
 
 	public void openEditor(int boardId) {
-		System.out.println("TODO: Open editor " + boardId);
-		Canvas.startCanvas();
+		server.openWhiteboard(boardId);
 	}
 	
 	public ServerHandler getServerHandler() {

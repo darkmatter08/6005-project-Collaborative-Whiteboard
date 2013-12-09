@@ -38,8 +38,10 @@ public class Canvas extends JPanel {
     private final String ERASE_MODE = "Erase";
     private final BasicStroke DRAW_MODE_STROKE = new BasicStroke(1);
     private final BasicStroke ERASE_MODE_STROKE = new BasicStroke(15);
+    private int boardId;
     private Stroke currentStroke = DRAW_MODE_STROKE;
     private String mode = DRAW_MODE;
+
     
     private ArrayList<WhiteboardAction> currentActions;
     
@@ -64,10 +66,17 @@ public class Canvas extends JPanel {
         // wait until paintComponent() is first called.
         currentActions = new ArrayList<WhiteboardAction>();
         Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
+        System.out.println("Created the socket");
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.objOut = new ObjectOutputStream(socket.getOutputStream());
         this.objIn = new ObjectInputStream(socket.getInputStream());
+        System.out.println("finished canvas");
+    }
+    
+    public Canvas(int boardId) throws Exception {
+    	this(800, 600);
+    	this.boardId = boardId;
     }
     
     public Canvas(int width, int height, Whiteboard board) throws UnknownHostException, IOException {

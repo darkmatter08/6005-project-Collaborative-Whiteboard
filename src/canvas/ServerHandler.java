@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 public class ServerHandler {
 	private final String getIdMessage = "getWhiteboardIds";
 	private final String createNewWhiteboardMessage = "createNewWhiteboard";
+	private final String getWhiteboardById = "getWhiteboardById";
 	private WhiteBoardTableModel tableModel;
 	private StartFrame parentFrame;
 	private Socket mySocket;
@@ -28,22 +29,16 @@ public class ServerHandler {
 			mySocket = new Socket("127.0.0.1", shared.Ports.CONNECTION_PORT);
 			out = new PrintWriter(mySocket.getOutputStream(), true);
 			in = new ObjectInputStream(mySocket.getInputStream());
-			this.watchForNewWhiteboards();
+			watchForNewWhiteboards();
+			askForWhiteboardIds();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized List<Integer> getWhiteBoardIds() {
+	public void askForWhiteboardIds() {
 		out.println(getIdMessage);
-		List<Integer> boards = null;
-		try {
-			boards = (List<Integer>) in.readObject();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return boards;
 	}
 
 	public synchronized void createNewWhiteBoard() {
@@ -71,11 +66,13 @@ public class ServerHandler {
 		}.start();
 	}
 
-	/**
-	 * Simply locks on the object. Used for testing purposes.
-	 */
-	public synchronized void hold() {
-
+	public void openWhiteboard(int boardId) {
+		final int boardToOpen = boardId;
+		new Thread() {
+			public void run() {
+				out.println(getWhiteboardById + " " + boardToOpen);
+				ClientWhiteboardGUI.openEditor(boardToOpen);
+			}
+		}.start();
 	}
-
 }

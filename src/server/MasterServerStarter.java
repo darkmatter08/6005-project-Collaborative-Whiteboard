@@ -50,7 +50,6 @@ public class MasterServerStarter implements Runnable {
     synchronized void createNewWhiteboard() throws IOException {
         MasterWhiteboard w = new MasterWhiteboard(++whiteboardIdIncrementer);
         whiteboards.add(w);
-        
         for (MasterServer client: clients) {
             client.announceNewWhiteboard();
         }
