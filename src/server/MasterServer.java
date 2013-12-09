@@ -94,6 +94,7 @@ public class MasterServer implements Runnable{
     
     private void pushAllWhiteboardIds() throws IOException {
         System.out.println("push all whiteboard ID - MasterServer.pushAllWhiteboardIds()");
+        System.out.println(getWhiteboardIds().toString());
         objOut.writeObject(getWhiteboardIds());
     }
     
@@ -129,10 +130,10 @@ public class MasterServer implements Runnable{
                 if (tokens[0].equals(createNewWhiteboard)) {
                     System.out.println("createNewWhiteboard - in MasterServer.serve()");
                     out.println("it sorta works");
-                    //god.createNewWhiteboard();
+                    god.createNewWhiteboard();
                 }
             }
-            System.out.println("Exited for loop in MasterServer.java");
+            //System.out.println("Exited for loop in MasterServer.java");
         }
         
     }
