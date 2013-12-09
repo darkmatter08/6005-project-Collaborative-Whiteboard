@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 
 public class MasterServerStarterTest {
     
@@ -32,6 +33,11 @@ public class MasterServerStarterTest {
     @Test
     public void testServerStart() throws IOException {
         out.write("createNewWhiteboard");
+        try {
+            List<Integer> allWhiteboards = (List<Integer>) objIn.readObject();
+        } catch (ClassNotFoundException e) {
+            fail("unexpected object returned");
+        }
     }
     
 }

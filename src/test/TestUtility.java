@@ -9,12 +9,21 @@ import server.MasterServerStarter;
 public class TestUtility {
     
     final private static int port = shared.Ports.CONNECTION_PORT;
+    final private static int masterPort = shared.Ports.MASTER_PORT;
     
     public static void startServer() throws IOException {
         new MasterServerStarter(port).serve();
     }
     
+    public static Socket connectToSlaveServer() throws IOException {
+        return connectHelper(masterPort);
+    }
+    
     public static Socket connect() throws IOException {
+        return connectHelper(port);
+    }
+    
+    public static Socket connectHelper(int port) throws IOException {
         Socket ret = null;
         final int MAX_ATTEMPTS = 50;
         int attempts = 0;
