@@ -1,6 +1,12 @@
 package server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -15,30 +21,66 @@ import shared.*;
  * @author jains
  *
  */
-public class MasterServer {
+public class MasterServer implements Runnable{
+    
     private final List<MasterWhiteboard> whiteboards;
+    //private final ServerSocket serverSocket;
+    private final Socket socket;
     private final ServerSocket serverSocket;
-    private final List<SlaveServer> clients;
-    private final Map<MasterWhiteboard, List<SlaveServer>> whiteboardToUsers;
+    private final List<SlaveServer> open_client_boards;
     private int whiteboardIdIncrementer = 0;
+    private final MasterServerStarter god;
     
-    /**
-     * Start server
-     * @param port int port to start server.
-     * @throws IOException
-     */
-    public MasterServer(int port) throws IOException{
-        whiteboards = new ArrayList<MasterWhiteboard>();
-        serverSocket = new ServerSocket(port);
-        clients = new ArrayList<SlaveServer>();
-        whiteboardToUsers = new HashMap<MasterWhiteboard, List<SlaveServer>>();
-    }
+    // IO
+    private ObjectOutputStream objOut = null;
+    private ObjectInputStream objIn = null;
+    private BufferedReader in = null; 
+    private PrintWriter out = null; 
     
+    // Server Strings
+    private final String getWhiteboardIds = "getWhiteboardIds";
+    private final String createNewWhiteboard = "createNewWhiteboard";
+    private final String getWhiteboardById = "getWhiteboardById";
+    
+//    /**
+//     * Start server
+//     * @param port int port to start server.
+//     * @throws IOException
+//     */
+//    public MasterServer(int port) throws IOException{
+//        whiteboards = new ArrayList<MasterWhiteboard>();
+//        //serverSocket = new ServerSocket(port);
+//        open_client_boards = new ArrayList<SlaveServer>();
+//        whiteboardToUsers = new HashMap<MasterWhiteboard, List<SlaveServer>>();
+//    }
+//    
+//    /**
+//     * Start server, default port 8888
+//     */
+//    public MasterServer() throws IOException{
+//        this(Ports.MASTER_PORT);
+//    }
+//    
     /**
-     * Start server, default port 8888
+     * clientSocket's request comes from the main method in the client package(pre gui) 
+     * clientSocket <=> MasterClient (Whiteboard Selector Frame)
+     * serverSocket's request comes from MasterClient 
+     * serverSocket <=>SlaveClient (CanvasFrame)
+     * @throws IOException 
      */
-    public MasterServer() throws IOException{
-        this(Ports.MASTER_PORT);
+    public MasterServer(List<MasterWhiteboard> masterWhiteboards, Socket clientSocket, MasterServerStarter shawn) throws IOException {
+        whiteboards = masterWhiteboards;
+        socket = clientSocket; // implicitly on Ports.CONNECTION_PORT
+        god = shawn;
+        open_client_boards = new ArrayList<SlaveServer>();
+        serverSocket = new ServerSocket(Ports.MASTER_PORT);
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        try {
+            serve();
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
     }
     
     public List<Integer> getWhiteboardIds() {
@@ -74,13 +116,10 @@ public class MasterServer {
         return w.getId();
     }
     
-    public static void main(String[] args) throws IOException {
-        new MasterServer().serve();
-    }
-    
     void announceNewWhiteboard(int newWhiteboardId) {
-        for (SlaveServer client : clients) {
-            client.announceNewWhiteboard(newWhiteboardId);
+        for (SlaveServer client : open_client_boards) {
+            //client.announceNewWhiteboard(newWhiteboardId);
+            //TODO write out of a new whiteboard
         }
     }
     
@@ -90,12 +129,39 @@ public class MasterServer {
      * @throws IOException
      */
     public void serve() throws IOException {
-        while(true) {
-            final Socket socket = serverSocket.accept();
-            SlaveServer wch = 
-                    new SlaveServer(whiteboards, socket, this);
-            clients.add(wch);
-            new Thread(wch).run();
+        // request a connection to a specific board
+        // wait on the serverSocket for a new connection 
+        // accept on the serverSocket, and spawn a new thread
+        // and pass the accepted socket to SlaveServer
+        while (true){
+            for (String line = in.readLine(); line != null; line = in.readLine()) {
+                String[] tokens = line.split(" ");
+                if (tokens[0].equals(getWhiteboardById)){
+                    Socket whiteboard_client_socket = serverSocket.accept();
+                    SlaveServer ss = new SlaveServer(
+                            getWhiteboardById(Integer.parseInt(tokens[1])), whiteboard_client_socket);
+                    open_client_boards.add(ss);
+                    ss.run();
+                }
+            }
         }
+//        while(true) {
+//            final Socket socket = serverSocket.accept();
+//            SlaveServer wch = 
+//                    new SlaveServer(whiteboards, socket, this); 
+//            open_client_boards.add(wch);
+//            new Thread(wch).run();
+//        }
+    }
+
+    public void run() {
+        try {
+            serve();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+        
     }
 }
