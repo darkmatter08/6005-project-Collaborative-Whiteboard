@@ -4,14 +4,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import canvas.ClientWhiteBoardGUITest;
-import canvas.WhiteboardPickerClientTest;
-import server.PickerServerTest;
+import canvas.*;
+import server.*;
 
 @RunWith(Suite.class)
 //PickerServerTest.class must be at the end.
-@SuiteClasses({ ClientWhiteBoardGUITest.class,
-		WhiteboardPickerClientTest.class, PickerServerTest.class })
+@SuiteClasses({
+    ClientWhiteBoardGUITest.class,
+	WhiteboardPickerClientTest.class,
+	PickerServerTest.class,
+	WhiteboardServerTest.class,
+	WhiteboardActionTest.class
+})
 public class AllTests {
 
 }
