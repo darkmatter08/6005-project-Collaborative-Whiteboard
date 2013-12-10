@@ -16,7 +16,7 @@ public class WhiteboardServer extends Server {
 	public void handleCurrentConnection(Socket socket) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
-			
+			String[] tokens msg.split(" ");
 		}
 	}
 }
