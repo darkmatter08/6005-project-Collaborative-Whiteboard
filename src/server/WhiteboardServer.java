@@ -12,11 +12,18 @@ import shared.Messages;
 import shared.WhiteboardAction;
 
 public class WhiteboardServer extends Server {
-
+    
+    /**
+     * Constructs the server with all WhiteboardServerInfo
+     * @param whiteBoards WhiteboardServerInfos to initialize the server with.
+     */
 	public WhiteboardServer(List<WhiteboardServerInfo> whiteBoards) {
 		super(whiteBoards);
 	}
-
+	
+	/**
+	 * @return int port to host the server on
+	 */
 	@Override
 	public int getPort() {
 		return shared.Ports.WHITEBOARD_GUI_PORT;
