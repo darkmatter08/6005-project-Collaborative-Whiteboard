@@ -51,18 +51,21 @@ public class WhiteboardServer extends Server {
 			 *   5 - y2
 			 *   6 - colorRGB (int)
 			 *   7 - strokeWidth (int)
+			 *  
 			 */
 		    String[] tokens = msg.split(" ");
 			String request = tokens[REQUEST_INDEX];
 			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
+			WhiteboardServerInfo whiteboard = getWhiteBoards().get(whiteBoardId);
 			if (request.equals(shared.Messages.NEW_WHITEBOARD_CONNECTION)) {
 			    String username = tokens[2];
 				getWhiteBoards().get(whiteBoardId).getClients()
 						.add(new ClientConnection(
 						        new PrintWriter(socket.getOutputStream(), true),
 						        username));
+				sendConnectedUsernames(whiteboard);
 				sendEntireHistory(new PrintWriter(socket.getOutputStream(),
-						true), getWhiteBoards().get(whiteBoardId));
+						true), whiteboard);
 			} else if (request.equals(shared.Messages.ADD_ACTION)) {
 				WhiteboardAction action = new WhiteboardAction(tokens[2],
 						tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]);
@@ -89,6 +92,22 @@ public class WhiteboardServer extends Server {
 			}
 		}.start();
 	}
+	
+	/**
+     * @param action WhiteboardAction to transmit to all clients connected to
+     *     WhiteboardServerInfo
+     * @param info the WhiteboardServerInfo clients to send the update to
+     */
+    public void sendConnectedUsernames(final WhiteboardServerInfo info) {
+        new Thread() {
+            public void run() {
+                String message = info.getConnectedUsernamesMessage();
+                for (ClientConnection client : info.getClients()) {
+                    client.getPrintWriter().println(message);
+                }
+            }
+        }.start();
+    }
 	
 	/**
 	 * @param out the client to send the history to
