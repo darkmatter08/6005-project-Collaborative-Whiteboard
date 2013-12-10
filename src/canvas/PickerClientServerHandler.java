@@ -71,7 +71,6 @@ public class PickerClientServerHandler {
 		final int boardToOpen = boardId;
 		new Thread() {
 			public void run() {
-				out.println(getWhiteboardById + " " + boardToOpen);
 				ClientWhiteboardGUI.openEditor(boardToOpen);
 			}
 		}.start();

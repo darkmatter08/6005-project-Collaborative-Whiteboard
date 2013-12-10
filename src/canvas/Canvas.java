@@ -33,23 +33,13 @@ import shared.WhiteboardAction;
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private Whiteboard board;
-    private Color currentColor = Color.BLACK;
-    private final String DRAW_MODE = "Draw";
-    private final String ERASE_MODE = "Erase";
-    private final BasicStroke DRAW_MODE_STROKE = new BasicStroke(1);
-    private final BasicStroke ERASE_MODE_STROKE = new BasicStroke(15);
     private int boardId;
-    private Stroke currentStroke = DRAW_MODE_STROKE;
-    private String mode = DRAW_MODE;
-
-    
-    private ArrayList<WhiteboardAction> currentActions;
-    
-    // IO
-    private BufferedReader in = null;
-    private PrintWriter out = null;
-    private ObjectOutputStream objOut = null;
-    private ObjectInputStream objIn = null;
+    private Color currentColor = Color.BLACK;
+    public final static int DEFAULT_STROKE_LENGTH = 25;
+    public final static int DEFAULT_ERASE_LENGTH = 50;
+    private CanvasServerHandler server;
+    int thickness = DEFAULT_STROKE_LENGTH;
+    Stroke currentStroke = new BasicStroke(DEFAULT_STROKE_LENGTH);
     
     /**
      * Make a canvas.
@@ -61,17 +51,7 @@ public class Canvas extends JPanel {
     public Canvas(int width, int height) throws UnknownHostException, IOException {
         this.setPreferredSize(new Dimension(width, height));
         addDrawingController();
-        // note: we can't call makeDrawingBuffer here, because it only
-        // works *after* this canvas has been added to a window.  Have to
-        // wait until paintComponent() is first called.
-        currentActions = new ArrayList<WhiteboardAction>();
-        Socket socket = new Socket("127.0.0.1", shared.Ports.WHITEBOARD_GUI_PORT);
-        System.out.println("Created the socket");
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.out = new PrintWriter(socket.getOutputStream(), true);
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
-        this.objIn = new ObjectInputStream(socket.getInputStream());
-        System.out.println("finished canvas");
+
     }
     
     public Whiteboard getWhiteboard() {
@@ -81,6 +61,18 @@ public class Canvas extends JPanel {
     public Canvas(int boardId) throws Exception {
     	this(800, 600);
     	this.boardId = boardId;
+    	initConnection();
+    }
+    
+    public void initConnection() {
+    	server = new CanvasServerHandler(boardId, board, this);
+    	try {
+    	server.init();
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
     }
     
     public Canvas(int width, int height, Whiteboard board) throws UnknownHostException, IOException {
@@ -97,6 +89,7 @@ public class Canvas extends JPanel {
     }
     
     public void setPenThickness(int thickness) {
+    	this.thickness = thickness;
     	currentStroke = new BasicStroke(thickness);
     }
     
@@ -140,33 +133,12 @@ public class Canvas extends JPanel {
      * pixels relative to the upper-left corner of the drawing buffer.
      */
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
-        WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor, currentStroke);
+        WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor.getRGB(), thickness);
         board.applyAction(action);
+        server.sendAction(action);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
-        
-        synchronized(currentActions) {
-            currentActions.add(action);
-            System.out.println("added action");
-        }
-        
-    }
-    
-    public void sendCurrentActionsAndUpdate() throws ClassNotFoundException, IOException {
-        synchronized (currentActions) {
-            ArrayList<WhiteboardAction> copyCurrentActions = (ArrayList)currentActions.clone();
-            currentActions.clear();
-        }
-        int boardId = 0;
-        out.println("drawLine" + " " + boardId); //TODO add in board id
-        Whiteboard newBoard = (Whiteboard) objIn.readObject();
-        //objOut.writeObject(object);
-        // Whiteboard newBoard = "send copyCurrentActions to server"()
-        for (WhiteboardAction action : currentActions) {
-            newBoard.applyAction(action);
-        }
-        
     }
     
     /*

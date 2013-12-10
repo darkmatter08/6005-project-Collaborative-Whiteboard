@@ -29,29 +29,12 @@ public class ClientWhiteboardGUI extends JPanel {
 	}
 	
 	public void init() {
-		 try {
-             canvas = new Canvas(boardId);
-             new Thread() {
-                 @Override
-                 public void run() {
-                     while (true) {
-                         try {
-                            canvas.sendCurrentActionsAndUpdate();
-                            Thread.sleep(10);
-                        } catch (ClassNotFoundException | IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                     }
-                 }
-             }.start();
-         } catch (Exception e) {
-             // TODO Auto-generated catch block
-             e.printStackTrace();
-         } 
+		try {
+			canvas = new Canvas(boardId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		layout = new GroupLayout(this);
 		this.setLayout(layout);
 		initButtons();
@@ -95,13 +78,13 @@ public class ClientWhiteboardGUI extends JPanel {
 		Color newColor = JColorChooser.showDialog(this, "Choose Pen Color", canvas.getPenColor());
 		canvas.setPenColor(newColor);
 		colorChooser.setBackground(newColor);
-		canvas.setPenThickness(1);	
+		canvas.setPenThickness(Canvas.DEFAULT_STROKE_LENGTH);	
 	}
 	
 	public void setEraserColor() {
 		canvas.setPenColor(Color.WHITE);
 		colorChooser.setBackground(Color.WHITE);
-		canvas.setPenThickness(15);
+		canvas.setPenThickness(Canvas.DEFAULT_ERASE_LENGTH);
 	}
 	
 	public static void openEditor(int boardId) {

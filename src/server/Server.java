@@ -6,10 +6,17 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public abstract class Server {
+	List<WhiteboardServerInfo> whiteBoards;
 	ServerSocket serverSocket;
 	ArrayList<PrintWriter> clientOutputs = new ArrayList<PrintWriter>();
+	
+	public Server(List<WhiteboardServerInfo> whiteBoards) {
+		this.whiteBoards = whiteBoards;
+	}
 	
 	public void host() throws IOException {
 		serverSocket = new ServerSocket(getPort());
@@ -32,6 +39,10 @@ public abstract class Server {
 	
 	public ArrayList<PrintWriter> getClientOutputs() {
 		return clientOutputs;
+	}
+	
+	public List<WhiteboardServerInfo> getWhiteBoards() {
+		return whiteBoards;
 	}
 	
 	public void writeToAllClients(String message) {

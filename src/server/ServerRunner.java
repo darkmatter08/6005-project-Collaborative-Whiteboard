@@ -1,14 +1,18 @@
 package server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ServerRunner {
 	PickerServer pickerServer;
 	WhiteboardServer whiteboardServer;
 	
 	public ServerRunner() {
-		pickerServer = new PickerServer();
-		whiteboardServer = new WhiteboardServer();
+		List<WhiteboardServerInfo> whiteBoards = Collections.synchronizedList(new ArrayList<WhiteboardServerInfo>());
+		pickerServer = new PickerServer(whiteBoards);
+		whiteboardServer = new WhiteboardServer(whiteBoards);
 	}
 	
 	public void hostServers() throws IOException {
