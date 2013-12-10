@@ -131,12 +131,16 @@ public class Canvas extends JPanel {
      */
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
         WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor.getRGB(), currentStrokeWidth);
+        applyAction(action);
+        out.println(action); // send draw action to the server
+        System.out.println("sending action to server: " + action);
+    }
+
+    public void applyAction(WhiteboardAction action) {
         board.applyAction(action);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
-        out.println(action); // send draw action to the server
-        System.out.println("sending action to server: " + action);
     }
     
     /*

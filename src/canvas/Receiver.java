@@ -20,6 +20,6 @@ class Receiver extends ActionReceiver {
 
     @Override
     public void receiveAction(WhiteboardAction action) {
-        canvas.getWhiteboard().applyAction(action);
+        canvas.applyAction(action);
     }
 }
