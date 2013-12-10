@@ -24,6 +24,7 @@ public class WhiteboardPickerClientTest {
 	private ServerSocket serverSocket;
 	final String getIdMessage = "getWhiteboardIds";
 	final String createNewWhiteboardMessage = "createNewWhiteboard";
+	private final String user = "Shawn";
 
 	@Before
 	public void setUp() {
@@ -60,7 +61,7 @@ public class WhiteboardPickerClientTest {
 
 	@Test
 	public void testConstructor() {
-		WhiteboardPickerClient myFrame = new WhiteboardPickerClient();
+		WhiteboardPickerClient myFrame = new WhiteboardPickerClient(user);
 		myFrame.init();
 		// TODO Make it so we get rid of Thread Sleeping
 		try {
@@ -77,7 +78,7 @@ public class WhiteboardPickerClientTest {
 
 	@Test
 	public void testAddWhiteboard() {
-		WhiteboardPickerClient myFrame = new WhiteboardPickerClient();
+		WhiteboardPickerClient myFrame = new WhiteboardPickerClient(user);
 		myFrame.init();
 		myFrame.addWhiteBoard();
 		// TODO Make it so we get rid of Thread Sleeping

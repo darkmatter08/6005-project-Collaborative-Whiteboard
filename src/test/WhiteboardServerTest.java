@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,11 +42,15 @@ public class WhiteboardServerTest {
         in.close();
         out.close();
         socket.close();
+        inBoard.close();
+        outBoard.close();
+        whiteboardSocket.close();
     }
     
     @Test
     public void fullTest() throws IOException {
         askForWhiteboard();
+        writeOnceToWhiteboard();
     }
     
     public void askForWhiteboard() throws IOException {
@@ -83,6 +88,24 @@ public class WhiteboardServerTest {
             }
         } catch (SocketTimeoutException e) {
             assertTrue(answers.size() == 0);
+        }
+    }
+    
+    public void writeOnceToWhiteboard() throws IOException {
+        final int x1 = 10, y1 = 10, x2 = 50, y2 = 50, 
+                colorRGB = new Color(10,20,30).getRGB(), width = 20;
+        WhiteboardAction wba = new WhiteboardAction(x1, y1, x2, y2, colorRGB, width);
+        outBoard.println(Messages.ADD_ACTION + sp + "0" + sp + wba.toString());
+        
+        // Check response
+        List<String> answers = new ArrayList<String>();
+        try {
+            for (String action = inBoard.readLine(); action != null; action = inBoard
+                    .readLine()) {
+                answers.add(action);
+            }
+        } catch (SocketTimeoutException e) {
+            assertEquals(WhiteboardAction.parse(answers.get(0)), wba);
         }
     }
 

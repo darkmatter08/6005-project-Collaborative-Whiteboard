@@ -43,4 +43,38 @@ public class WhiteboardAction {
 				Integer.parseInt(parsed[3]), Integer.parseInt(parsed[4]),
 				Integer.parseInt(parsed[5]));
 	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        WhiteboardAction other = (WhiteboardAction) obj;
+        if (color == null) {
+            if (other.color != null)
+                return false;
+        } else if (!color.equals(other.color))
+            return false;
+        if (stroke == null) {
+            if (other.stroke != null)
+                return false;
+        } else if (!stroke.equals(other.stroke))
+            return false;
+        if (strokeWidth != other.strokeWidth)
+            return false;
+        if (x1 != other.x1)
+            return false;
+        if (x2 != other.x2)
+            return false;
+        if (y1 != other.y1)
+            return false;
+        if (y2 != other.y2)
+            return false;
+        return true;
+    }
+	
+	
 }
