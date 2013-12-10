@@ -4,19 +4,19 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class WhiteboardServerInfo {
-	private ArrayList<PrintWriter> clients;
+	private ArrayList<ClientConnection> clients;
 	private ArrayList<String> history;
 	
 	public WhiteboardServerInfo() {
-		clients = new ArrayList<PrintWriter>();
+		clients = new ArrayList<ClientConnection>();
 		history = new ArrayList<String>();
 	}
 	
-	public ArrayList<PrintWriter> getClients() {
+	public ArrayList<ClientConnection> getClients() {
 		return clients;
 	}
 	
-	public void setClients(ArrayList<PrintWriter> clients) {
+	public void setClients(ArrayList<ClientConnection> clients) {
 		this.clients = clients;
 	}
 	

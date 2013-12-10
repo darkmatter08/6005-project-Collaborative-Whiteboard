@@ -3,6 +3,14 @@ package server;
 import java.io.PrintWriter;
 
 public class ClientConnection {
-    PrintWriter out;
-    String username;
+    private PrintWriter out;
+    private String username;
+    
+    public String getUsername() {
+        return username;
+    }
+    
+    public PrintWriter getPrintWriter() {
+        return out;
+    }
 }
