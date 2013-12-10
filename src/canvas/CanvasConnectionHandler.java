@@ -11,7 +11,7 @@ import javax.swing.SwingUtilities;
 
 import shared.WhiteboardAction;
 
-public class CanvasServerHandler {
+public class CanvasConnectionHandler {
 	private Socket socket;
 	private int boardId;
 	private PrintWriter out;
@@ -19,7 +19,7 @@ public class CanvasServerHandler {
 	private Canvas parentCanvas;
 	Whiteboard board;
 
-	public CanvasServerHandler(int boardId, Canvas canvas) {
+	public CanvasConnectionHandler(int boardId, Canvas canvas) {
 		this.boardId = boardId;
 		this.parentCanvas = canvas;
 	}
@@ -35,7 +35,6 @@ public class CanvasServerHandler {
 	public void listenForActions() {
 		new Thread() {
 			public void run() {
-				//TODO Remove this hack if necessary.
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {

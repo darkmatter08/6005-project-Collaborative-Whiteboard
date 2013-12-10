@@ -21,14 +21,14 @@ public class WhiteboardPickerClient extends JFrame {
 	private final JTable whiteBoardTable = new JTable(whiteBoardTableModel);
 	private final JButton newWhiteBoard = new JButton();
 	private final JLabel headerText = new JLabel();
-	private PickerClientServerHandler server;
+	private PickerClientConnectionHandler connectionHandler;
 	private final static int MIN_WIDTH = 400;
 	private final static int MIN_HEIGHT = 400;
 	
 	public void init() {
-		server = new PickerClientServerHandler(this, whiteBoardTableModel);
+		connectionHandler = new PickerClientConnectionHandler(this, whiteBoardTableModel);
 		whiteBoardTableModel.addColumn("boardId");
-		server.init();
+		connectionHandler.init();
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		initHeader();
 		initWhiteBoardTable();
@@ -80,17 +80,17 @@ public class WhiteboardPickerClient extends JFrame {
 	public void addWhiteBoard() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				server.createNewWhiteBoard();
+				connectionHandler.createNewWhiteBoard();
 			}
 		});
 	}
 
 	public void openEditor(int boardId) {
-		server.openWhiteboard(boardId);
+		connectionHandler.openWhiteboard(boardId);
 	}
 	
-	public PickerClientServerHandler getServerHandler() {
-		return server;
+	public PickerClientConnectionHandler getServerHandler() {
+		return connectionHandler;
 	}
 
 	public static void main(String[] args) {

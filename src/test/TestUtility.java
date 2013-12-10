@@ -15,7 +15,7 @@ import server.MasterServerStarter;
 
 public class TestUtility {
     
-    final private static int port = shared.Ports.CLIENT_PICKER_PORT;
+    final private static int port = shared.Ports.CLIENT_PICKER_GUI_PORT;
     final private static int masterPort = shared.Ports.WHITEBOARD_GUI_PORT;
     
     public static void startServer() throws IOException {
@@ -52,7 +52,7 @@ public class TestUtility {
     }
     
   public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
-      Socket socket = new Socket("127.0.0.1", shared.Ports.CLIENT_PICKER_PORT);
+      Socket socket = new Socket("127.0.0.1", shared.Ports.CLIENT_PICKER_GUI_PORT);
       Thread.sleep(1500);
       ObjectOutputStream objOut;
       ObjectInputStream objIn;
