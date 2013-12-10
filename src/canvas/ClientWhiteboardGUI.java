@@ -39,6 +39,7 @@ public class ClientWhiteboardGUI extends JPanel {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              canvas = new Canvas(boardId, out);
              Receiver receiver = new Receiver(canvas, in);
+             receiver.start();
          } catch (Exception e) {
              // TODO Auto-generated catch block
              e.printStackTrace();

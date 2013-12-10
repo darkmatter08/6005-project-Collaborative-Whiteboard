@@ -108,6 +108,7 @@ public class MasterServer implements Runnable{
         Thread.sleep(300);
         while (true){
             for (String line = in.readLine(); line != null; line = in.readLine()) {
+                System.out.println("MasterServer.serve() read line: " + line);
                 String[] tokens = line.split(" ");
                 if (tokens[0].equals(getWhiteboardById)) {
                     Socket whiteboard_client_socket = serverSocket.accept();

@@ -29,7 +29,7 @@ public abstract class ActionReceiver extends Thread {
         try {
             System.out.println("entered receiver.receiveServerActions() try block");
             for (String actionStr = in.readLine(); actionStr != null; actionStr = in.readLine()) {
-                System.out.println("actionStr: " + actionStr);
+                System.out.println("received actionStr: " + actionStr);
                 WhiteboardAction action = WhiteboardAction.parse(actionStr);
                 receiveAction(action);
             }
