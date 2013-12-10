@@ -32,7 +32,7 @@ public class WhiteboardAction {
 	}
 
 	public String toString() {
-		return x1 + " " + y1 + " " + x2 + " " + y2 + " " + color.getRGB() + " "
+		return Messages.ADD_ACTION + " " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + color.getRGB() + " "
 				+ strokeWidth;
 	}
 

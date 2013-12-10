@@ -108,7 +108,7 @@ public class Canvas extends JPanel {
         Image drawingBuffer = createImage(getWidth(), getHeight());
         board = new Whiteboard(drawingBuffer, getWidth(), getHeight());
         fillWithWhite();
-        connectionHandler.listenForActions();
+        connectionHandler.listenForServerMessages();
 		connectionHandler.askForHistory();
     }
     
