@@ -28,7 +28,7 @@ public class WhiteboardPickerClientTest {
 		new Thread() {
 			public void run() {
 				try {
-					serverSocket = new ServerSocket(shared.Ports.CLIENT_PICKER_GUI_PORT);
+					serverSocket = new ServerSocket(shared.ConnectionDetails.CLIENT_PICKER_GUI_PORT);
 					final Socket mySocket = serverSocket.accept();
 					handleMessages(mySocket);
 				} catch (Exception e) {

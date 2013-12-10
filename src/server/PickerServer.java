@@ -14,7 +14,7 @@ public class PickerServer extends Server {
 	
 	@Override
 	public int getPort() {
-		return shared.Ports.CLIENT_PICKER_GUI_PORT;
+		return shared.ConnectionDetails.CLIENT_PICKER_GUI_PORT;
 	}
 
 	@Override

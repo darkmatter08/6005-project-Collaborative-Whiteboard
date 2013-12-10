@@ -15,8 +15,8 @@ import shared.*;
 
 public class TestUtility {
     
-    final private static int port = Ports.CLIENT_PICKER_GUI_PORT;
-    final private static int masterPort = Ports.WHITEBOARD_GUI_PORT;
+    final private static int port = ConnectionDetails.CLIENT_PICKER_GUI_PORT;
+    final private static int masterPort = ConnectionDetails.WHITEBOARD_GUI_PORT;
     
     public static void startServer() throws IOException {
         new Thread(new ServerRunner()).start();
@@ -36,7 +36,7 @@ public class TestUtility {
         int attempts = 0;
         do {
           try {
-            ret = new Socket(Ports.SERVER_ADDRESS, port);
+            ret = new Socket(ConnectionDetails.SERVER_ADDRESS, port);
           } catch (ConnectException ce) {
             try {
               if (++attempts > MAX_ATTEMPTS)
@@ -52,7 +52,7 @@ public class TestUtility {
     }
     
   public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
-      Socket socket = new Socket(Ports.SERVER_ADDRESS, port);
+      Socket socket = new Socket(ConnectionDetails.SERVER_ADDRESS, port);
       Thread.sleep(1500);
       ObjectOutputStream objOut;
       ObjectInputStream objIn;

@@ -26,7 +26,7 @@ public class WhiteboardServer extends Server {
 	 */
 	@Override
 	public int getPort() {
-		return shared.Ports.WHITEBOARD_GUI_PORT;
+		return shared.ConnectionDetails.WHITEBOARD_GUI_PORT;
 	}
 	
 	/**
