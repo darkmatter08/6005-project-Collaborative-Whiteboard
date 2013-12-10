@@ -1,4 +1,4 @@
-package canvas;
+package test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,12 +8,14 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import canvas.ClientWhiteboardGUI;
+
 public class ClientWhiteBoardGUIManualTest {
 	public static void main(String[] args) {
 		new Thread() {
 			public void run() {
 				try {
-					ServerSocket serverSocket = new ServerSocket(shared.Ports.WHITEBOARD_GUI_PORT);
+					ServerSocket serverSocket = new ServerSocket(shared.ConnectionDetails.WHITEBOARD_GUI_PORT);
 					Socket socket = serverSocket.accept();
 			        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);

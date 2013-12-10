@@ -26,9 +26,13 @@ public class WhiteboardServer extends Server {
 	 */
 	@Override
 	public int getPort() {
-		return shared.Ports.WHITEBOARD_GUI_PORT;
+		return shared.ConnectionDetails.WHITEBOARD_GUI_PORT;
 	}
-
+	
+	/**
+	 * Handles a client on the socket socket.
+	 * @param client socket
+	 */
 	@Override
 	public void handleCurrentConnection(Socket socket) throws IOException {
 		final int REQUEST_INDEX = 0;
@@ -55,7 +59,12 @@ public class WhiteboardServer extends Server {
 			}
 		}
 	}
-
+	
+	/**
+	 * @param action WhiteboardAction to transmit to all clients connected to
+	 *     WhiteboardServerInfo
+	 * @param info the WhiteboardServerInfo clients to send the update to
+	 */
 	public void sendSingleAction(WhiteboardAction action, WhiteboardServerInfo info) {
 		info.getHistory().add(action.toString());
 		final String actionInThread = action.toString();
@@ -69,6 +78,10 @@ public class WhiteboardServer extends Server {
 		}.start();
 	}
 	
+	/**
+	 * @param out the client to send the history to
+	 * @param info the WhiteboardServerInfo board to get the history from
+	 */
 	public void sendEntireHistory(PrintWriter out, WhiteboardServerInfo info) {
 	    System.out.println("sending entire history");
 		final PrintWriter outInThread = out;

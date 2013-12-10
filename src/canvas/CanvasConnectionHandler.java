@@ -6,10 +6,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import shared.Ports;
+import shared.ConnectionDetails;
 import shared.WhiteboardAction;
 
 public class CanvasConnectionHandler {
@@ -19,6 +20,7 @@ public class CanvasConnectionHandler {
 	private BufferedReader in;
 	private Canvas parentCanvas;
 	private ClientWhiteboardGUI gui;
+	private ArrayList<String> historyReceived = new ArrayList<String>();
 	Whiteboard board;
 
 	public CanvasConnectionHandler(int boardId, ClientWhiteboardGUI gui) {
@@ -28,7 +30,7 @@ public class CanvasConnectionHandler {
 	}
 
 	public void init() throws UnknownHostException, IOException {
-		socket = new Socket(Ports.SERVER_ADDRESS, Ports.WHITEBOARD_GUI_PORT);
+		socket = new Socket(ConnectionDetails.SERVER_ADDRESS, ConnectionDetails.WHITEBOARD_GUI_PORT);
 		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		listenForActions();
@@ -41,6 +43,7 @@ public class CanvasConnectionHandler {
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {
+						historyReceived.add(action);
 						// Once the frame closes, whiteboard will be null, and we should break out of this loop.
 						if (parentCanvas == null || parentCanvas.getWhiteboard() == null) {
 							break;
@@ -73,6 +76,10 @@ public class CanvasConnectionHandler {
 				out.println(messageToSend.toString());
 			}
 		}.start();
+	}
+	
+	public ArrayList<String> getHistoryReceived() {
+		return historyReceived;
 	}
 
 }

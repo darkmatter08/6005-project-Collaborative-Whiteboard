@@ -112,6 +112,10 @@ public class Canvas extends JPanel {
 		connectionHandler.askForHistory();
     }
     
+    public CanvasConnectionHandler getConnectionHandler() {
+    	return connectionHandler;
+    }
+    
     public boolean readyToPaint() {
     	return readyToPaint;
     }

@@ -25,10 +25,9 @@ public class WhiteboardServerInfo {
 		return clients;
 	}
 	
-	public void setClients(ArrayList<ClientConnection> clients) {
-		this.clients = clients;
-	}
-	
+	/**
+	 * @return ArrayList<String> representing the board's entire history
+	 */
 	public ArrayList<String> getHistory() {
 		return history;
 	}

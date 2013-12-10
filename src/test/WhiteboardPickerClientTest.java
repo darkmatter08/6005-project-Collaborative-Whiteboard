@@ -1,4 +1,4 @@
-package canvas;
+package test;
 
 import static org.junit.Assert.*;
 
@@ -18,6 +18,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import canvas.WhiteboardPickerClient;
+
 public class WhiteboardPickerClientTest {
 	private ServerSocket serverSocket;
 	final String getIdMessage = "getWhiteboardIds";
@@ -28,7 +30,7 @@ public class WhiteboardPickerClientTest {
 		new Thread() {
 			public void run() {
 				try {
-					serverSocket = new ServerSocket(shared.Ports.CLIENT_PICKER_GUI_PORT);
+					serverSocket = new ServerSocket(shared.ConnectionDetails.CLIENT_PICKER_GUI_PORT);
 					final Socket mySocket = serverSocket.accept();
 					handleMessages(mySocket);
 				} catch (Exception e) {
