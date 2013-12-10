@@ -15,7 +15,7 @@ class Sender extends Thread {
     
     public Sender(SlaveServer server) throws IOException {
         this.server = server;
-        out = new PrintWriter(server.socket.getOutputStream());
+        out = new PrintWriter(server.socket.getOutputStream(), true);
     }
     
     public void run() {

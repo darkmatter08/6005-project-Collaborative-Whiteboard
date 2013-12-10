@@ -36,7 +36,7 @@ public class ClientWhiteboardGUI extends JPanel {
 		 try {
              Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter out = new PrintWriter(socket.getOutputStream());
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              canvas = new Canvas(boardId, out);
              Receiver receiver = new Receiver(canvas, in);
          } catch (Exception e) {
