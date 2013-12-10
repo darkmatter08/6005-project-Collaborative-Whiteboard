@@ -24,12 +24,14 @@ public class WhiteboardServer extends Server {
 
 	@Override
 	public void handleCurrentConnection(Socket socket) throws IOException {
+		final int REQUEST_INDEX = 0;
+		final int WHITEBOARD_ID_INDEX = 1;
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
 			String[] tokens = msg.split(" ");
-			String request = tokens[0];
-			int whiteBoardId = Integer.parseInt(tokens[1]);
+			String request = tokens[REQUEST_INDEX];
+			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
 			if (request.equals(shared.Messages.GET_ALL_HISTORY)) {
 				getWhiteBoards().get(whiteBoardId).getClients()
 						.add(new PrintWriter(socket.getOutputStream(), true));
