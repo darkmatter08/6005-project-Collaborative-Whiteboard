@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 
-import shared.ProtocolUtility;
+import shared.*;
 
 public class ServerHandler {
 	private final String getIdMessage = "getWhiteboardIds";
@@ -32,7 +32,7 @@ public class ServerHandler {
 
 	public synchronized void init() {
 		try {
-			mySocket = new Socket("127.0.0.1", shared.Ports.CONNECTION_PORT);
+			mySocket = new Socket(Ports.ADDRESS, Ports.CONNECTION_PORT);
 			this.out = new PrintWriter(mySocket.getOutputStream(), true);
 			this.in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 			watchForNewWhiteboards();

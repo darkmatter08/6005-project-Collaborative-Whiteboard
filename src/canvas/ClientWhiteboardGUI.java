@@ -19,6 +19,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import shared.Ports;
+
 public class ClientWhiteboardGUI extends JPanel {
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private GroupLayout layout;
@@ -34,7 +36,8 @@ public class ClientWhiteboardGUI extends JPanel {
 	
 	public void init() {
 		 try {
-             Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
+             Socket socket = new Socket(Ports.ADDRESS, shared.Ports.MASTER_PORT);
+             System.out.println("client slave connecting on port " + shared.Ports.MASTER_PORT);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              canvas = new Canvas(boardId, out);
