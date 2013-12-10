@@ -58,7 +58,7 @@ public class Canvas extends JPanel {
     public void initConnection() {
     	//Do a quick draw so board is Initialized.
     	//drawLineSegment(0, 0, 0, 0);
-    	connectionHandler = new CanvasConnectionHandler(boardId, gui);
+    	connectionHandler = new CanvasConnectionHandler(boardId, gui, this);
     	try {
     	connectionHandler.init();
     	}
