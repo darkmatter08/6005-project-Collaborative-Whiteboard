@@ -1,52 +1,28 @@
 package server.slave;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import shared.WhiteboardAction;
+import shared.ActionReceiver;
 
-class Receiver extends Thread {
+class Receiver extends ActionReceiver {
     private SlaveServer server;
-    private ObjectInputStream objIn = null;
+    private BufferedReader in;
     
-    public Receiver(SlaveServer server) {
+    public Receiver(SlaveServer server, BufferedReader in) throws IOException {
+        super(in);
         this.server = server;
+        System.out.println("constructed Receiver");
     }
     
-    public void run() {
-        try {
-            receiveClientActions();
-        } catch (IOException e) {
-            e.printStackTrace(); // but don't terminate serve()
-        } finally {
-            try {
-                server.socket.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-    
-    private void receiveClientActions() throws IOException {
-        this.objIn = new ObjectInputStream(server.socket.getInputStream());
-        
-        try {
-            for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
-                    actions = (List<WhiteboardAction>)objIn.readObject()) {
-                server.whiteboard.applyActions(actions);
-                BlockingQueue<WhiteboardAction> history = server.whiteboard.getHistory();
-                synchronized (history) {
-                    server.whiteboard.getHistory().addAll(actions);
-                }
-                System.out.println(history);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            server.socket.close();
-        }
+    @Override
+    public void receiveAction(WhiteboardAction action) {
+        server.whiteboard.getHistory().add(action);
+        System.out.println("received action " + action);
     }
 }

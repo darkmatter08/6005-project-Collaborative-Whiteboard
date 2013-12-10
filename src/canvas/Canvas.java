@@ -136,6 +136,7 @@ public class Canvas extends JPanel {
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
         out.println(action); // send draw action to the server
+        System.out.println("sending action to server: " + action);
     }
     
     /*

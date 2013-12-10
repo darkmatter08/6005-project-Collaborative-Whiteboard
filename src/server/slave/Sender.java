@@ -3,6 +3,7 @@ package server.slave;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,11 +11,11 @@ import shared.WhiteboardAction;
 
 class Sender extends Thread {
     private SlaveServer server;
-    private ObjectInputStream objIn = null;
-    private ObjectOutputStream objOut = null;
+    PrintWriter out;
     
-    public Sender(SlaveServer server) {
+    public Sender(SlaveServer server) throws IOException {
         this.server = server;
+        out = new PrintWriter(server.socket.getOutputStream());
     }
     
     public void run() {
@@ -33,8 +34,6 @@ class Sender extends Thread {
     }
     
     private void sendActions() throws IOException {
-        this.objOut = new ObjectOutputStream(server.socket.getOutputStream());
-        
         try {
             while (true) {
                 int newHistorySize;
@@ -44,7 +43,9 @@ class Sender extends Thread {
                     actionList = new LinkedList<WhiteboardAction>(server.whiteboard.getHistory());
                 }
                 List<WhiteboardAction> newActions = actionList.subList(server.lastHistorySize, newHistorySize);
-                //objOut.writeObject(newActions);
+                for (WhiteboardAction action : newActions) {
+                    out.println(action);
+                }
                 server.lastHistorySize = newHistorySize;
             }
         } catch (Exception e){
