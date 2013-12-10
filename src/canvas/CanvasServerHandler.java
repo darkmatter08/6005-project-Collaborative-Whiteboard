@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import javax.swing.SwingUtilities;
+
 import shared.WhiteboardAction;
 
 public class CanvasServerHandler {
@@ -31,28 +33,24 @@ public class CanvasServerHandler {
 	}
 
 	public void listenForActions() {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		new Thread() {
 			public void run() {
+				//TODO Remove this hack if necessary.
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {
-						System.out.println(WhiteboardAction.parse(action));
-						parentCanvas.getWhiteboard().applyAction(WhiteboardAction.parse(action));
+						parentCanvas.getWhiteboard().applyAction(
+								WhiteboardAction.parse(action));
 						parentCanvas.repaint();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+
 			}
 		}.start();
 	}
-	
+
 	public void askForHistory() {
 		new Thread() {
 			public void run() {

@@ -34,6 +34,7 @@ public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private Whiteboard board;
     private int boardId;
+    public boolean readyToPaint = false;
     private Color currentColor = Color.BLACK;
     public final static int DEFAULT_STROKE_LENGTH = 25;
     public final static int DEFAULT_ERASE_LENGTH = 50;
@@ -116,6 +117,12 @@ public class Canvas extends JPanel {
         Image drawingBuffer = createImage(getWidth(), getHeight());
         board = new Whiteboard(drawingBuffer, getWidth(), getHeight());
         fillWithWhite();
+        server.listenForActions();
+		server.askForHistory();
+    }
+    
+    public boolean readyToPaint() {
+    	return readyToPaint;
     }
     
     /*
