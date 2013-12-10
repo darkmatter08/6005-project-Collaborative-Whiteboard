@@ -49,12 +49,13 @@ public class MasterServer implements Runnable{
      * serverSocket <=>SlaveClient (CanvasFrame)
      * @throws IOException 
      */
-    public MasterServer(List<MasterWhiteboard> masterWhiteboards, Socket clientSocket, MasterServerStarter shawn) throws IOException {
+    public MasterServer(List<MasterWhiteboard> masterWhiteboards, Socket clientSocket, 
+            MasterServerStarter shawn, ServerSocket masterServerSocket) throws IOException {
         whiteboards = masterWhiteboards;
         socket = clientSocket; // implicitly on Ports.CONNECTION_PORT
         god = shawn;
         open_client_boards = new ArrayList<SlaveServer>();
-        serverSocket = new ServerSocket(Ports.MASTER_PORT);
+        serverSocket = masterServerSocket;//new ServerSocket(Ports.MASTER_PORT);
         
         // order of the following two statements questionable
         // which order to construct stream readers for Socket input vs. output?

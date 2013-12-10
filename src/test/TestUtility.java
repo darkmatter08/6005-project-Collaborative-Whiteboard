@@ -20,7 +20,7 @@ public class TestUtility {
     final private static int masterPort = shared.Ports.MASTER_PORT;
     
     public static void startServer() throws IOException {
-        new Thread(new MasterServerStarter(port)).start();
+        new Thread(new MasterServerStarter(port, masterPort)).start();
     }
     
     public static Socket connectToSlaveServer() throws IOException {

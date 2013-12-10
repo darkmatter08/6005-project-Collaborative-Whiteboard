@@ -21,23 +21,26 @@ public class MasterServerStarter implements Runnable {
     private final List<MasterServer> clients;
     private int whiteboardIdIncrementer = 0;
     //private final Map<MasterWhiteboard, List<SlaveServer>> whiteboardToUsers;
+    private final ServerSocket masterServerSocket;
     
     public static void main(String[] args) throws IOException {
-        MasterServerStarter mss = new MasterServerStarter(shared.Ports.CONNECTION_PORT);
+        MasterServerStarter mss = new MasterServerStarter(shared.Ports.CONNECTION_PORT,
+                shared.Ports.MASTER_PORT);
         mss.serve();
     }
     
-    public MasterServerStarter(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
+    public MasterServerStarter(int port1, int port2) throws IOException {
+        serverSocket = new ServerSocket(port1);
         whiteboards = new ArrayList<MasterWhiteboard>();
         clients = new ArrayList<MasterServer>();
+        masterServerSocket = new ServerSocket(port2);
     }
     
     public void serve() throws IOException {
         while(true) {
             final Socket socket = serverSocket.accept();
             MasterServer wch = 
-                    new MasterServer(whiteboards, socket, this);
+                    new MasterServer(whiteboards, socket, this, masterServerSocket);
             clients.add(wch);
             new Thread(wch).start();
         }
