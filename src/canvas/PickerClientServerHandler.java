@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 
-public class ServerHandler {
+public class PickerClientServerHandler {
 	private final String getIdMessage = shared.Messages.ASK_FOR_WHITEBOARDS;
 	private final String createNewWhiteboardMessage = shared.Messages.CREATE_NEW_WHITEBOARD;
 	private final String getWhiteboardById = "getWhiteboardById";
@@ -21,14 +21,14 @@ public class ServerHandler {
 	private PrintWriter out;
 	private BufferedReader in;
 
-	public ServerHandler(WhiteboardPickerClient parentFrame, WhiteBoardTableModel tableModel) {
+	public PickerClientServerHandler(WhiteboardPickerClient parentFrame, WhiteBoardTableModel tableModel) {
 		this.parentFrame = parentFrame;
 		this.tableModel = tableModel;
 	}
 
 	public synchronized void init() {
 		try {
-			mySocket = new Socket("127.0.0.1", shared.Ports.CONNECTION_PORT);
+			mySocket = new Socket("127.0.0.1", shared.Ports.CLIENT_PICKER_PORT);
 			out = new PrintWriter(mySocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 			watchForNewWhiteboards();

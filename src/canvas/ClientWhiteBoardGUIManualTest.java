@@ -13,7 +13,7 @@ public class ClientWhiteBoardGUIManualTest {
 		new Thread() {
 			public void run() {
 				try {
-					ServerSocket serverSocket = new ServerSocket(shared.Ports.MASTER_PORT);
+					ServerSocket serverSocket = new ServerSocket(shared.Ports.WHITEBOARD_GUI_PORT);
 					Socket socket = serverSocket.accept();
 			        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);

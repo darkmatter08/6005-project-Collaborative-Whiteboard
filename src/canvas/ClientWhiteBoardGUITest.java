@@ -31,7 +31,7 @@ public class ClientWhiteBoardGUITest {
 		new Thread() {
 			public void run() {
 				try {
-					serverSocket = new ServerSocket(shared.Ports.MASTER_PORT);
+					serverSocket = new ServerSocket(shared.Ports.WHITEBOARD_GUI_PORT);
 					socket = serverSocket.accept();
 					in = new BufferedReader(new InputStreamReader(
 							socket.getInputStream()));

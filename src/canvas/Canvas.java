@@ -65,7 +65,7 @@ public class Canvas extends JPanel {
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
         currentActions = new ArrayList<WhiteboardAction>();
-        Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
+        Socket socket = new Socket("127.0.0.1", shared.Ports.WHITEBOARD_GUI_PORT);
         System.out.println("Created the socket");
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
