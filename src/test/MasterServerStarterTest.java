@@ -23,8 +23,6 @@ import java.util.List;
 public class MasterServerStarterTest {
     
     private static Socket socket;
-    private static ObjectOutputStream objOut;
-    private static ObjectInputStream objIn;
     private static BufferedReader in; 
     private static PrintWriter out; 
     
