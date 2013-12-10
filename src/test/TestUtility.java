@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -50,12 +51,11 @@ public class TestUtility {
         return ret;
     }
     
-  public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
+  public static void main(String[] args) throws UnknownHostException, IOException {
       startServer();
       System.out.println("after start server");
       Socket socket = connect();//new Socket(ConnectionDetails.SERVER_ADDRESS, port);
       System.out.println("after connect call");
-      Thread.sleep(1500);
       BufferedReader in, inBoard; 
       PrintWriter out, outBoard;
       
@@ -88,12 +88,16 @@ public class TestUtility {
       final String sp = " ";
       final String name = "ShawnJ";
       
-      outBoard.println(Messages.NEW_WHITEBOARD_CONNECTION + sp + "1" + sp + name);
+      outBoard.println(Messages.NEW_WHITEBOARD_CONNECTION + sp + "0" + sp + name);
       // read lines of history
-      for (String action = inBoard.readLine(); action != null; action = inBoard
-              .readLine()) {
-          System.out.println(action);
+      try {
+          for (String action = inBoard.readLine(); action != null; action = inBoard
+                  .readLine()) {
+              System.out.println(action);
+          }
+      } catch (SocketTimeoutException e) {
+          System.out.println("Done getting history");
       }
-      
+      outBoard.println("Garbage");
   }
 }

@@ -10,7 +10,6 @@ public class PickerServer extends Server {
 	
 	public PickerServer(List<WhiteboardServerInfo> whiteBoards) {
 		super(whiteBoards);
-		System.out.println("PickerServer");
 	}
 	
 	@Override

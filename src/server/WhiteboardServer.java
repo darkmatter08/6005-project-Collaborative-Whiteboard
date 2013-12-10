@@ -19,7 +19,6 @@ public class WhiteboardServer extends Server {
      */
 	public WhiteboardServer(List<WhiteboardServerInfo> whiteBoards) {
 		super(whiteBoards);
-		System.out.println("startedWhiteboardServer");
 	}
 	
 	/**
@@ -59,7 +58,6 @@ public class WhiteboardServer extends Server {
 			String request = tokens[REQUEST_INDEX];
 			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
 			if (request.equals(shared.Messages.NEW_WHITEBOARD_CONNECTION)) {
-			    System.out.println("in WhiteboardServer.handleCurrentConnection NEW_WHITEBOARD_CONNECTION");
 			    String username = tokens[2];
 				getWhiteBoards().get(whiteBoardId).getClients()
 						.add(new ClientConnection(
@@ -99,7 +97,6 @@ public class WhiteboardServer extends Server {
 	 * @param info the WhiteboardServerInfo board to get the history from
 	 */
 	public void sendEntireHistory(PrintWriter out, WhiteboardServerInfo info) {
-	    System.out.println("sending entire history");
 		final PrintWriter outInThread = out;
 		final WhiteboardServerInfo infoInThread = info;
 		new Thread() {

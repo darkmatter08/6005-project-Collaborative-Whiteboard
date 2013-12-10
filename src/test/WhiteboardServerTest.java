@@ -7,18 +7,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import shared.*;
 
 public class WhiteboardServerTest {
     
     private static Socket socket;
     private static Socket whiteboardSocket;
-    private static BufferedReader in; 
-    private static PrintWriter out; 
+    private static BufferedReader in, inBoard; 
+    private static PrintWriter out, outBoard; 
+    
+    private final String sp = " ";
+    private final String name = "ShawnJ";
     
     @BeforeClass
     public static void setup() throws IOException {
@@ -37,8 +44,8 @@ public class WhiteboardServerTest {
     }
     
     @Test
-    public void fullTest() {
-        fail("Not yet implemented");
+    public void fullTest() throws IOException {
+        askForWhiteboard();
     }
     
     public void askForWhiteboard() throws IOException {
@@ -48,6 +55,35 @@ public class WhiteboardServerTest {
         
         // request connection to the WhiteboardServer
         whiteboardSocket = TestUtility.connectToWhiteboardServer();
+        
+        inBoard = new BufferedReader(new InputStreamReader(whiteboardSocket.getInputStream()));
+        outBoard = new PrintWriter(whiteboardSocket.getOutputStream(), true);
+        
+        /*
+         * Protocol token ordering:
+         * 0 - Request type 
+         * 1 - Whiteboard ID
+         * 2 - username (String) (only on shared.Messages.NEW_WHITEBOARD_CONNECTION)
+         * 2-7 WhiteboardAction (only on shared.Messages.ADD_ACTION)
+         *   2 - x1
+         *   3 - y1
+         *   4 - x2 
+         *   5 - y2
+         *   6 - colorRGB (int)
+         *   7 - strokeWidth (int)
+         */
+        
+        outBoard.println(Messages.NEW_WHITEBOARD_CONNECTION + sp + "0" + sp + name);
+        // read lines of history
+        List<String> answers = new ArrayList<String>();
+        try {
+            for (String action = inBoard.readLine(); action != null; action = inBoard
+                    .readLine()) {
+                answers.add(action);
+            }
+        } catch (SocketTimeoutException e) {
+            assertTrue(answers.size() == 0);
+        }
     }
 
 }
