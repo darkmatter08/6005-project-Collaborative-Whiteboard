@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -39,26 +40,15 @@ public class WhiteboardPickerClientTest {
 
 	public void handleMessages(Socket socket) {
 		try {
+			PrintWriter out = new PrintWriter(
+					socket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
-			ObjectOutputStream objOut = new ObjectOutputStream(
-					socket.getOutputStream());
 			for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
-				if (msg.equals(getIdMessage)) {
-					ArrayList<Integer> mockIds = new ArrayList<Integer>();
-					mockIds.add(0);
-					mockIds.add(1);
-					mockIds.add(2);
-					objOut.writeObject(mockIds);
-					objOut.flush();
-				} else if (msg.equals(createNewWhiteboardMessage)) {
-					ArrayList<Integer> mockIds = new ArrayList<Integer>();
-					mockIds.add(0);
-					mockIds.add(1);
-					mockIds.add(2);
-					mockIds.add(3);
-					objOut.writeObject(mockIds);
-					objOut.flush();
+				if (msg.equals(shared.Messages.ASK_FOR_WHITEBOARDS)) {
+					out.println(3);
+				} else if (msg.equals(shared.Messages.CREATE_NEW_WHITEBOARD)) {
+					out.println(4);
 				}
 			}
 		} catch (IOException e) {
