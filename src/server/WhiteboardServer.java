@@ -40,8 +40,11 @@ public class WhiteboardServer extends Server {
 			String request = tokens[REQUEST_INDEX];
 			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
 			if (request.equals(shared.Messages.GET_ALL_HISTORY)) {
+			    String username = tokens[2];
 				getWhiteBoards().get(whiteBoardId).getClients()
-						.add(new PrintWriter(socket.getOutputStream(), true));
+						.add(new ClientConnection(
+						        new PrintWriter(socket.getOutputStream(), true),
+						        username));
 				sendEntireHistory(new PrintWriter(socket.getOutputStream(),
 						true), getWhiteBoards().get(whiteBoardId));
 				System.out.println(getWhiteBoards().get(whiteBoardId).getClients());
@@ -60,8 +63,8 @@ public class WhiteboardServer extends Server {
 		final WhiteboardServerInfo infoInThread = info;
 		new Thread() {
 			public void run() {
-				for (PrintWriter out : infoInThread.getClients()) {
-					out.println(actionInThread);
+				for (ClientConnection client : infoInThread.getClients()) {
+					client.getPrintWriter().println(actionInThread);
 				}
 			}
 		}.start();

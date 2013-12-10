@@ -13,23 +13,22 @@ import java.util.ArrayList;
  *
  */
 public class WhiteboardServerInfo {
-	private ArrayList<PrintWriter> clients;
+	private ArrayList<ClientConnection> clients;
 	private ArrayList<String> history;
 	
 	public WhiteboardServerInfo() {
-		clients = new ArrayList<PrintWriter>();
+		clients = new ArrayList<ClientConnection>();
 		history = new ArrayList<String>();
 	}
 	
-	/**
-	 * @return List<PrintWriter> connected to all clients of this 
-	 *     whiteboard
-	 */
-	public ArrayList<PrintWriter> getClients() {
+	public ArrayList<ClientConnection> getClients() {
 		return clients;
 	}
 	
-
+	public void setClients(ArrayList<ClientConnection> clients) {
+		this.clients = clients;
+	}
+	
 	public ArrayList<String> getHistory() {
 		return history;
 	}
