@@ -3,7 +3,10 @@ package canvas;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -31,30 +34,11 @@ public class ClientWhiteboardGUI extends JPanel {
 	
 	public void init() {
 		 try {
-             canvas = new Canvas(boardId);
              Socket socket = new Socket("127.0.0.1", shared.Ports.MASTER_PORT);
-             new SlaveClient(canvas, socket).run();
-//             new Thread() {
-//                 @Override
-//                 public void run() {
-//                     while (true) {
-//                         try {
-//                            canvas.sendCurrentActionsAndUpdate();
-//                            Thread.sleep(10);
-//                        } catch (InterruptedException e) {
-//                            // TODO Auto-generated catch block
-//                            e.printStackTrace();
-//                        } catch (ClassNotFoundException e) {
-//                            // TODO Auto-generated catch block
-//                            e.printStackTrace();
-//                        } catch (IOException e) {
-//                            // TODO Auto-generated catch block
-//                            e.printStackTrace();
-//                        }
-//                     }
-//                 }
-//             }.start();
-             
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter out = new PrintWriter(socket.getOutputStream());
+             canvas = new Canvas(boardId, out);
+             Receiver receiver = new Receiver(canvas, in);
          } catch (Exception e) {
              // TODO Auto-generated catch block
              e.printStackTrace();
