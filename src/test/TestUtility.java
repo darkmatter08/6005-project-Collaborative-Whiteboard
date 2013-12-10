@@ -16,7 +16,7 @@ import shared.Ports;
 
 public class TestUtility {
     
-    final private static int port = shared.Ports.CLIENT_PICKER_PORT;
+    final private static int port = shared.Ports.CLIENT_PICKER_GUI_PORT;
     final private static int masterPort = shared.Ports.WHITEBOARD_GUI_PORT;
     
     public static void startServer() throws IOException {

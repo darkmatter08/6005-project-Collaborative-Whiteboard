@@ -1,7 +1,6 @@
 package canvas;
 
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,19 +9,9 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.*;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import shared.WhiteboardAction;
 
@@ -38,7 +27,7 @@ public class Canvas extends JPanel {
     private Color currentColor = Color.BLACK;
     public final static int DEFAULT_STROKE_LENGTH = 25;
     public final static int DEFAULT_ERASE_LENGTH = 50;
-    private CanvasServerHandler server;
+    private CanvasConnectionHandler connectionHandler;
     int thickness = DEFAULT_STROKE_LENGTH;
     Stroke currentStroke = new BasicStroke(DEFAULT_STROKE_LENGTH);
     
@@ -67,9 +56,9 @@ public class Canvas extends JPanel {
     public void initConnection() {
     	//Do a quick draw so board is Initialized.
     	//drawLineSegment(0, 0, 0, 0);
-    	server = new CanvasServerHandler(boardId, this);
+    	connectionHandler = new CanvasConnectionHandler(boardId, this);
     	try {
-    	server.init();
+    	connectionHandler.init();
     	}
     	catch (Exception e) {
     		e.printStackTrace();
@@ -117,8 +106,8 @@ public class Canvas extends JPanel {
         Image drawingBuffer = createImage(getWidth(), getHeight());
         board = new Whiteboard(drawingBuffer, getWidth(), getHeight());
         fillWithWhite();
-        server.listenForActions();
-		server.askForHistory();
+        connectionHandler.listenForActions();
+		connectionHandler.askForHistory();
     }
     
     public boolean readyToPaint() {
@@ -143,7 +132,7 @@ public class Canvas extends JPanel {
     private synchronized void drawLineSegment(int x1, int y1, int x2, int y2) {
         WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor.getRGB(), thickness);
         board.applyAction(action);
-        server.sendAction(action);
+        connectionHandler.sendAction(action);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint();

@@ -32,7 +32,6 @@ public class ClientWhiteboardGUI extends JPanel {
 		try {
 			canvas = new Canvas(boardId);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		layout = new GroupLayout(this);

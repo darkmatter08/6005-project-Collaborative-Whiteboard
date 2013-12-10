@@ -12,11 +12,18 @@ import shared.Messages;
 import shared.WhiteboardAction;
 
 public class WhiteboardServer extends Server {
-
+    
+    /**
+     * Constructs the server with all WhiteboardServerInfo
+     * @param whiteBoards WhiteboardServerInfos to initialize the server with.
+     */
 	public WhiteboardServer(List<WhiteboardServerInfo> whiteBoards) {
 		super(whiteBoards);
 	}
-
+	
+	/**
+	 * @return int port to host the server on
+	 */
 	@Override
 	public int getPort() {
 		return shared.Ports.WHITEBOARD_GUI_PORT;
@@ -24,12 +31,14 @@ public class WhiteboardServer extends Server {
 
 	@Override
 	public void handleCurrentConnection(Socket socket) throws IOException {
+		final int REQUEST_INDEX = 0;
+		final int WHITEBOARD_ID_INDEX = 1;
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
 			String[] tokens = msg.split(" ");
-			String request = tokens[0];
-			int whiteBoardId = Integer.parseInt(tokens[1]);
+			String request = tokens[REQUEST_INDEX];
+			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
 			if (request.equals(shared.Messages.GET_ALL_HISTORY)) {
 			    String username = tokens[2];
 				getWhiteBoards().get(whiteBoardId).getClients()
