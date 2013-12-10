@@ -2,8 +2,13 @@ package test;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import shared.ProtocolUtility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,42 +22,49 @@ import java.util.List;
 
 public class MasterServerStarterTest {
     
-    private Socket socket = null;
-    private ObjectOutputStream objOut;
-    private ObjectInputStream objIn;
-    private BufferedReader in; 
-    private PrintWriter out; 
+    private static Socket socket;
+    private static ObjectOutputStream objOut;
+    private static ObjectInputStream objIn;
+    private static BufferedReader in; 
+    private static PrintWriter out; 
     
-    @Before
-    public void setup() throws IOException, InterruptedException {
+    @BeforeClass
+    public static void setup() throws IOException {
         TestUtility.startServer(); // starts MasterServerStarter
         socket = TestUtility.connect();
-        Thread.sleep(300);
         
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.objIn = new ObjectInputStream(socket.getInputStream());
-        this.objOut = new ObjectOutputStream(socket.getOutputStream());
-        this.out = new PrintWriter(socket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        out = new PrintWriter(socket.getOutputStream(), true);
+    }
+    
+    @AfterClass
+    public static void teardown() throws IOException {
+        in.close();
+        out.close();
+        socket.close();
     }
     
     @Test
-    public void testServerStart() throws IOException, InterruptedException {
-        Thread.sleep(300);
-        System.out.println(this.out);
-        out.write("createNewWhiteboard\n");
-        System.out.println("sent createNewWhiteboard");
-        try {
-            while(objIn.available() == 0){
-            }
-            List<Integer> allWhiteboards = (List<Integer>) objIn.readObject();
-            List<Integer> expected = new ArrayList<Integer>();
-            expected.add(1);
-            assert(allWhiteboards.equals(expected));
-        } catch (ClassNotFoundException e) {
-            fail("unexpected object returned");
-        }
+    public void testCreateNewWhiteboard() throws IOException {
+        out.println("createNewWhiteboard");
+
+        List<Integer> allWhiteboards = ProtocolUtility.convertListTypeToInt(
+                ProtocolUtility.deserialize(in.readLine()));
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(1);
+        assert(allWhiteboards.equals(expected));
     }
     
+    @Test
+    public void testGetWhiteboardIds() throws IOException {
+        out.println("getWhiteboardIds");
+        
+        List<Integer> allWhiteboards = ProtocolUtility.convertListTypeToInt(
+                ProtocolUtility.deserialize(in.readLine()));
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(1);
+        assert(allWhiteboards.equals(expected));
+    }
 
     
 }
