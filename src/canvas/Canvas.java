@@ -41,15 +41,12 @@ public class Canvas extends JPanel {
     private int boardId;
     private float currentStrokeWidth = drawStrokeWidth;
     private String mode = DRAW_MODE;
+    private Socket socket;
 
-    
     private ArrayList<WhiteboardAction> currentActions;
     
     // IO
-    private BufferedReader in = null;
     private PrintWriter out = null;
-    private ObjectOutputStream objOut = null;
-    private ObjectInputStream objIn = null;
     
     /**
      * Make a canvas.
@@ -58,7 +55,7 @@ public class Canvas extends JPanel {
      * @throws IOException 
      * @throws UnknownHostException 
      */
-    public Canvas(int width, int height) throws UnknownHostException, IOException {
+    private Canvas(int width, int height) throws UnknownHostException, IOException {
         this.setPreferredSize(new Dimension(width, height));
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
@@ -69,14 +66,16 @@ public class Canvas extends JPanel {
         System.out.println("finished canvas");
     }
     
-    public Canvas(int boardId) throws Exception {
+    public Canvas(int boardId, PrintWriter out) throws Exception {
     	this(800, 600);
     	this.boardId = boardId;
+    	this.out = out;
     }
     
-    public Canvas(int width, int height, Whiteboard board) throws UnknownHostException, IOException {
+    public Canvas(int width, int height, Whiteboard board, PrintWriter out) throws UnknownHostException, IOException {
         this(width, height);
         this.board = board;
+        this.out = out;
     }
     
     public Color getPenColor() {
@@ -136,12 +135,7 @@ public class Canvas extends JPanel {
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
-        
-        synchronized(getCurrentActions()) {
-            getCurrentActions().add(action);
-            System.out.println("added action");
-        }
-        
+        out.println(action); // send draw action to the server
     }
     
     /*
@@ -205,5 +199,9 @@ public class Canvas extends JPanel {
      */
     private void setCurrentActions(ArrayList<WhiteboardAction> currentActions) {
         this.currentActions = currentActions;
+    }
+    
+    public Whiteboard getWhiteboard() {
+        return board;
     }
 }

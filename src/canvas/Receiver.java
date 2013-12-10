@@ -1,17 +1,20 @@
 package canvas;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.util.List;
 
 import shared.WhiteboardAction;
 
 class Receiver extends Thread {
-    private SlaveClient client;
-    private ObjectInputStream objIn = null;
+    private Canvas canvas;
+    private BufferedReader in;
     
-    public Receiver(SlaveClient client) {
-        this.client = client;
+    public Receiver(Canvas canvas, BufferedReader in) {
+        this.canvas = canvas;
+        this.in = in;
     }
     
     public void run() {
@@ -21,35 +24,24 @@ class Receiver extends Thread {
         } catch (IOException e) {
             System.out.println("caught ioexception in receiver.run");
             e.printStackTrace(); // but don't terminate serve()
-        } finally {
-            try {
-                System.out.println("socket close attempt in receiver.run()");
-                client.socket.close();
-            } catch (IOException e) {
-                System.out.println("caught ioexception in receiver.run's finally-catch");
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         }
     }
     
     private void receiveServerActions() throws IOException {
         System.out.println("entered receiver.receiveServerActions()");
-        System.out.println("socket closed? " + client.socket.isClosed());
-        this.objIn = new ObjectInputStream(client.socket.getInputStream());
-        System.out.println("finished init of objIn");
+        
         try {
             System.out.println("entered receiver.receiveServerActions() try block");
-            for (List<WhiteboardAction> actions = (List<WhiteboardAction>)objIn.readObject(); actions != null;
-                    actions = (List<WhiteboardAction>)objIn.readObject()) {
-                client.canvas.applyActions(actions);
+            for (String actionStr = in.readLine(); actionStr != null; actionStr = in.readLine()) {
+                WhiteboardAction action = WhiteboardAction.parse(actionStr);
+                canvas.getWhiteboard().applyAction(action);
             }
         } catch (Exception e){
             System.out.println("caught exception in receiver.receiveserveractions()");
             e.printStackTrace();
         } finally {
             System.out.println("socket close attempt in receiver.receiveServerAction()");
-            client.socket.close();
+            //client.socket.close();
         }
     }
 }
