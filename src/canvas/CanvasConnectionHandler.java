@@ -58,7 +58,7 @@ public class CanvasConnectionHandler {
 	public void askForHistory() {
 		new Thread() {
 			public void run() {
-				out.println(shared.Messages.GET_ALL_HISTORY + " " + boardId);
+				out.println(shared.Messages.NEW_WHITEBOARD_CONNECTION + " " + boardId + " " + parentCanvas.getUsername());
 			}
 		}.start();
 	}
