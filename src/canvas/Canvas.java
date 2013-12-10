@@ -56,8 +56,9 @@ public class Canvas extends JPanel {
      * @throws UnknownHostException 
      */
     private Canvas(int width, int height) throws UnknownHostException, IOException {
-        makeDrawingBuffer();
+        super();
         this.setPreferredSize(new Dimension(width, height));
+        makeDrawingBuffer();
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
