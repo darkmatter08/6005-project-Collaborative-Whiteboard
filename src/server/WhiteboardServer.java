@@ -39,7 +39,7 @@ public class WhiteboardServer extends Server {
 			String[] tokens = msg.split(" ");
 			String request = tokens[REQUEST_INDEX];
 			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
-			if (request.equals(shared.Messages.GET_ALL_HISTORY)) {
+			if (request.equals(shared.Messages.NEW_WHITEBOARD_CONNECTION)) {
 			    String username = tokens[2];
 				getWhiteBoards().get(whiteBoardId).getClients()
 						.add(new ClientConnection(
@@ -70,12 +70,14 @@ public class WhiteboardServer extends Server {
 	}
 	
 	public void sendEntireHistory(PrintWriter out, WhiteboardServerInfo info) {
+	    System.out.println("sending entire history");
 		final PrintWriter outInThread = out;
 		final WhiteboardServerInfo infoInThread = info;
 		new Thread() {
 			public void run() {
 				for (String action : infoInThread.getHistory()) {
 						outInThread.println(action);
+						System.out.println(action);
 					}
 			}
 		}.start();

@@ -47,7 +47,7 @@ public class ClientWhiteBoardGUITest {
 
 	@Test
 	public void testEraseButton() {
-		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0);
+		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0, "testUser");
 		clientGUI.init();
 		clientGUI.setEraserColor();
 		assertEquals(clientGUI.getCanvas().getPenColor(), Color.WHITE);
@@ -55,7 +55,7 @@ public class ClientWhiteBoardGUITest {
 
 	@Test
 	public void testAppliesAction() throws IOException {
-		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0);
+		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0, "testUser");
 		clientGUI.init();
 		ArrayList<WhiteboardAction> actions = new ArrayList<WhiteboardAction>();
 		//actions.add(new WhiteboardAction(0, 0, 1, 1, Color.RED, new BasicStroke(1)));

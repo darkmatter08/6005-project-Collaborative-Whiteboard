@@ -18,11 +18,13 @@ public class CanvasConnectionHandler {
 	private PrintWriter out;
 	private BufferedReader in;
 	private Canvas parentCanvas;
+	private ClientWhiteboardGUI gui;
 	Whiteboard board;
 
-	public CanvasConnectionHandler(int boardId, Canvas canvas) {
+	public CanvasConnectionHandler(int boardId, ClientWhiteboardGUI gui) {
 		this.boardId = boardId;
-		this.parentCanvas = canvas;
+		this.gui = gui;
+		this.parentCanvas = gui.getCanvas();
 	}
 
 	public void init() throws UnknownHostException, IOException {
@@ -58,7 +60,7 @@ public class CanvasConnectionHandler {
 	public void askForHistory() {
 		new Thread() {
 			public void run() {
-				out.println(shared.Messages.NEW_WHITEBOARD_CONNECTION + " " + boardId + " " + parentCanvas.getUsername());
+				out.println(shared.Messages.NEW_WHITEBOARD_CONNECTION + " " + boardId + " " + gui.getUsername());
 			}
 		}.start();
 	}

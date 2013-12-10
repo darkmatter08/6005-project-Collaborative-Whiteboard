@@ -86,11 +86,15 @@ public class WhiteboardPickerClient extends JFrame {
 	}
 
 	public void openEditor(int boardId) {
-		connectionHandler.openWhiteboard(boardId);
+		connectionHandler.openWhiteboard(boardId, getUsername());
 	}
 	
 	public PickerClientConnectionHandler getServerHandler() {
 		return connectionHandler;
+	}
+	
+	public String getUsername() {
+	    return "pickerClientUser"; // TODO: implement UI for setting username
 	}
 
 	public static void main(String[] args) {

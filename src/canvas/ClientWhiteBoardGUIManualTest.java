@@ -25,6 +25,6 @@ public class ClientWhiteBoardGUIManualTest {
 				}
 			}
 		}.start();
-		ClientWhiteboardGUI.openEditor(0);
+		ClientWhiteboardGUI.openEditor(0, "testUser");
 	}
 }

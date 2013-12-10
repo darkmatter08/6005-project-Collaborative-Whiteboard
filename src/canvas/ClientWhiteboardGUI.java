@@ -32,7 +32,7 @@ public class ClientWhiteboardGUI extends JPanel {
 	
 	public void init() {
 		try {
-			canvas = new Canvas(boardId);
+			canvas = new Canvas(boardId, this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -108,8 +108,13 @@ public class ClientWhiteboardGUI extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		openEditor(0);
+		openEditor(0, "testUser");
 	}
-	
-	
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
 }
