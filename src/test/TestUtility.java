@@ -3,8 +3,6 @@ package test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -52,23 +50,17 @@ public class TestUtility {
     }
     
   public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
-      Socket socket = new Socket(ConnectionDetails.SERVER_ADDRESS, port);
+      startServer();
+      Socket socket = connect();//new Socket(ConnectionDetails.SERVER_ADDRESS, port);
       Thread.sleep(1500);
-      ObjectOutputStream objOut;
-      ObjectInputStream objIn;
       BufferedReader in; 
       PrintWriter out;
       
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      objIn = new ObjectInputStream(socket.getInputStream());
-      objOut = new ObjectOutputStream(socket.getOutputStream());
       out = new PrintWriter(socket.getOutputStream(), true);
       
       out.println("createNewWhiteboard");
       System.out.println("wrote createnewwhiteboard");
       System.out.println(in.readLine());
-      //while(objIn.available() == 0){}
-      List<Integer> list = (List<Integer>)objIn.readObject();
-      System.out.println(list);
   }
 }
