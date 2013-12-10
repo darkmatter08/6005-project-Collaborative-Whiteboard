@@ -51,10 +51,9 @@ public class Canvas extends JPanel {
     public Canvas(int width, int height) throws UnknownHostException, IOException {
         this.setPreferredSize(new Dimension(width, height));
         addDrawingController();
-
     }
     
-    public Whiteboard getWhiteboard() {
+    public synchronized Whiteboard getWhiteboard() {
     	return board;
     }
     
@@ -65,7 +64,9 @@ public class Canvas extends JPanel {
     }
     
     public void initConnection() {
-    	server = new CanvasServerHandler(boardId, board, this);
+    	//Do a quick draw so board is Initialized.
+    	//drawLineSegment(0, 0, 0, 0);
+    	server = new CanvasServerHandler(boardId, this);
     	try {
     	server.init();
     	}
@@ -132,7 +133,7 @@ public class Canvas extends JPanel {
      * Draw a line between two points (x1, y1) and (x2, y2), specified in
      * pixels relative to the upper-left corner of the drawing buffer.
      */
-    private void drawLineSegment(int x1, int y1, int x2, int y2) {
+    private synchronized void drawLineSegment(int x1, int y1, int x2, int y2) {
         WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor.getRGB(), thickness);
         board.applyAction(action);
         server.sendAction(action);

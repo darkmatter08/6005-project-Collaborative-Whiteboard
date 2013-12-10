@@ -27,25 +27,25 @@ public class Whiteboard implements Serializable {
      * Draw a line between two points (x1, y1) and (x2, y2), specified in
      * pixels relative to the upper-left corner of the drawing buffer.
      */
-    public void applyAction(WhiteboardAction action) {
+    public synchronized void applyAction(WhiteboardAction action) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         g.setColor(action.color);
         g.setStroke(action.stroke);
         g.drawLine(action.x1, action.y1, action.x2, action.y2);
     }
     
-    public void fillWithWhite() {
+    public synchronized void fillWithWhite() {
         final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
     
         g.setColor(Color.WHITE);
         g.fillRect(0,  0,  getWidth(), getHeight());
     }
     
-    public int getWidth() {
+    public synchronized int getWidth() {
         return width;
     }
     
-    public int getHeight() {
+    public synchronized int getHeight() {
         return height;
     }
 }

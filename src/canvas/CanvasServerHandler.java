@@ -19,7 +19,7 @@ public class CanvasServerHandler {
 
 	public CanvasServerHandler(int boardId, Canvas canvas) {
 		this.boardId = boardId;
-\		this.parentCanvas = canvas;
+		this.parentCanvas = canvas;
 	}
 
 	public void init() throws UnknownHostException, IOException {
@@ -31,12 +31,18 @@ public class CanvasServerHandler {
 	}
 
 	public void listenForActions() {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		new Thread() {
 			public void run() {
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {
-						System.out.println("csv msg : " + action);
+						System.out.println(WhiteboardAction.parse(action));
 						parentCanvas.getWhiteboard().applyAction(WhiteboardAction.parse(action));
 						parentCanvas.repaint();
 					}
