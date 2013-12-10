@@ -1,4 +1,4 @@
-package canvas;
+package test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import canvas.ClientWhiteboardGUI;
 
 public class ClientWhiteBoardGUIManualTest {
 	public static void main(String[] args) {
@@ -25,6 +27,6 @@ public class ClientWhiteBoardGUIManualTest {
 				}
 			}
 		}.start();
-		ClientWhiteboardGUI.openEditor(0);
+		ClientWhiteboardGUI.openEditor(0, "testUser");
 	}
 }

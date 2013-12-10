@@ -1,4 +1,4 @@
-package canvas;
+package test;
 
 import static org.junit.Assert.*;
 
@@ -17,6 +17,8 @@ import javax.swing.JTable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import canvas.WhiteboardPickerClient;
 
 public class WhiteboardPickerClientTest {
 	private ServerSocket serverSocket;

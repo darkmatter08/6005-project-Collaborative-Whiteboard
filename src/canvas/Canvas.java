@@ -30,6 +30,7 @@ public class Canvas extends JPanel {
     private CanvasConnectionHandler connectionHandler;
     int thickness = DEFAULT_STROKE_LENGTH;
     Stroke currentStroke = new BasicStroke(DEFAULT_STROKE_LENGTH);
+    private ClientWhiteboardGUI gui;
     
     /**
      * Make a canvas.
@@ -47,16 +48,17 @@ public class Canvas extends JPanel {
     	return board;
     }
     
-    public Canvas(int boardId) throws Exception {
+    public Canvas(int boardId, ClientWhiteboardGUI gui) throws Exception {
     	this(800, 600);
     	this.boardId = boardId;
+    	this.gui = gui;
     	initConnection();
     }
     
     public void initConnection() {
     	//Do a quick draw so board is Initialized.
     	//drawLineSegment(0, 0, 0, 0);
-    	connectionHandler = new CanvasConnectionHandler(boardId, this);
+    	connectionHandler = new CanvasConnectionHandler(boardId, gui);
     	try {
     	connectionHandler.init();
     	}
@@ -108,6 +110,10 @@ public class Canvas extends JPanel {
         fillWithWhite();
         connectionHandler.listenForActions();
 		connectionHandler.askForHistory();
+    }
+    
+    public CanvasConnectionHandler getConnectionHandler() {
+    	return connectionHandler;
     }
     
     public boolean readyToPaint() {

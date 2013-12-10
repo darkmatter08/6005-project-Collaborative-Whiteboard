@@ -66,11 +66,10 @@ public class PickerClientConnectionHandler {
 		}.start();
 	}
 
-	public void openWhiteboard(int boardId) {
-		final int boardToOpen = boardId;
+	public void openWhiteboard(final int boardId, final String username) {
 		new Thread() {
 			public void run() {
-				ClientWhiteboardGUI.openEditor(boardToOpen);
+				ClientWhiteboardGUI.openEditor(boardId, username);
 			}
 		}.start();
 	}

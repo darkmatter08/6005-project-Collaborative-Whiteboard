@@ -22,15 +22,17 @@ public class ClientWhiteboardGUI extends JPanel {
 	private JButton eraseButton = new JButton();
 	private Canvas canvas;
 	private int boardId;
+	private String username;
 	
-	public ClientWhiteboardGUI(int boardId) {
+	public ClientWhiteboardGUI(int boardId, String username) {
 		super();
 		this.boardId = boardId;
+		this.username = username;
 	}
 	
 	public void init() {
 		try {
-			canvas = new Canvas(boardId);
+			canvas = new Canvas(boardId, this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -86,14 +88,13 @@ public class ClientWhiteboardGUI extends JPanel {
 		canvas.setPenThickness(Canvas.DEFAULT_ERASE_LENGTH);
 	}
 	
-	public static void openEditor(int boardId) {
-		final int boardToOpen = boardId;
+	public static void openEditor(final int boardId, final String username) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame window = new JFrame(
 						"Freehand Canvas");
 				window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(boardToOpen);
+				ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(boardId, username);
 				window.add(clientGUI);
 				clientGUI.init();
 				window.pack();
@@ -107,8 +108,13 @@ public class ClientWhiteboardGUI extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		openEditor(0);
+		openEditor(0, "testUser");
 	}
-	
-	
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
 }
