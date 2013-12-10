@@ -19,6 +19,7 @@ public class WhiteboardServer extends Server {
      */
 	public WhiteboardServer(List<WhiteboardServerInfo> whiteBoards) {
 		super(whiteBoards);
+		System.out.println("startedWhiteboardServer");
 	}
 	
 	/**
@@ -40,11 +41,13 @@ public class WhiteboardServer extends Server {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
-			/*
+			System.out.println("whiteboard server got message: " + msg);
+		    /*
 			 * Protocol token ordering:
 			 * 0 - Request type 
 			 * 1 - Whiteboard ID
-			 * 2-7 WhiteboardAction
+			 * 2 - username (String) (only on shared.Messages.NEW_WHITEBOARD_CONNECTION)
+			 * 2-7 WhiteboardAction (only on shared.Messages.ADD_ACTION)
 			 *   2 - x1
 			 *   3 - y1
 			 *   4 - x2 
@@ -56,6 +59,7 @@ public class WhiteboardServer extends Server {
 			String request = tokens[REQUEST_INDEX];
 			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
 			if (request.equals(shared.Messages.NEW_WHITEBOARD_CONNECTION)) {
+			    System.out.println("in WhiteboardServer.handleCurrentConnection NEW_WHITEBOARD_CONNECTION");
 			    String username = tokens[2];
 				getWhiteBoards().get(whiteBoardId).getClients()
 						.add(new ClientConnection(
@@ -103,7 +107,7 @@ public class WhiteboardServer extends Server {
 				for (String action : infoInThread.getHistory()) {
 						outInThread.println(action);
 						System.out.println(action);
-					}
+				}
 			}
 		}.start();
 	}

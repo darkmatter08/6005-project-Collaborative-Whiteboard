@@ -52,7 +52,7 @@ public class ServerRunner implements Runnable {
     @Override
     public void run() {
         try {
-            main(null);
+            this.hostServers();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Couldn't Start Server");

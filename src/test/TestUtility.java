@@ -8,6 +8,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
+
 import server.ServerRunner;
 import shared.*;
 
@@ -49,9 +50,11 @@ public class TestUtility {
         return ret;
     }
     
-  public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
+  public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
       startServer();
+      System.out.println("after start server");
       Socket socket = connect();//new Socket(ConnectionDetails.SERVER_ADDRESS, port);
+      System.out.println("after connect call");
       Thread.sleep(1500);
       BufferedReader in, inBoard; 
       PrintWriter out, outBoard;
@@ -66,6 +69,30 @@ public class TestUtility {
       Socket whiteboardSock = connectToWhiteboardServer();
       inBoard = new BufferedReader(new InputStreamReader(whiteboardSock.getInputStream()));
       outBoard = new PrintWriter(whiteboardSock.getOutputStream(), true);
+      System.out.println("finished connection to the whiteboard server");
+      
+      /*
+       * Protocol token ordering:
+       * 0 - Request type 
+       * 1 - Whiteboard ID
+       * 2 - username (String) (only on shared.Messages.NEW_WHITEBOARD_CONNECTION)
+       * 2-7 WhiteboardAction (only on shared.Messages.ADD_ACTION)
+       *   2 - x1
+       *   3 - y1
+       *   4 - x2 
+       *   5 - y2
+       *   6 - colorRGB (int)
+       *   7 - strokeWidth (int)
+       */
+      
+      final String sp = " ";
+      final String name = "ShawnJ";
+      
+      outBoard.println(Messages.NEW_WHITEBOARD_CONNECTION + sp + "1" + sp + name);
+      // read lines of history
+      for (String msg = inBoard.readLine(); msg != null; msg = inBoard.readLine()) {
+          System.out.println(msg);
+      }
       
   }
 }
