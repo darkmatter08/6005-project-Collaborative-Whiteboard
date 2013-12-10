@@ -86,6 +86,7 @@ public class WhiteboardPickerClient extends JFrame {
 	}
 
 	public void openEditor(int boardId) {
+	    System.out.println("opening board " + boardId);
 		server.openWhiteboard(boardId);
 	}
 	

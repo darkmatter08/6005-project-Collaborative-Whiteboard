@@ -56,6 +56,7 @@ public class Canvas extends JPanel {
      * @throws UnknownHostException 
      */
     private Canvas(int width, int height) throws UnknownHostException, IOException {
+        makeDrawingBuffer();
         this.setPreferredSize(new Dimension(width, height));
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
@@ -72,11 +73,11 @@ public class Canvas extends JPanel {
     	this.out = out;
     }
     
-    public Canvas(int width, int height, Whiteboard board, PrintWriter out) throws UnknownHostException, IOException {
+    /*public Canvas(int width, int height, Whiteboard board, PrintWriter out) throws UnknownHostException, IOException {
         this(width, height);
         this.board = board;
         this.out = out;
-    }
+    }*/
     
     public Color getPenColor() {
     	return currentColor;
@@ -137,6 +138,12 @@ public class Canvas extends JPanel {
     }
 
     public void applyAction(WhiteboardAction action) {
+        if (action == null) {
+            System.out.println("Cannot apply null action to Whiteboard");
+        }
+        if (board == null) {
+            System.out.println("board is null");
+        }
         board.applyAction(action);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
