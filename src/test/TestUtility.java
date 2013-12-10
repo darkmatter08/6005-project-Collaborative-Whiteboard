@@ -90,8 +90,9 @@ public class TestUtility {
       
       outBoard.println(Messages.NEW_WHITEBOARD_CONNECTION + sp + "1" + sp + name);
       // read lines of history
-      for (String msg = inBoard.readLine(); msg != null; msg = inBoard.readLine()) {
-          System.out.println(msg);
+      for (String action = inBoard.readLine(); action != null; action = inBoard
+              .readLine()) {
+          System.out.println(action);
       }
       
   }
