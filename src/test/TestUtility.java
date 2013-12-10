@@ -62,8 +62,5 @@ public class TestUtility {
       out.println("createNewWhiteboard");
       System.out.println("wrote createnewwhiteboard");
       System.out.println(in.readLine());
-      //while(objIn.available() == 0){}
-      //List<Integer> list = (List<Integer>)objIn.readObject();
-      //System.out.println(list);
   }
 }

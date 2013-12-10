@@ -19,7 +19,7 @@ import java.net.Socket;
  * @author jains
  *
  */
-public class MasterServerStarterTest {
+public class PickerServerTest {
     
     private static Socket socket;
     private static BufferedReader in; 
@@ -32,7 +32,6 @@ public class MasterServerStarterTest {
         
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
-        System.out.println("done setup");
     }
     
     @AfterClass
@@ -40,7 +39,6 @@ public class MasterServerStarterTest {
         in.close();
         out.close();
         socket.close();
-        System.out.println("done teardown");
         Thread.sleep(500);
     }
     
