@@ -92,7 +92,7 @@ public class ClientWhiteboardGUI extends JPanel {
 			public void run() {
 				JFrame window = new JFrame(
 						"Freehand Canvas");
-				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(boardToOpen);
 				window.add(clientGUI);
 				clientGUI.init();

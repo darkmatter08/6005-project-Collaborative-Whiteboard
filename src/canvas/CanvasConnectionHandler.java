@@ -39,6 +39,10 @@ public class CanvasConnectionHandler {
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {
+						// Once the frame closes, whiteboard will be null, and we should break out of this loop.
+						if (parentCanvas == null || arentCanvas.getWhiteboard() == null) {
+							break;
+						}
 						parentCanvas.getWhiteboard().applyAction(
 								WhiteboardAction.parse(action));
 						parentCanvas.repaint();
