@@ -23,10 +23,10 @@ public class CanvasConnectionHandler {
 	private ArrayList<String> historyReceived = new ArrayList<String>();
 	Whiteboard board;
 
-	public CanvasConnectionHandler(int boardId, ClientWhiteboardGUI gui) {
+	public CanvasConnectionHandler(int boardId, ClientWhiteboardGUI gui, Canvas canvas) {
 		this.boardId = boardId;
 		this.gui = gui;
-		this.parentCanvas = gui.getCanvas();
+		this.parentCanvas = canvas;
 	}
 
 	public void init() throws UnknownHostException, IOException {
@@ -43,10 +43,13 @@ public class CanvasConnectionHandler {
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {
+					    System.out.println(historyReceived);
 						historyReceived.add(action);
 						// Once the frame closes, whiteboard will be null, and we should break out of this loop.
 						if (parentCanvas == null || parentCanvas.getWhiteboard() == null) {
-							break;
+							System.out.println("reached break condition");
+							System.out.println("parentCanvas: " + parentCanvas);
+						    break;
 						}
 						parentCanvas.getWhiteboard().applyAction(
 								WhiteboardAction.parse(action));
