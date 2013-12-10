@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
+import shared.Messages;
 import shared.WhiteboardAction;
 
 public class WhiteboardServer extends Server {
@@ -87,7 +88,7 @@ public class WhiteboardServer extends Server {
 		new Thread() {
 			public void run() {
 				for (ClientConnection client : infoInThread.getClients()) {
-					client.getPrintWriter().println(actionInThread);
+					client.getPrintWriter().println(Messages.ADD_ACTION + " " + actionInThread);
 				}
 			}
 		}.start();
@@ -118,9 +119,10 @@ public class WhiteboardServer extends Server {
 		final WhiteboardServerInfo infoInThread = info;
 		new Thread() {
 			public void run() {
-				for (String action : infoInThread.getHistory()) {
-						outInThread.println(action);
-						System.out.println(action);
+				for (String actionStr : infoInThread.getHistory()) {
+				        WhiteboardAction action = WhiteboardAction.parse(actionStr);
+						outInThread.println(Messages.ADD_ACTION + " " + action);
+						System.out.println(Messages.ADD_ACTION + " " + action);
 				}
 			}
 		}.start();

@@ -34,8 +34,6 @@ public class CanvasConnectionHandler {
 		socket = new Socket(ConnectionDetails.SERVER_ADDRESS, ConnectionDetails.WHITEBOARD_GUI_PORT);
 		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		listenForServerMessages();
-		askForHistory();
 	}
 
 	public void listenForServerMessages() {
