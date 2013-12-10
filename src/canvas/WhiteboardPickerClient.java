@@ -9,21 +9,30 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 
 
 public class WhiteboardPickerClient extends JFrame {
+	private String userName;
 	private final WhiteBoardTableModel whiteBoardTableModel = new WhiteBoardTableModel();
 	private final JTable whiteBoardTable = new JTable(whiteBoardTableModel);
 	private final JButton newWhiteBoard = new JButton();
-	private final JLabel headerText = new JLabel();
+	private final JLabel infoText = new JLabel();
 	private PickerClientConnectionHandler connectionHandler;
 	private final static int MIN_WIDTH = 400;
 	private final static int MIN_HEIGHT = 400;
+	
+	public WhiteboardPickerClient(String userName) {
+		super();
+		this.userName = userName;
+	}
 	
 	public void init() {
 		connectionHandler = new PickerClientConnectionHandler(this, whiteBoardTableModel);
@@ -33,7 +42,7 @@ public class WhiteboardPickerClient extends JFrame {
 		initHeader();
 		initWhiteBoardTable();
 		initNewWhiteBoardButton();
-		this.add(headerText, BorderLayout.NORTH);
+		this.add(infoText, BorderLayout.NORTH);
 		this.add(whiteBoardTable, BorderLayout.CENTER);
 		this.add(newWhiteBoard, BorderLayout.SOUTH);
 		this.pack();
@@ -50,7 +59,7 @@ public class WhiteboardPickerClient extends JFrame {
 	}
 
 	public void initHeader() {
-		headerText.setText("Click a whiteboard ID to begin");
+		infoText.setText("Hi " + userName + ", pick a whiteboard to begin");
 	}
 
 	public void initWhiteBoardTable() {
@@ -94,11 +103,18 @@ public class WhiteboardPickerClient extends JFrame {
 	}
 	
 	public String getUsername() {
-	    return "pickerClientUser"; // TODO: implement UI for setting username
+		return userName;
 	}
 
 	public static void main(String[] args) {
-		WhiteboardPickerClient myFrame = new WhiteboardPickerClient();
+		JTextField userName = new JTextField();
+		final JComponent[] inputs = new JComponent[] {
+				new JLabel("User Name:"),
+				userName,
+		};
+		JOptionPane.showMessageDialog(null, inputs, "Enter your username!", JOptionPane.PLAIN_MESSAGE);
+		String acquiredUserName = userName.getText();
+		WhiteboardPickerClient myFrame = new WhiteboardPickerClient(acquiredUserName);
 		myFrame.init();
 	}
 
