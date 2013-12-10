@@ -43,7 +43,6 @@ public class CanvasConnectionHandler {
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {
-					    System.out.println(historyReceived);
 						historyReceived.add(action);
 						// Once the frame closes, whiteboard will be null, and we should break out of this loop.
 						if (parentCanvas == null || parentCanvas.getWhiteboard() == null) {
