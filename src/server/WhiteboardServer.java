@@ -48,7 +48,6 @@ public class WhiteboardServer extends Server {
 						.add(new PrintWriter(socket.getOutputStream(), true));
 				sendEntireHistory(new PrintWriter(socket.getOutputStream(),
 						true), getWhiteBoards().get(whiteBoardId));
-				System.out.println(getWhiteBoards().get(whiteBoardId).getClients());
 			} else if (request.equals(shared.Messages.ADD_ACTION)) {
 				WhiteboardAction action = new WhiteboardAction(tokens[2],
 						tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]);
