@@ -16,16 +16,8 @@ public class WhiteboardServerInfo {
 		return clients;
 	}
 	
-	public void setClients(ArrayList<PrintWriter> clients) {
-		this.clients = clients;
-	}
-	
 	public ArrayList<String> getHistory() {
 		return history;
-	}
-	
-	public void setHistory(ArrayList<String> history) {
-		this.history = history;
 	}
 	
 }
