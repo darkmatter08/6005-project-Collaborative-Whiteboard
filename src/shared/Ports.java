@@ -3,4 +3,5 @@ package shared;
 public class Ports {
     public static int CLIENT_PICKER_PORT = 8887;
     public static int WHITEBOARD_GUI_PORT = 8888;
+    public static String SERVER_ADDRESS = "18.111.21.246";
 }

@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import server.MasterServerStarter;
+import shared.Ports;
 
 public class TestUtility {
     
@@ -36,7 +37,7 @@ public class TestUtility {
         int attempts = 0;
         do {
           try {
-            ret = new Socket("127.0.0.1", port);
+            ret = new Socket(Ports.SERVER_ADDRESS, port);
           } catch (ConnectException ce) {
             try {
               if (++attempts > MAX_ATTEMPTS)
@@ -52,7 +53,7 @@ public class TestUtility {
     }
     
   public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
-      Socket socket = new Socket("127.0.0.1", shared.Ports.CLIENT_PICKER_PORT);
+      Socket socket = new Socket(Ports.SERVER_ADDRESS, Ports.CLIENT_PICKER_PORT);
       Thread.sleep(1500);
       ObjectOutputStream objOut;
       ObjectInputStream objIn;

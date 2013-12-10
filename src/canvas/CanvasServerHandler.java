@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 
 import javax.swing.SwingUtilities;
 
+import shared.Ports;
 import shared.WhiteboardAction;
 
 public class CanvasServerHandler {
@@ -25,7 +26,7 @@ public class CanvasServerHandler {
 	}
 
 	public void init() throws UnknownHostException, IOException {
-		socket = new Socket("127.0.0.1", shared.Ports.WHITEBOARD_GUI_PORT);
+		socket = new Socket(Ports.SERVER_ADDRESS, Ports.WHITEBOARD_GUI_PORT);
 		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		listenForActions();
