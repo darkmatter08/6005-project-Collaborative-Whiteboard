@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
@@ -18,6 +19,7 @@ public class CanvasConnectionHandler {
 	private PrintWriter out;
 	private BufferedReader in;
 	private Canvas parentCanvas;
+	private ArrayList<String> historyReceived = new ArrayList<String>();
 	Whiteboard board;
 
 	public CanvasConnectionHandler(int boardId, Canvas canvas) {
@@ -39,6 +41,7 @@ public class CanvasConnectionHandler {
 				try {
 					for (String action = in.readLine(); action != null; action = in
 							.readLine()) {
+						historyReceived.add(action);
 						// Once the frame closes, whiteboard will be null, and we should break out of this loop.
 						if (parentCanvas == null || parentCanvas.getWhiteboard() == null) {
 							break;
@@ -71,6 +74,10 @@ public class CanvasConnectionHandler {
 				out.println(messageToSend.toString());
 			}
 		}.start();
+	}
+	
+	public ArrayList<String> getHistoryReceived() {
+		return historyReceived;
 	}
 
 }

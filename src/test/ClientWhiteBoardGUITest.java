@@ -1,4 +1,4 @@
-package canvas;
+package test;
 
 import static org.junit.Assert.*;
 
@@ -15,8 +15,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import shared.WhiteboardAction;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import canvas.ClientWhiteboardGUI;
 
 public class ClientWhiteBoardGUITest {
 	ServerSocket serverSocket;
@@ -25,7 +28,8 @@ public class ClientWhiteBoardGUITest {
 	PrintWriter out;
 	ObjectOutputStream objOut;
 	ObjectInputStream objIn;
-
+	String actionString = new WhiteboardAction(10, 10, 10, 10, 10, 10).toString();
+	
 	@Before
 	public void setUp() {
 		new Thread() {
@@ -36,13 +40,22 @@ public class ClientWhiteBoardGUITest {
 					in = new BufferedReader(new InputStreamReader(
 							socket.getInputStream()));
 					out = new PrintWriter(socket.getOutputStream(), true);
-					objOut = new ObjectOutputStream(socket.getOutputStream());
-					objIn = new ObjectInputStream(socket.getInputStream());
 				} catch (Exception e) {
-
+					e.printStackTrace();
 				}
 			}
 		}.start();
+	}
+	
+	@After
+	public void tearDown() {
+		try {
+			socket.close();
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -51,17 +64,23 @@ public class ClientWhiteBoardGUITest {
 		clientGUI.init();
 		clientGUI.setEraserColor();
 		assertEquals(clientGUI.getCanvas().getPenColor(), Color.WHITE);
+
 	}
 
 	@Test
 	public void testAppliesAction() throws IOException {
 		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0);
 		clientGUI.init();
-		ArrayList<WhiteboardAction> actions = new ArrayList<WhiteboardAction>();
-		//actions.add(new WhiteboardAction(0, 0, 1, 1, Color.RED, new BasicStroke(1)));
-		objOut.writeObject(actions);
-		objOut.flush();
-		//assertEquals(clientGUI.getCanvas().getWhiteboard());
+		clientGUI.setEraserColor();
+		out.println(actionString);
+		// TODO: Remove sleep call.
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		assertEquals(clientGUI.getCanvas().getConnectionHandler().getHistoryReceived().get(0),
+		actionString);
 	}
 	
 }
