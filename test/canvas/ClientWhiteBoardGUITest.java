@@ -1,4 +1,4 @@
-package test;
+package canvas;
 
 import static org.junit.Assert.*;
 
@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import shared.Messages;
 import shared.WhiteboardAction;
 
 import org.junit.After;
@@ -28,7 +30,7 @@ public class ClientWhiteBoardGUITest {
 	PrintWriter out;
 	ObjectOutputStream objOut;
 	ObjectInputStream objIn;
-	String actionString = new WhiteboardAction(10, 10, 10, 10, 10, 10).toString();
+	String actionString = Messages.ADD_ACTION + " " + new WhiteboardAction(10, 10, 10, 10, 10, 10).toString();
 	
 	@Before
 	public void setUp() {
