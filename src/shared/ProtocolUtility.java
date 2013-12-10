@@ -59,5 +59,26 @@ public class ProtocolUtility {
         test3.add(4);
         System.out.println(serialize(test3));
         System.out.println(deserialize(serialize(test3)));
+        
+        List<String> test4 = new ArrayList<String>(); 
+        test4.add("1");
+        test4.add("2");
+        test4.add("3");
+        test4.add("4");
+        System.out.println(test2.equals(convertListTypeToInt(test4)));
+        
+        List<String> test5 = new ArrayList<String>(); 
+        test5.add("");
+        System.out.println(convertListTypeToInt(test5));
+    }
+
+    public static List<Integer> convertListTypeToInt(List<String> boardIdsStrings) {
+        List<Integer> results = new ArrayList<Integer>();
+        for (String id : boardIdsStrings) {
+            if (id.equals(""))
+                break;
+            results.add(Integer.parseInt(id));
+        }
+        return results;
     }
 }

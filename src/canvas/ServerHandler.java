@@ -57,9 +57,10 @@ public class ServerHandler {
 			public void run() {
 				while (true) {
 					try {
-					    List<String> boardIds = ProtocolUtility.deserialize(in.readLine());
+					    List<String> boardIdsStrings = ProtocolUtility.deserialize(in.readLine());
+					    List<Integer> boardIds = ProtocolUtility.convertListTypeToInt(boardIdsStrings);
 						tableModel.removeAllRows();
-						for (String boardId : boardIds) {
+						for (Integer boardId : boardIds) {
 							tableModel.addRow(new Object[] { boardId });
 						}
 						parentFrame.pack();

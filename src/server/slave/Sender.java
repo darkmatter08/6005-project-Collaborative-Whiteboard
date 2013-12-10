@@ -44,7 +44,7 @@ class Sender extends Thread {
                     actionList = new LinkedList<WhiteboardAction>(server.whiteboard.getHistory());
                 }
                 List<WhiteboardAction> newActions = actionList.subList(server.lastHistorySize, newHistorySize);
-                objOut.writeObject(newActions);
+                //objOut.writeObject(newActions);
                 server.lastHistorySize = newHistorySize;
             }
         } catch (Exception e){
