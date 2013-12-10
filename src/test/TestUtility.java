@@ -53,8 +53,8 @@ public class TestUtility {
       startServer();
       Socket socket = connect();//new Socket(ConnectionDetails.SERVER_ADDRESS, port);
       Thread.sleep(1500);
-      BufferedReader in; 
-      PrintWriter out;
+      BufferedReader in, inBoard; 
+      PrintWriter out, outBoard;
       
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       out = new PrintWriter(socket.getOutputStream(), true);
@@ -62,5 +62,10 @@ public class TestUtility {
       out.println("createNewWhiteboard");
       System.out.println("wrote createnewwhiteboard");
       System.out.println(in.readLine());
+      
+      Socket whiteboardSock = connectToWhiteboardServer();
+      inBoard = new BufferedReader(new InputStreamReader(whiteboardSock.getInputStream()));
+      outBoard = new PrintWriter(whiteboardSock.getOutputStream(), true);
+      
   }
 }

@@ -38,7 +38,19 @@ public class WhiteboardServer extends Server {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
-			String[] tokens = msg.split(" ");
+			/*
+			 * Protocol token ordering:
+			 * 0 - Request type 
+			 * 1 - Whiteboard ID
+			 * 2-7 WhiteboardAction
+			 *   2 - x1
+			 *   3 - y1
+			 *   4 - x2 
+			 *   5 - y2
+			 *   6 - colorRGB (int)
+			 *   7 - strokeWidth (int)
+			 */
+		    String[] tokens = msg.split(" ");
 			String request = tokens[REQUEST_INDEX];
 			int whiteBoardId = Integer.parseInt(tokens[WHITEBOARD_ID_INDEX]);
 			if (request.equals(shared.Messages.NEW_WHITEBOARD_CONNECTION)) {
