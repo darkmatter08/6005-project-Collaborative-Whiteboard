@@ -39,7 +39,6 @@ public class PickerServerTest {
         in.close();
         out.close();
         socket.close();
-        Thread.sleep(500);
     }
     
     @Test
