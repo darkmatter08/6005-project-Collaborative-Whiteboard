@@ -10,20 +10,19 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
-
-import server.MasterServerStarter;
-import shared.Ports;
+import server.ServerRunner;
+import shared.*;
 
 public class TestUtility {
     
-    final private static int port = shared.Ports.CLIENT_PICKER_GUI_PORT;
-    final private static int masterPort = shared.Ports.WHITEBOARD_GUI_PORT;
+    final private static int port = Ports.CLIENT_PICKER_GUI_PORT;
+    final private static int masterPort = Ports.WHITEBOARD_GUI_PORT;
     
     public static void startServer() throws IOException {
-        new Thread(new MasterServerStarter(port)).start();
+        new Thread(new ServerRunner()).start();
     }
     
-    public static Socket connectToSlaveServer() throws IOException {
+    public static Socket connectToWhiteboardServer() throws IOException {
         return connectHelper(masterPort);
     }
     
@@ -53,7 +52,7 @@ public class TestUtility {
     }
     
   public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
-      Socket socket = new Socket(Ports.SERVER_ADDRESS, Ports.CLIENT_PICKER_PORT);
+      Socket socket = new Socket(Ports.SERVER_ADDRESS, port);
       Thread.sleep(1500);
       ObjectOutputStream objOut;
       ObjectInputStream objIn;

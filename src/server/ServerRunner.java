@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ServerRunner {
+/**
+ * ServerRunner launches the whole server application, starting the 
+ *  pickerServer and whiteboardServer in separate threads. 
+ * @author jains
+ *
+ */
+public class ServerRunner implements Runnable {
 	PickerServer pickerServer;
 	WhiteboardServer whiteboardServer;
 	
@@ -15,8 +21,13 @@ public class ServerRunner {
 		whiteboardServer = new WhiteboardServer(whiteBoards);
 	}
 	
+	/**
+	 * Starts the pickerServer (in a new thread) and the whiteboardServer. 
+	 * @throws IOException
+	 */
 	public void hostServers() throws IOException {
-		//We need a thread for each server to host in, so pickerServer will be done in a new thread.
+		// We need a thread for each server to host in, so pickerServer 
+	    // will be done in a new thread.
 		new Thread() {
 			@Override
 			public void run() {
@@ -30,9 +41,21 @@ public class ServerRunner {
 		whiteboardServer.host();
 	}
 	
-	
+	/**
+	 * Main to start the whole server. 
+	 */
 	public static void main(String[] args) throws IOException {
 		ServerRunner serverRunner = new ServerRunner();
 		serverRunner.hostServers();
 	}
+
+    @Override
+    public void run() {
+        try {
+            main(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Couldn't Start Server");
+        }
+    }
 }

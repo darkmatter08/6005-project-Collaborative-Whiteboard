@@ -29,7 +29,9 @@ public class WhiteboardServerInfo {
 		return clients;
 	}
 	
-
+	/**
+	 * @return ArrayList<String> representing the board's entire history
+	 */
 	public ArrayList<String> getHistory() {
 		return history;
 	}
