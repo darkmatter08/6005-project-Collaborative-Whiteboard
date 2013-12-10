@@ -38,14 +38,13 @@ public class WhiteboardServer extends Server {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
-			/*
+			System.out.println("whiteboard server got message: " + msg);
+		    /*
 			 * Protocol token ordering:
 			 * 0 - Request type 
 			 * 1 - Whiteboard ID
-			 * 
-			 * 2 - Username (String) (if request type = NEW_WHITEBOARD_CONNECTION)
-			 * 
-			 * 2-7 WhiteboardAction  (if request type = ADD_ACTION)
+			 * 2 - username (String) (only on shared.Messages.NEW_WHITEBOARD_CONNECTION)
+			 * 2-7 WhiteboardAction (only on shared.Messages.ADD_ACTION)
 			 *   2 - x1
 			 *   3 - y1
 			 *   4 - x2 
@@ -115,7 +114,6 @@ public class WhiteboardServer extends Server {
 	 * @param info the WhiteboardServerInfo board to get the history from
 	 */
 	public void sendEntireHistory(PrintWriter out, WhiteboardServerInfo info) {
-	    System.out.println("sending entire history");
 		final PrintWriter outInThread = out;
 		final WhiteboardServerInfo infoInThread = info;
 		new Thread() {
@@ -123,7 +121,7 @@ public class WhiteboardServer extends Server {
 				for (String action : infoInThread.getHistory()) {
 						outInThread.println(action);
 						System.out.println(action);
-					}
+				}
 			}
 		}.start();
 	}
