@@ -23,6 +23,9 @@ public class WhiteboardServerInfo {
 		history = new ArrayList<String>();
 	}
 	
+	/**
+	 * @return List<ClientConnection> of all clients
+	 */
 	public ArrayList<ClientConnection> getClients() {
 		return clients;
 	}
@@ -34,10 +37,16 @@ public class WhiteboardServerInfo {
 		return (ArrayList<String>)history.clone();
 	}
 	
+	/**
+	 * @param action to add to the whiteboard. 
+	 */
 	public synchronized void addAction(String action) {
 	    history.add(action);
 	}
 	
+	/**
+	 * @return String with all connected users. 
+	 */
 	public String getConnectedUsernamesMessage() {
 	    String s = Messages.CONNECTED_USERS;
 	    for (ClientConnection client : clients) {
