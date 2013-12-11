@@ -12,7 +12,8 @@ import java.util.List;
  *
  */
 public class ServerRunner implements Runnable {
-	PickerServer pickerServer;
+	
+    PickerServer pickerServer;
 	WhiteboardServer whiteboardServer;
 	
 	public ServerRunner() {
@@ -48,7 +49,10 @@ public class ServerRunner implements Runnable {
 		ServerRunner serverRunner = new ServerRunner();
 		serverRunner.hostServers();
 	}
-
+	
+	/**
+	 * Runnable so it can be started in a new thread for testing purposes. 
+	 */
     @Override
     public void run() {
         try {

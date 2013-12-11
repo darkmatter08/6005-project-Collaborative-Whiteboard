@@ -11,6 +11,13 @@ import java.util.List;
 import shared.Messages;
 import shared.WhiteboardAction;
 
+/**
+ * WhiteboardServer is a server that responds to requests to modify the whiteboard
+ *  or to modify a client's username. 
+ * @see Server.java
+ * @author jains
+ *
+ */
 public class WhiteboardServer extends Server {
 
 	/**
@@ -44,11 +51,17 @@ public class WhiteboardServer extends Server {
 		for (String msg = in.readLine(); msg != null; msg = in.readLine()) {
 			System.out.println("whiteboard server got message: " + msg);
 			/*
-			 * Protocol token ordering: 0 - Request type 1 - Whiteboard ID 2 -
-			 * username (String) (only on
-			 * shared.Messages.NEW_WHITEBOARD_CONNECTION) 2-7 WhiteboardAction
-			 * (only on shared.Messages.ADD_ACTION) 2 - x1 3 - y1 4 - x2 5 - y2
-			 * 6 - colorRGB (int) 7 - strokeWidth (int)
+			 * Protocol token ordering: 
+			 * 0 - Request type 
+			 * 1 - Whiteboard ID 
+			 * 2 - username (String)  
+			 * 3 - 7 WhiteboardAction (only on shared.Messages.ADD_ACTION) 
+			 * 2 - x1 
+			 * 3 - y1 
+			 * 4 - x2 
+			 * 5 - y2
+			 * 6 - colorRGB (int) 
+			 * 7 - strokeWidth (int)
 			 */
 			String[] tokens = msg.split(" ");
 			String request = tokens[REQUEST_INDEX];
@@ -80,6 +93,9 @@ public class WhiteboardServer extends Server {
 	
 	/**
 	 * Disconnects the user with the given username.
+	 * @param Socket of the user
+	 * @param userName String username to disconnect
+	 * @param whiteboardId board to disconnect from. 
 	 */
 	 public void disconnectUser(Socket socket, String userName, int whiteboardId) {
 		 ArrayList<ClientConnection> clients = getWhiteBoards().get(whiteboardId).getClients();
@@ -92,16 +108,11 @@ public class WhiteboardServer extends Server {
 		 }
 		 if (indexToRemove != -1) {
 			 clients.remove(indexToRemove);
-			// try {
-			//	socket.close();
-		//	} catch (IOException e) {
-		//		e.printStackTrace();
-	//		}
 		 }
 		 sendConnectedUsernames(getWhiteBoards().get(whiteboardId));
 	 }
 
-	/*
+	/**
 	 * Updates the username to have a # added if its already a username
 	 * connected. If the username is not a user currently connected to the
 	 * whiteboard, it keeps the same username.This method also informs the client of its new username.
@@ -127,6 +138,11 @@ public class WhiteboardServer extends Server {
 		return original + suffix;
 	}
 	
+	/**
+	 * Communicates to the user (represetned by out) his username. 
+	 * @param username String username to send
+	 * @param out client to send it to. 
+	 */
 	public void tellClientItsUserName(final String username, final PrintWriter out) {
 		new Thread() {
 			public void run() {
