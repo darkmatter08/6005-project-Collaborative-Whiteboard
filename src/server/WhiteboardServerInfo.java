@@ -30,8 +30,12 @@ public class WhiteboardServerInfo {
 	/**
 	 * @return ArrayList<String> representing the board's entire history
 	 */
-	public ArrayList<String> getHistory() {
+	public synchronized ArrayList<String> getHistory() {
 		return history;
+	}
+	
+	public synchronized void addAction(String action) {
+	    history.add(action);
 	}
 	
 	public String getConnectedUsernamesMessage() {

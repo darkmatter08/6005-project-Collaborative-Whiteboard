@@ -147,7 +147,7 @@ public class WhiteboardServer extends Server {
 	 */
 	public void sendSingleAction(WhiteboardAction action,
 			WhiteboardServerInfo info) {
-		info.getHistory().add(action.toString());
+		info.addAction(action.toString());
 		final String actionInThread = action.toString();
 		final WhiteboardServerInfo infoInThread = info;
 		new Thread() {
