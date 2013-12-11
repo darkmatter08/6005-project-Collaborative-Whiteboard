@@ -31,7 +31,7 @@ public class WhiteboardServerInfo {
 	 * @return ArrayList<String> representing the board's entire history
 	 */
 	public synchronized ArrayList<String> getHistory() {
-		return history;
+		return (ArrayList<String>)history.clone();
 	}
 	
 	public synchronized void addAction(String action) {
