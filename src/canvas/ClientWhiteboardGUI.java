@@ -1,8 +1,7 @@
 package canvas;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -12,24 +11,26 @@ import javax.swing.GroupLayout.Group;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class ClientWhiteboardGUI extends JPanel {
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
+	private JLabel connectedUsers = new JLabel("Connected Users: ");
 	private GroupLayout layout;
 	private JButton colorChooser = new JButton();
 	private JButton eraseButton = new JButton();
 	private Canvas canvas;
 	private int boardId;
 	private String username;
-	
+
 	public ClientWhiteboardGUI(int boardId, String username) {
 		super();
 		this.boardId = boardId;
 		this.username = username;
 	}
-	
+
 	public void init() {
 		try {
 			canvas = new Canvas(boardId, this);
@@ -41,7 +42,7 @@ public class ClientWhiteboardGUI extends JPanel {
 		initButtons();
 		setupLayout();
 	}
-	
+
 	public void setupLayout() {
 		Group sequentialButtonGroup = layout.createSequentialGroup();
 		Group parallelButtonGroup = layout.createParallelGroup();
@@ -49,10 +50,15 @@ public class ClientWhiteboardGUI extends JPanel {
 			sequentialButtonGroup = sequentialButtonGroup.addComponent(button);
 			parallelButtonGroup = parallelButtonGroup.addComponent(button);
 		}
-		layout.setHorizontalGroup(layout.createParallelGroup().addGroup(sequentialButtonGroup).addComponent(canvas));
-		layout.setVerticalGroup(layout.createSequentialGroup().addGroup(parallelButtonGroup).addComponent(canvas));
+		// TODO Maybe rename sequentialButtonGroup and parallelButtonGroup
+		sequentialButtonGroup.addComponent(connectedUsers);
+		parallelButtonGroup.addComponent(connectedUsers);
+		layout.setHorizontalGroup(layout.createParallelGroup()
+				.addGroup(sequentialButtonGroup).addComponent(canvas));
+		layout.setVerticalGroup(layout.createSequentialGroup()
+				.addGroup(parallelButtonGroup).addComponent(canvas));
 	}
-	
+
 	public void initButtons() {
 		colorChooser.setText("Choose color");
 		eraseButton.setText("Eraser");
@@ -60,8 +66,8 @@ public class ClientWhiteboardGUI extends JPanel {
 		eraseButton.setBackground(Color.WHITE);
 		colorChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-					newDialogColor();
-				}
+				newDialogColor();
+			}
 		});
 		eraseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -74,35 +80,48 @@ public class ClientWhiteboardGUI extends JPanel {
 			button.setOpaque(true);
 		}
 	}
-	
+
 	public void newDialogColor() {
-		Color newColor = JColorChooser.showDialog(this, "Choose Pen Color", canvas.getPenColor());
+		Color newColor = JColorChooser.showDialog(this, "Choose Pen Color",
+				canvas.getPenColor());
 		canvas.setPenColor(newColor);
 		colorChooser.setBackground(newColor);
-		canvas.setPenThickness(Canvas.DEFAULT_STROKE_LENGTH);	
+		canvas.setPenThickness(Canvas.DEFAULT_STROKE_LENGTH);
 	}
-	
+
 	public void setEraserColor() {
 		canvas.setPenColor(Color.WHITE);
 		colorChooser.setBackground(Color.WHITE);
 		canvas.setPenThickness(Canvas.DEFAULT_ERASE_LENGTH);
 	}
-	
+
 	public static void openEditor(final int boardId, final String username) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JFrame window = new JFrame(
-						"Freehand Canvas");
+				JFrame window = new JFrame("Freehand Canvas");
 				window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(boardId, username);
+
+				final ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(
+						boardId, username);
 				window.add(clientGUI);
 				clientGUI.init();
+				window.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosing(WindowEvent we) {
+						clientGUI.getCanvas().getConnectionHandler()
+								.closeConnection();
+					}
+				});
 				window.pack();
 				window.setVisible(true);
 			}
 		});
 	}
-	
+
+	public void setUserName(String username) {
+		this.username = username;
+	}
+
 	public Canvas getCanvas() {
 		return canvas;
 	}
@@ -111,10 +130,14 @@ public class ClientWhiteboardGUI extends JPanel {
 		openEditor(0, "testUser");
 	}
 
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
+	public JLabel getConnectedUsersLabel() {
+		return connectedUsers;
+	}
+
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
 }
