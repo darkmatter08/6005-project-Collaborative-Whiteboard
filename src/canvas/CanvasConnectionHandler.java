@@ -38,6 +38,7 @@ public class CanvasConnectionHandler {
 	}
 
 	public void listenForServerMessages() {
+		System.out.println("listening"); //TODO Remove me.
 		new Thread() {
 			public void run() {
 				try {
