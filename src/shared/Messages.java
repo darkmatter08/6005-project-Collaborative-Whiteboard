@@ -1,5 +1,9 @@
 package shared;
 
+/**
+ * A list of message constants that are used across the application. 
+ * @author jains
+ */
 public class Messages {
     
 	// sent by client
