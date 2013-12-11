@@ -44,13 +44,18 @@ public class WhiteboardServerTest {
     }
     
     @AfterClass
-    public static void tearDown() throws IOException {
+    public static void tearDown() {
+    	try {
         in.close();
         out.close();
         socket.close();
         inBoard.close();
         outBoard.close();
         whiteboardSocket.close();
+    	}
+    	catch (Exception e) {
+    		System.out.println("A socket failed to close in tearDown");
+    	}
     }
     
     @Test
