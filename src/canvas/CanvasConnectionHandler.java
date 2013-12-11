@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import shared.ConnectionDetails;
@@ -57,7 +58,12 @@ public class CanvasConnectionHandler {
     						parentCanvas.repaint();
 					    }
 					    else if (commandType.equals(Messages.CONNECTED_USERS)) {
-					        System.out.println("users connected: " + args);
+					    	JLabel users = gui.getConnectedUsersLabel();
+					    	users.setText("Connected users: " + args);
+					    }
+					    else if (commandType.equals(Messages.YOUR_USERNAME_IS)) {
+					    	gui.setUserName(args);
+					    	System.out.println("My username is " + gui.getUsername());
 					    }
 					}
 				} catch (Exception e) {
@@ -71,14 +77,13 @@ public class CanvasConnectionHandler {
 	public void askForHistory() {
 		new Thread() {
 			public void run() {
-				out.println(shared.Messages.NEW_WHITEBOARD_CONNECTION + " " + boardId + " " + gui.getUsername());
+				out.println(getMessageHeader(shared.Messages.NEW_WHITEBOARD_CONNECTION));
 			}
 		}.start();
 	}
 
 	public void sendAction(WhiteboardAction action) {
-		final String messageToSend = shared.Messages.ADD_ACTION + " " + boardId
-				+ " " + action.toString();
+		final String messageToSend = getMessageHeader(shared.Messages.ADD_ACTION);
 		new Thread() {
 			public void run() {
 				out.println(messageToSend.toString());
@@ -88,6 +93,18 @@ public class CanvasConnectionHandler {
 	
 	public ArrayList<String> getHistoryReceived() {
 		return historyReceived;
+	}
+
+	public void closeConnection() {
+		new Thread() {
+			public void run() {
+				out.println(getMessageHeader(shared.Messages.DISCONNECT_ME));
+			}
+		}.start();
+	}
+	
+	public String getMessageHeader(String messageType) {
+		return messageType + " " + boardId + " " + gui.getUsername();
 	}
 
 }
