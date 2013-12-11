@@ -30,7 +30,7 @@ public class ClientWhiteBoardGUITest {
 	PrintWriter out;
 	ObjectOutputStream objOut;
 	ObjectInputStream objIn;
-	String actionString = Messages.ADD_ACTION + " " + new WhiteboardAction(10, 10, 10, 10, 10, 10).toString();
+	String actionString = new WhiteboardAction(10, 10, 10, 10, 10, 10).toString();
 	
 	@Before
 	public void setUp() {
@@ -55,7 +55,7 @@ public class ClientWhiteBoardGUITest {
 			socket.close();
 			serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Couldn't close socket");
 			e.printStackTrace();
 		}
 	}
@@ -73,9 +73,8 @@ public class ClientWhiteBoardGUITest {
 	public void testAppliesAction() throws IOException {
 		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0, "testUser");
 		clientGUI.init();
-		clientGUI.setEraserColor();
-		out.println(actionString);
-		// TODO: Remove sleep call.
+		clientGUI.getCanvas().getConnectionHandler().listenForServerMessages();
+		out.println(Messages.ADD_ACTION + " " + actionString);
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
