@@ -10,7 +10,6 @@ import server.*;
 @RunWith(Suite.class)
 //PickerServerTest.class must be at the end.
 @SuiteClasses({
-    ClientWhiteBoardGUIManualTest.class,
     ClientWhiteBoardGUITest.class,
 	WhiteboardPickerClientTest.class,
 	
