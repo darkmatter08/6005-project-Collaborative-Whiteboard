@@ -83,10 +83,10 @@ public class CanvasConnectionHandler {
 	}
 
 	public void sendAction(WhiteboardAction action) {
-		final String messageToSend = getMessageHeader(shared.Messages.ADD_ACTION);
+		final String messageToSend = getMessageHeader(shared.Messages.ADD_ACTION) + " " +  action.toString();
 		new Thread() {
 			public void run() {
-				out.println(messageToSend.toString());
+				out.println(messageToSend);
 			}
 		}.start();
 	}
