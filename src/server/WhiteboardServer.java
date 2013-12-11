@@ -187,15 +187,10 @@ public class WhiteboardServer extends Server {
 	public void sendEntireHistory(PrintWriter out, WhiteboardServerInfo info) {
 		final PrintWriter outInThread = out;
 		final WhiteboardServerInfo infoInThread = info;
-		new Thread() {
-			public void run() {
-				for (String actionStr : infoInThread.getHistory()) {
-					WhiteboardAction action = WhiteboardAction.parse(actionStr);
-					outInThread.println(Messages.ADD_ACTION + " " + action);
-					System.out.println(Messages.ADD_ACTION + " " + action);
-				}
-			}
-		}.start();
+		for (String actionStr : infoInThread.getHistory()) {
+			WhiteboardAction action = WhiteboardAction.parse(actionStr);
+			outInThread.println(Messages.ADD_ACTION + " " + action);
+			System.out.println(Messages.ADD_ACTION + " " + action);
+		}
 	}
-
 }
