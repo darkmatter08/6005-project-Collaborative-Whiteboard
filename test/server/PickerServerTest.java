@@ -24,6 +24,14 @@ import java.net.Socket;
  */
 public class PickerServerTest {
     
+    /**
+     * Testing strategy:
+     * - test createNewWhiteboard, confirm 1 board has been created
+     * - test testGetWhiteboardIds, confirm 1 board created
+     * - add many new boards, confirm that the correct number have been created
+     *      along with a message after each one. 
+     */
+    
     private static Socket socket;
     private static BufferedReader in; 
     private static PrintWriter out; 

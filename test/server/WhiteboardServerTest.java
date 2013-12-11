@@ -20,6 +20,12 @@ import shared.*;
 
 public class WhiteboardServerTest {
     
+    /**
+     * Testing Strategy:
+     * - request a whiteboard that has been created
+     * - draw on that whiteboard and make sure the action is returned
+     */
+    
     private static Socket socket;
     private static Socket whiteboardSocket;
     private static BufferedReader in, inBoard; 
@@ -65,17 +71,17 @@ public class WhiteboardServerTest {
         outBoard = new PrintWriter(whiteboardSocket.getOutputStream(), true);
         
         /*
-         * Protocol token ordering:
+         * Protocol token ordering: 
          * 0 - Request type 
-         * 1 - Whiteboard ID
-         * 2 - username (String) (only on shared.Messages.NEW_WHITEBOARD_CONNECTION)
-         * 2-7 WhiteboardAction (only on shared.Messages.ADD_ACTION)
-         *   2 - x1
-         *   3 - y1
-         *   4 - x2 
-         *   5 - y2
-         *   6 - colorRGB (int)
-         *   7 - strokeWidth (int)
+         * 1 - Whiteboard ID 
+         * 2 - username (String)  
+         * 3 - 7 WhiteboardAction (only on shared.Messages.ADD_ACTION) 
+         * 3 - x1 
+         * 4 - y1 
+         * 5 - x2 
+         * 6 - y2
+         * 7 - colorRGB (int) 
+         * 8 - strokeWidth (int)
          */
         
         outBoard.println(Messages.NEW_WHITEBOARD_CONNECTION + sp + "0" + sp + name);

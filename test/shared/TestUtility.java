@@ -18,18 +18,37 @@ public class TestUtility {
     final private static int port = ConnectionDetails.CLIENT_PICKER_GUI_PORT;
     final private static int masterPort = ConnectionDetails.WHITEBOARD_GUI_PORT;
     
+    /**
+     * Starts the server on a new thread
+     * @throws IOException
+     */
     public static void startServer() throws IOException {
         new Thread(new ServerRunner()).start();
     }
     
+    /**
+     * @return Socket connected to the WhiteboardServer
+     * @throws IOException
+     */
     public static Socket connectToWhiteboardServer() throws IOException {
         return connectHelper(masterPort);
     }
     
+    /**
+     * @return Socket connected to the PickerServer
+     * @throws IOException
+     */
     public static Socket connect() throws IOException {
         return connectHelper(port);
     }
     
+    /**
+     * General form connection - attempts to connect on ConnectionDetails.SERVER_ADDRESS:port
+     * and returns the socket. 
+     * @param port int port to connect to. 
+     * @return Socket with connection
+     * @throws IOException
+     */
     public static Socket connectHelper(int port) throws IOException {
         Socket ret = null;
         final int MAX_ATTEMPTS = 50;
