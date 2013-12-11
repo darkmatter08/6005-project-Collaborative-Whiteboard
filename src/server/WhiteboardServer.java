@@ -101,7 +101,7 @@ public class WhiteboardServer extends Server {
 		 sendConnectedUsernames(getWhiteBoards().get(whiteboardId));
 	 }
 
-	/*
+	/**
 	 * Updates the username to have a # added if its already a username
 	 * connected. If the username is not a user currently connected to the
 	 * whiteboard, it keeps the same username.This method also informs the client of its new username.
