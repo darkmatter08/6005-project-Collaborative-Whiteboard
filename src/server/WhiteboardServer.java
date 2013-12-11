@@ -24,7 +24,7 @@ public class WhiteboardServer extends Server {
 	}
 
 	/**
-	 * @return int port to host the server on
+	 * @see Server.java
 	 */
 	@Override
 	public int getPort() {
@@ -32,10 +32,7 @@ public class WhiteboardServer extends Server {
 	}
 
 	/**
-	 * Handles a client on the socket socket.
-	 * 
-	 * @param client
-	 *            socket
+	 * @see Server.java
 	 */
 	@Override
 	public void handleCurrentConnection(Socket socket) throws IOException {
@@ -81,7 +78,7 @@ public class WhiteboardServer extends Server {
 		}
 	}
 	
-	/*
+	/**
 	 * Disconnects the user with the given username.
 	 */
 	 public void disconnectUser(Socket socket, String userName, int whiteboardId) {
