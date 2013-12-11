@@ -113,7 +113,10 @@ public class WhiteboardPickerClient extends JFrame {
 				userName,
 		};
 		JOptionPane.showMessageDialog(null, inputs, "Enter your username!", JOptionPane.PLAIN_MESSAGE);
-		String acquiredUserName = userName.getText();
+		String acquiredUserName = userName.getText().replace(' ', '_');
+		if (acquiredUserName.equals("")) {
+		    acquiredUserName = "defaultUser";
+		}
 		WhiteboardPickerClient myFrame = new WhiteboardPickerClient(acquiredUserName);
 		myFrame.init();
 	}
