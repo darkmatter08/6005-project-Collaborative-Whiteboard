@@ -15,6 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+/**
+ * The graphical user interface containing one canvas.
+ */
 public class ClientWhiteboardGUI extends JPanel {
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private JLabel connectedUsers = new JLabel("Connected Users: ");
@@ -31,6 +34,9 @@ public class ClientWhiteboardGUI extends JPanel {
 		this.username = username;
 	}
 
+	/**
+	 * Initialize this graphical user interface and the canvas data structure that goes along with it.
+	 */
 	public void init() {
 		try {
 			canvas = new Canvas(boardId, this);
@@ -43,6 +49,9 @@ public class ClientWhiteboardGUI extends JPanel {
 		setupLayout();
 	}
 
+	/**
+	 * Set up the window layout of this canvas.
+	 */
 	public void setupLayout() {
 		Group sequentialButtonGroup = layout.createSequentialGroup();
 		Group parallelButtonGroup = layout.createParallelGroup();
@@ -59,6 +68,9 @@ public class ClientWhiteboardGUI extends JPanel {
 				.addGroup(parallelButtonGroup).addComponent(canvas));
 	}
 
+	/**
+	 * Initialize all the buttons that will be displayed in this window.
+	 */
 	public void initButtons() {
 		colorChooser.setText("Choose color");
 		eraseButton.setText("Eraser");
@@ -81,6 +93,12 @@ public class ClientWhiteboardGUI extends JPanel {
 		}
 	}
 
+	/**
+	 * Launch dialag window for picking new pen color.
+	 * 
+	 * If the "pen" was previously an eraser, the pen will be set back to normal pen properties
+	 * with a new user-chosen color and normal stroke thickness.
+	 */
 	public void newDialogColor() {
 		Color newColor = JColorChooser.showDialog(this, "Choose Pen Color",
 				canvas.getPenColor());
@@ -89,12 +107,23 @@ public class ClientWhiteboardGUI extends JPanel {
 		canvas.setPenThickness(Canvas.DEFAULT_STROKE_LENGTH);
 	}
 
+	/**
+	 * Set the current "pen" to be in erase-mode, meaning the color is the same as the background
+	 * color of the canvas (white), and set the pen thickness to be the default erase thickness.
+	 */
 	public void setEraserColor() {
 		canvas.setPenColor(Color.WHITE);
 		colorChooser.setBackground(Color.WHITE);
 		canvas.setPenThickness(Canvas.DEFAULT_ERASE_LENGTH);
 	}
 
+	/**
+	 * Open a new ClientWhiteboardGUI on the screen which connects a canavs to the board with ID
+	 * boardId and alerts the server to this user connecting with name {@code username}.
+	 * @param boardId The board number to conect to on the server, for both sending actions that
+	 *     are made locally and receiving actions from other users connected to the server. 
+	 * @param username The username that this client will attempt to connect as on the server.
+	 */
 	public static void openEditor(final int boardId, final String username) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -118,24 +147,40 @@ public class ClientWhiteboardGUI extends JPanel {
 		});
 	}
 
+	/**
+	 * Set the username of the user in this gui window.
+	 * @param username The username with which to try to connect to the server.
+	 */
 	public void setUserName(String username) {
 		this.username = username;
 	}
 
+	/**
+	 * A reference to the canvas that this GUI is displaying.
+	 * @return The canvas that this GUI is displaying too and receiving actions from.
+	 */
 	public Canvas getCanvas() {
 		return canvas;
 	}
 
+	/**
+	 * Run an independent GUI with a test username in order to see this GUI properly function
+	 * independent of the server.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		openEditor(0, "testUser");
 	}
 
+	/**
+	 * @return The JLabel object showing the list of all connected users on this whiteboard.
+	 */
 	public JLabel getConnectedUsersLabel() {
 		return connectedUsers;
 	}
 
 	/**
-	 * @return the username
+	 * @return the username of this user
 	 */
 	public String getUsername() {
 		return username;

@@ -15,6 +15,14 @@ import shared.ConnectionDetails;
 import shared.Messages;
 import shared.WhiteboardAction;
 
+/**
+ * Object representing the connection between a canvas (local) and a wihteboard on the server.
+ * 
+ * Contains references to the network socket, input and output streams for communication,
+ * as well as the history of actions received from all clients for this particular board,
+ * and a pointer to the Canvas and ClientWhiteboardGUI objects related to the client's GUI
+ * representation of this board.
+ */
 public class CanvasConnectionHandler {
 	private Socket socket;
 	private int boardId;
@@ -31,12 +39,27 @@ public class CanvasConnectionHandler {
 		this.parentCanvas = canvas;
 	}
 
+	/**
+	 * Initialize the connection between client and server. 
+	 * Constructs a new socket as well as input and output streams to communicate with client.
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
 	public void init() throws UnknownHostException, IOException {
 		socket = new Socket(ConnectionDetails.SERVER_ADDRESS, ConnectionDetails.WHITEBOARD_GUI_PORT);
 		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 
+	/**
+	 * Continuously receive messages from the client and send to the server.
+	 * 
+	 * Messages processed include: ADD_ACTION (ask server to draw an action to the master copy of the whiteboard,
+	 * and to send it to all connected clients), CONNECTED_USERS (ask for a list of the usernames to be sent back
+	 * to the client, of all users who are currently connected to the server), YOUR_USERNAME_IS (
+	 * tell server to tell user their current username, as it may have changed from what was sent when
+	 * they connected due to that username already existing as a connected user).
+	 */
 	public void listenForServerMessages() {
 		System.out.println("listening"); //TODO Remove me.
 		new Thread() {
@@ -75,6 +98,9 @@ public class CanvasConnectionHandler {
 		}.start();
 	}
 
+	/**
+	 * Request the complete history of actions the server has received.
+	 */
 	public void askForHistory() {
 		new Thread() {
 			public void run() {
@@ -83,6 +109,10 @@ public class CanvasConnectionHandler {
 		}.start();
 	}
 
+	/**
+	 * Send an individual drawn action to the server.
+	 * @param action The action that was drawn
+	 */
 	public void sendAction(WhiteboardAction action) {
 		final String messageToSend = getMessageHeader(shared.Messages.ADD_ACTION) + " " +  action.toString();
 		new Thread() {
@@ -92,10 +122,16 @@ public class CanvasConnectionHandler {
 		}.start();
 	}
 	
+	/**
+	 * @return A pointer to the history list that has been received from the server so far.s
+	 */
 	public ArrayList<String> getHistoryReceived() {
 		return historyReceived;
 	}
 
+	/**
+	 * Close this client canvas's connection to the server.
+	 */
 	public void closeConnection() {
 		new Thread() {
 			public void run() {
@@ -104,6 +140,12 @@ public class CanvasConnectionHandler {
 		}.start();
 	}
 	
+	/**
+	 * Convert the type of a message into its actual message protocal string
+	 * @param messageType The type of message being sent. One of NEW_WHITEBOARD_CONNECTION,
+	 * ADD_ACTION, NEW_WHITEBOARD_CONNECTION).
+	 * @return
+	 */
 	public String getMessageHeader(String messageType) {
 		return messageType + " " + boardId + " " + gui.getUsername();
 	}
