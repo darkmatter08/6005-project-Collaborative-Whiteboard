@@ -11,6 +11,10 @@ import java.net.Socket;
 import canvas.ClientWhiteboardGUI;
 
 public class ClientWhiteBoardGUIManualTest {
+    /**
+     * Run an individual canvas GUI window with a connection to a server to manually test
+     * canvas and GUI functionality.
+     */
 	public static void main(String[] args) {
 		new Thread() {
 			public void run() {

@@ -20,12 +20,18 @@ import org.junit.Test;
 
 import canvas.WhiteboardPickerClient;
 
+/**
+ * Automatically test functionality of the whiteboard picker window.
+ */
 public class WhiteboardPickerClientTest {
 	private ServerSocket serverSocket;
 	final String getIdMessage = "getWhiteboardIds";
 	final String createNewWhiteboardMessage = "createNewWhiteboard";
 	private final String user = "Shawn";
 
+	/**
+	 * Initialize a server and a connection to it.
+	 */
 	@Before
 	public void setUp() {
 		new Thread() {
@@ -41,6 +47,10 @@ public class WhiteboardPickerClientTest {
 		}.start();
 	}
 
+	/**
+	 * Read messages on socket to process messages from server.
+	 * @param socket Socket on connection between client and server.
+	 */
 	public void handleMessages(Socket socket) {
 		try {
 			PrintWriter out = new PrintWriter(
@@ -59,6 +69,9 @@ public class WhiteboardPickerClientTest {
 		}
 	}
 
+	/**
+	 * Test WhiteboardPickerClient is constructed properly.
+	 */
 	@Test
 	public void testConstructor() {
 		WhiteboardPickerClient myFrame = new WhiteboardPickerClient(user);
@@ -75,6 +88,9 @@ public class WhiteboardPickerClientTest {
 		}
 	}
 
+	/**
+	 * Test the behavior of asking to add a whiteboard.
+	 */
 	@Test
 	public void testAddWhiteboard() {
 		WhiteboardPickerClient myFrame = new WhiteboardPickerClient(user);
@@ -90,6 +106,9 @@ public class WhiteboardPickerClientTest {
 		assertEquals(myFrame.getWhiteboardTable().getValueAt(3, 0), 3);
 	}
 
+	/**
+	 * Close the socket to the server that was started.
+	 */
 	@After
 	public void tearDown() {
 		try {

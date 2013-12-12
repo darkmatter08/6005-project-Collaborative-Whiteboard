@@ -23,6 +23,9 @@ import org.junit.Test;
 
 import canvas.ClientWhiteboardGUI;
 
+/**
+ * Automatically test the functionality of the canvas GUI window.
+ */
 public class ClientWhiteBoardGUITest {
 	ServerSocket serverSocket;
 	Socket socket;
@@ -32,6 +35,9 @@ public class ClientWhiteBoardGUITest {
 	ObjectInputStream objIn;
 	String actionString = new WhiteboardAction(10, 10, 10, 10, 10, 10).toString();
 	
+	/**
+	 * Start a server and connect to it.
+	 */
 	@Before
 	public void setUp() {
 		new Thread() {
@@ -49,6 +55,9 @@ public class ClientWhiteBoardGUITest {
 		}.start();
 	}
 	
+	/**
+	 * Disconnect from the server.
+	 */
 	@After
 	public void tearDown() {
 		try {
@@ -60,6 +69,9 @@ public class ClientWhiteBoardGUITest {
 		}
 	}
 
+	/**
+	 * Confirm switching of erase button from "erase" button.
+	 */
 	@Test
 	public void testEraseButton() {
 		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0, "testUser");
@@ -69,6 +81,11 @@ public class ClientWhiteBoardGUITest {
 
 	}
 
+	/**
+	 * Confirm that client's added actions get received by server and sent back to eventually
+	 * arrive in client's historyReceived queue.
+	 * @throws IOException
+	 */
 	@Test
 	public void testAppliesAction() throws IOException {
 		ClientWhiteboardGUI clientGUI = new ClientWhiteboardGUI(0, "testUser");
