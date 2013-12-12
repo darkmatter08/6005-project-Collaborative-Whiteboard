@@ -44,6 +44,10 @@ public class Canvas extends JPanel {
         addDrawingController();
     }
     
+    /**
+     * A reference to the whiteboard this canvas contains
+     * @return A Whiteboard
+     */
     public synchronized Whiteboard getWhiteboard() {
     	return board;
     }
@@ -55,6 +59,9 @@ public class Canvas extends JPanel {
     	initConnection();
     }
     
+    /**
+     * Initialize the connection between this canvas and the server.
+     */
     public void initConnection() {
     	//Do a quick draw so board is Initialized.
     	//drawLineSegment(0, 0, 0, 0);
@@ -73,14 +80,28 @@ public class Canvas extends JPanel {
         this.board = board;
     }
     
+    /**
+     * The color of the pen that will draw on the whiteboard if the user
+     * drags their mouse at this moment.
+     * @return The color being drawn with
+     */
     public Color getPenColor() {
     	return currentColor;
     }
     
+    /**
+     * Change the color that the user is drawing with
+     * @param color The color to be drawn with
+     */
     public void setPenColor(Color color) {
     	currentColor = color;
     }
     
+    /**
+     * Set the thickness of the user's stroke from now on (until the next change,
+     * called by this method).
+     * @param thickness 
+     */
     public void setPenThickness(int thickness) {
     	this.thickness = thickness;
     	currentStroke = new BasicStroke(thickness);
@@ -112,10 +133,19 @@ public class Canvas extends JPanel {
 		connectionHandler.askForHistory();
     }
     
+    /**
+     * Retrieve a reference to the CanvasConnectionHandler, containing the network connection
+     * between this canvas and the server.
+     * @return A CanvasConnectionHandler representing the connection to the server
+     */
     public CanvasConnectionHandler getConnectionHandler() {
     	return connectionHandler;
     }
     
+    /**
+     * Method indicating whether this canvas is ready to be painted on
+     * @return true if this canvas's board is ready to be painted on, false otherwise. 
+     */
     public boolean readyToPaint() {
     	return readyToPaint;
     }
@@ -134,6 +164,7 @@ public class Canvas extends JPanel {
     /*
      * Draw a line between two points (x1, y1) and (x2, y2), specified in
      * pixels relative to the upper-left corner of the drawing buffer.
+     * Uses the current color and stroke with provided by getPenColor() and basicStroke
      */
     private synchronized void drawLineSegment(int x1, int y1, int x2, int y2) {
         WhiteboardAction action = new WhiteboardAction(x1, y1, x2, y2, currentColor.getRGB(), thickness);
