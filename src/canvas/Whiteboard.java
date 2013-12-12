@@ -12,6 +12,9 @@ import java.io.Serializable;
 
 import shared.WhiteboardAction;
 
+/**
+ * Represents the image data on a whiteboard.
+ */
 public class Whiteboard implements Serializable {
     public Image drawingBuffer;
     private int width;
@@ -34,6 +37,9 @@ public class Whiteboard implements Serializable {
         g.drawLine(action.x1, action.y1, action.x2, action.y2);
     }
     
+    /**
+     * Make the entire image white.
+     */
     public synchronized void fillWithWhite() {
         final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
     
@@ -41,10 +47,16 @@ public class Whiteboard implements Serializable {
         g.fillRect(0,  0,  getWidth(), getHeight());
     }
     
+    /**
+     * @return The width of this image, in pixels
+     */
     public synchronized int getWidth() {
         return width;
     }
     
+    /**
+     * @return The height of this image, in pixels
+     */
     public synchronized int getHeight() {
         return height;
     }

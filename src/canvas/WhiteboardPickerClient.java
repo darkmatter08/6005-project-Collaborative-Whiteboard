@@ -17,8 +17,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-
-
+/**
+ * GUI for selecting a whiteboard to connect to.
+ * @author blake
+ *
+ */
 public class WhiteboardPickerClient extends JFrame {
 	private String userName;
 	private final WhiteBoardTableModel whiteBoardTableModel = new WhiteBoardTableModel();
@@ -34,6 +37,9 @@ public class WhiteboardPickerClient extends JFrame {
 		this.userName = userName;
 	}
 	
+	/**
+	 * Initialize connection between WhiteboardPickerClient and Server.
+	 */
 	public void init() {
 		connectionHandler = new PickerClientConnectionHandler(this, whiteBoardTableModel);
 		whiteBoardTableModel.addColumn("boardId");
@@ -49,19 +55,31 @@ public class WhiteboardPickerClient extends JFrame {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * @return The JTable element showing the available whiteboards.
+	 */
 	public JTable getWhiteboardTable() {
 		return whiteBoardTable;
 	}
 
+	/**
+	 * Open main window.
+	 */
 	public void initMainFrame() {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 	}
 
+	/**
+	 * Display welcome message.
+	 */
 	public void initHeader() {
 		infoText.setText("Hi " + userName + ", pick a whiteboard to begin");
 	}
 
+	/**
+	 * Set the table of whiteboards available.
+	 */
 	public void initWhiteBoardTable() {
 		whiteBoardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		whiteBoardTable.addMouseListener(new MouseAdapter() {
@@ -77,6 +95,9 @@ public class WhiteboardPickerClient extends JFrame {
 
 	}
 
+	/**
+	 * Display a buton for creating a new whiteboard on the server.
+	 */
 	public void initNewWhiteBoardButton() {
 		newWhiteBoard.setText("Create new Whiteboard");
 		newWhiteBoard.addActionListener(new ActionListener() {
