@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0054)http://web.mit.edu/6.005/www/fa13/projects/whiteboard/ -->
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<link rel="stylesheet" href="./readme_files/main.css" type="text/css">
+<title>Project 2: Collaborative Whiteboard</title>
+</head><body>
+
+<center>
+<p><img src="./readme_files/whiteboard.jpg" border="0" height="150"></p>
+
+<h1>6.005 — Fall, 2013<br>
+Project 2: Collaborative Whiteboard<br>
+</h1>
+
+<h3>
+<u>Deadlines</u><br>
+Project 2 Released — Monday, November 25, 2013<br>
+Milestone — Tuesday, December 3, 2013 at 11:59pm<br>
+Final — Wednesday, December 11, 2013 at 11:59pm<br>
+Reflections — Wednesday, December 11, 2013 at 11:59pm<br>
+
+Meetings with TAs to discuss your milestone will occur on December 4 and 5.
+</h3>
+
+</center>
+
+<br>
+<ul>
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#problem">Problem</a></li>
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#purpose">Purpose</a></li>  
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#specification">Specification</a> </li>
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#repo">Your team's repository</a></li>
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#tasks">Tasks</a>
+    <ul>
+      <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/teamcontract.html">Team Contract</a></li>
+    </ul>
+  </li> 
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#warmup">Warmup</a></li>
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#deliverables">Deliverables and Grading</a></li>
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#awards">Awards</a></li>
+  <li><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#testing">Automated Testing</a></li>
+  <li> <a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#hints">Hints</a></li>
+</ul>
+
+<!---------------------------------------------------------------------------->
+<h2><a name="problem">Problem</a></h2>
+
+<p>
+ A collaborative whiteboard allows multiple users to draw at the same time, across a network. You can find many examples of <a href="http://www.google.com/search?q=collaborative+whiteboard">web-based collaborative whiteboards</a> that support a range of features: drawing freehand with the mouse, drawing on top of screen captures or presentation slides, or drawing with lines and shapes that can be moved around and resized. With the right tool, users can collaborate on the same sort of <a href="https://docs.google.com/drawings/d/15rPmbgfhEw2d81fC6SOHgQCSmY4QBzb1XzezblIIp9Q/edit">compelling visual representations</a> they might draw on a physical whiteboard if they were together in the same room.
+</p>
+
+<p>
+In this project, you will build your own collaborative whiteboard. This is a challenging application, since it involves handling concurrency (so that simultaneous actions interleave in a reasonable way), dealing with network connections and building a graphical user interface. It should also be fun because you'll be building a tool you can use yourself. You'll become familiar with a variety of technologies, and you'll have an opportunity to practice applying the fundamental ideas you've learned in the course and working on a team.
+</p>
+
+
+
+<!---------------------------------------------------------------------------->
+<h2><a name="purpose">Purpose</a></h2>
+
+<p>
+The purpose of this project is threefold.
+</p><ul>
+
+<li> First, you will have an opportunity to practice using the fundamental design and implementation techniques you've learned in the course -- most notably, mutable datatypes, but also ideas from the earlier paradigms (language processing, functions over immutable types, data abstraction, etc.).
+</li>
+<li>
+ Second, the project will give you practice using a variety of technologies -- networking, sockets and I/O, and Swing (Java's GUI toolkit) -- and will help you deepen your understanding of common design patterns, such as view tree and model-view-controller for user interfaces, listener patterns, and message-passing concurrency.
+</li> 
+<li>
+ Third, you'll have another chance to work on a team.
+ </li>
+ </ul>
+<p></p>
+
+
+
+<!---------------------------------------------------------------------------->
+
+
+<!---------------------------------------------------------------------------->
+<h2><a name="specification">Specification</a></h2>
+
+<p>
+You have considerable freedom to design your whiteboard as you choose, not only in the implementation, but also in designing the behavior. We recommend, however, that you design and implement for the minimal required functionality first, and add extensions only when you are confident that the core is stable and solid.
+</p>
+
+<p>
+Some of the decisions you will have to make are:
+ </p><ul>
+    <li>What set of editing actions are provided </li>
+    <li>How the whiteboard is structured </li>
+    <li>How whiteboards are named and accessed by users </li>
+    <li>How whiteboards are stored or cached (e.g. at a central server or on clients) </li>
+    <li>What guarantees are made about the effects of concurrent edits</li>
+ </ul>
+<p></p>
+
+
+<p>
+Nevertheless, your tool must meet some minimal requirements:
+	</p><ul>
+		<li><b>Whiteboard</b> — A whiteboard is an interactive drawing canvas shared by multiple clients. The exact behavior of a whiteboard is not specified (although the hints section details a couple of possibilities), except that it allows people to draw on it together. Your server should support multiple whiteboards at once, and your client should allow the user to choose which whiteboard to draw on.
+        </li> <br>
+		<li><b> Drawing operations</b> — Your whiteboard should support, at a minimum, drawing freehand strokes, in user-chosen colors.  Users must also be able to remove part or all of the drawing, either by deleting whole strokes or by using an eraser.  You are free to add other drawing features, but this is the baseline required behavior.</li> <br>
+		<li> <b>Real-time responsiveness</b> — Users should be able to work on a drawing together in real time, without appreciable delays between making and observing edits.</li> <br>
+		<li><b>Multiple users</b> — It should be possible for at least three users to be able to work on the same whiteboard at once, and the server should allow multiple whiteboards to be active at once.  When editing a whiteboard, the client user interface should show usernames of other users who are currently editing the same whiteboard. 
+		</li> <br>
+		<li> <b>Persistence</b> — Users should be able to edit a whiteboard over several network sessions, with the server maintaining the contents of the whiteboard even when no users are currently connected. Note that persisting to disk is not necessary, so it's okay if shutting down the server erases all the whiteboards. But the state of whiteboards should persist across client disconnects and reconnects.
+		</li> <br>
+		<li><b>No authentication</b> — In a production system, logging in as a client would require some form of password authentication. For simplicity, this system should not use authentication, meaning that anyone can use any whiteboard with any username they choose. </li><br>
+	</ul>
+<p></p>
+
+<p>
+Note: You are NOT allowed to use any code taken from an existing collaborative whiteboard as
+a part of your implementation in this project.
+</p>
+
+<!---------------------------------------------------------------------------->
+<h2><a name="repo">Your team's repository</a></h2>
+
+<p>
+Clone your team's Git repository using (all one line):</p>
+<blockquote><code>
+git clone ssh://<span style="background: yellow">[username]</span>@athena.dialup.mit.edu/afs/athena.mit.edu/course/6/6.005/git/fa13/projects/whiteboard/<span style="background: yellow">[username1]</span>-<span style="background: yellow">[username2]</span>-<span style="background: yellow">[username3]</span>.git whiteboard
+</code></blockquote>
+<p>
+where the three Athena usernames are in alphabetical order.
+</p>
+
+
+
+<!---------------------------------------------------------------------------->
+<h2><a name="tasks">Tasks</a></h2>
+
+<p>
+During this project, you will perform the following tasks. The
+<a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/#deliverables">Deliverables and Grading</a> section specifies when
+each component is due.
+
+</p><ul>
+  <li><b>Team Contracts</b> — Before you begin, you should write and
+  agree to a team contract. Please see <a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/teamcontract.html">this
+  page</a> for details.
+  </li><br>
+
+  <li><b>Warmup</b> — There are some warmup exercises that you need to do (see below). They will help you learn about how Java’s 2D graphics system works.
+  </li><br>
+
+  <li><b>Datatype design</b> — Define a precise notion of whiteboard in your system. 
+  See the hints on how to do this. 
+  Specifically, name the Java classes you will create to implement whiteboards and their contents, give specs of their public methods, and give a brief description of how they will interact. Include a snapshot diagram of a whiteboard in action.
+
+  </li><br>
+
+  <li><b>Protocol</b> — Design a set of commands the clients and server will use to communicate,
+   allowing clients to perform the actions stipulated by the specification. 
+   Create a specification of the client/server protocol as a grammar.
+
+  </li> <br>
+
+  <li><b>Concurrency Strategy</b> — You should argue that your system is free of race conditions and deadlocks.
+   Be specific about which data structures or design patterns you will use to ensure thread safe behavior.
+
+  </li> <br>
+
+ <li><b>Testing Strategy</b> — Devise a strategy for testing your system (determining what order you will test components in, how you will derive test cases, what level of coverage you plan to achieve, how you will test the user interface, etc.). Justify your strategy with an argument that the level of effort is appropriate for the likely prevalence and location of bugs, and the degree of reliability required. Document your testing strategy for all components of the system in your code.
+
+  </li><br>
+
+  <li><b>Implementation</b> — Write code based on your design. Make sure to update the design documents if the design changes. Make sure to make extensive use of runtime assertions, data abstraction, and representation invariants.
+  </li><br>
+
+  <li><b>Testing</b> — Execute your testing strategy and provide end-to-end testing of the system.
+  </li><br>
+ 
+
+
+  <li><b>Reflection</b> — Write a brief commentary saying what you
+  learned from this experience. What was easy? What was hard? What was
+  unexpected? Briefly evaluate your solution, pointing out its key merits and
+  deficiencies. This is an individual activity.
+  </li><br>
+</ul>
+
+<!---------------------------------------------------------------------------->
+
+
+<h2><a name="warmup">Warmup</a></h2>
+
+<p> 
+Before you start the project, you should learn about how to draw on the screen with the <a href="http://docs.oracle.com/javase/tutorial/2d/index.html">Java2D drawing package</a>.  We have provided sample code, a class called Canvas, in your group's starting repository.  This class displays a window that allows the user to draw on it freehand, by clicking and dragging the mouse.
+</p>
+
+<p>
+For your warmup task, you should modify the Canvas class so that it supports not only freehand drawing but also erasing.  There are many ways to support erasing (that's a design issue that you should discuss with your group), but one way is drawing with fat white strokes.  You will also need to give the user a way to switch modes between drawing and erasing. There are many ways to do this as well.  One way is to use a JToggleButton with a draw button and an erase button.  You can change the Canvas code as much as you like.  At your milestone meeting with your TA, you will have to demonstrate both drawing and erasing.
+</p>
+
+<!---------------------------------------------------------------------------->
+<h2><a name="deliverables">Deliverables and Grading</a></h2>
+
+<p>
+  Note that you will be able to work on your projects in-class on November 26 and 27, December 2,4,5,6,9 and 10.
+</p>
+
+<p>
+There are <b>three</b> deadlines for this project listed at the top of this document, each with its own deliverables.
+</p>
+
+
+
+<p>
+  The <b><u>milestone deadline</u></b> is Tuesday, December 3, 2013 at 11:59pm. The deliverables are:
+
+</p>
+
+<ul>
+  <li>Your <b><a href="http://web.mit.edu/6.005/www/fa13/projects/whiteboard/teamcontract.html">Team Contract</a></b>. In your team's git repository, there is a folder called <tt>docs</tt>.
+  You should place your contract in <tt>docs/team-contract.pdf</tt>.</li>
+  <li>Your <b>Warmup</b> exercise. You should commit and push your modified Canvas code, and be
+  ready to demonstrate it to your TA.</li>
+  <li>Your <b>Design</b>. Place your design in <tt>docs/design-milestone.pdf</tt> in your team's git repository.
+  Your design must include (from the Tasks above):
+    <ul>
+         <li>DataType Design</li>
+         <li>Protocol</li>
+         <li>Concurrency Strategy</li>
+         <li>Testing Strategy</li>
+    </ul>
+ 
+</li></ul>
+
+<p>
+Your team will be randomly assigned a TA who will help you with your design and ensure you're on the right
+track before you implement your collaborative whiteboard. Meetings with TAs will occur on December 4 and 5.
+As in project 1, your TA will get in touch with you to setup that meeting.
+</p>
+
+<br>
+
+<p>
+  The <b><u>final deadline</u></b> is Wednesday, December 11, 2013 at 11:59pm. The deliverables are:
+</p>
+
+<ul>
+  <li>Your <b>Revised Design</b>. As you implement your collaborative whiteboard, you will likely need to modify your original design. Start this revised design with a summary of what changed from your milestone design. Place your revised design in <tt>docs/design-revised.pdf</tt> in your team's git repository.
+
+  </li><li>Your <b>implementation</b>. All your code should be completed and tested by this deadline!</li>
+  
+</ul>
+
+<br>
+
+<p>
+  The <b><u>reflections deadline</u></b> is also Wednesday, December 11, 2013 at 11:59pm. (Note that you may hand in your reflection up to 24 hours late without penalty.) In your reflections, you should address the following:
+</p>
+
+<ul>
+  <li>Reflections on your team — How did you feel the team did? How well did your team work together? How was the coding? How did you split the work?</li>
+  <li>Reflections on yourself — How do you think you did? What specific contributions did you make? How do you feel about your contributions?</li>
+</ul>
+<p>A Stellar assignment will be created for reflections. Please submit your reflections as a <tt>pdf</tt> to Stellar.</p>
+
+<br>
+
+<p>
+  Other than reflections, all parts of the project should be committed in the repository you share with your
+  teammates. Each commit to the repository should have a comment saying what you changed, as well as who worked on it.
+  Your TA will be reviewing your git log to see individual contributions. Make sure you commit frequently!
+</p>
+
+<p>
+  Grades will be allotted according to the following breakdown:
+</p><ul>
+<li>  Team Contract — 5%
+</li><li>  Design — 25%
+</li><li>  Implementation — 50%
+</li><li>  Testing — 15%
+</li><li>  Reflection — 5%
+</li></ul>
+<p></p>
+
+<!---------------------------------------------------------------------------->
+<h2><a name="awards">Awards</a></h2>
+<p>
+The course staff will judge and award prizes to teams whose whiteboards embody exemplary design and implementation.
+</p>
+<p>
+You may optionally <b>submit your project for prize consideration on Tuesday, December 10. </b> There will be some time slots during the day for your team to present your system, which you can sign up for in advance. Your team will give a 5-minute presentation to the course staff in which you demonstrate your system and describe its design. You must commit your work (up to that point) to Git by 10:00am on December 10. You are <b>not</b> required to give this presentation (but then you won't win anything, either). Everyone can continue to work on the project until the final deadline, but only the work demonstrated in this presentation will be considered for prizes.
+</p><p>
+Serious award contenders should consider going above and beyond the required specification to implement their own extensions.
+You might add new drawing tools, images, saving and loading to disk, chat, ... or you might integrate voice, video, homomorphic encryption, rescuing pandas from extinction, or something as yet unheard of!
+</p>
+<p></p>
+
+
+<!---------------------------------------------------------------------------->
+<h2><a name="testing">Automated Testing</a></h2>
+<p>
+  For this project, Didit will run <b>your</b> JUnit tests.
+  Tests must be in the <code>src</code> directory with a name like <code><i>[something]</i>Test.java</code> or <code><i>[something]</i>Tests.java</code> for Didit to find them.
+</p>
+<p>
+  Your tests will be run in an environment with limited permissions and resources.
+  (E.g., limited filesystem access.)
+  Any deliberate attempts to circumvent these restrictions are a violation of course policy and academic standards, and will be dealt with harshly.
+  However:
+</p>
+<ul>
+  <li>Your code runs with read-only access to your <code>src</code> directory.
+  It may also access a directory named <code>resources</code> at the root of your project, if you need a place to commit additional project assets.</li>
+</ul>
+<p></p>
+<ul>
+  <li>If you find that Didit is unable to run some of your tests but you think they are reasonable and should be supported, email the TAs and include <b>"Didit test restrictions"</b> in the subject line.</li>
+</ul>
+<p></p>
+<ul>
+  <li>You are likely to have tests Didit cannot run (e.g., tests which require Swing).
+    <i>Don't let Didit's restrictions stop you from writing such tests.</i>
+    Instead, for these tests, include the Javadoc tag <b><code>@category&nbsp;no_didit</code></b> on the test class.
+    <i>All tests in that file will be ignored.</i> You cannot use <b><code>@category&nbsp;no_didit</code></b> on methods — you must use it on the class.
+    Here's an example:
+  </li>
+</ul>
+
+<pre><b>package</b> collaboard.ui;
+<b>import</b> org.junit.Test;
+/**
+ * Test some user interface stuff.
+ * <b>@category</b> no_didit
+ */
+<b>public</b> <b>class</b> CollaboardInterfaceTest {
+  
+    @Test <b>public</b> <b>void</b> testAllTheSwings() {
+        // Didit will not run this test
+    }
+    // nor any other tests in this file
+}
+</pre>
+
+<p>
+  On your build results page, Didit will report which tests it attempted to run, and which tests it skipped.
+  Make sure you and your teammates are running those tests manually.
+</p>
+<p>
+  If you include no tests, Didit will count that as a pass — remember to also check whether your code compiled!
+</p>
+
+<!---------------------------------------------------------------------------->
+<h2><a name="hints">Hints</a></h2>
+
+<p>
+<b>Start early!</b> This project is more work than it seems. Starting early on the project 
+will give you more time to sort out any issues and ask the staff questions that may arise, especially if you have trouble with drawing pandas realistically.
+</p>
+<p>
+<b>Defining whiteboards.</b> One of your first tasks is to determine what whiteboard is in your system. Is a whiteboard more like a 2D array of pixels, or more like an arrangement of shapes? How are they named? What drawing operations are available, and what does it mean to remove or erase a drawing? What happens when two users draw on or modify the whiteboard simultaneously? Will both of their edits be reflected or might one override the other? Are some changes independent and some interfering, and if so, how is interference resolved? The most important piece of advice here is to <b>keep it simple</b>. You can always extend your program, but if you've created a complex mess, it's hard to go back.
+</p>
+<p>
+<b>Designing architecture and protocol.</b> You must also devise a network architecture and a protocol for this project. A client/server architecture is potentially the easiest choice here, but it isn't required.
+You should strongly consider using a text-based protocol, which is generally easier for testing and debugging. We used text-based protocols in the problem sets. Services that use plain text protocols — e.g. <a href="http://en.wikipedia.org/wiki/HTTP">HTTP</a> or <a href="http://en.wikipedia.org/wiki/SMTP">SMTP</a> — can talk to a human just as well as another machine by using a client program that sends and receives characters. You've already used telnet as a tool for interacting with text-based protocols in the problem set. Make use of it here too.
+</p>
+<p>
+<b>Handling multiple users.</b> Since realtime collaborative whiteboard is not realtime without at least two people, your system must be able to handle multiple users connected at the same time. One reasonable design approach could be using one thread for reading input from each client and having a central state machine representing the state of the server (using one more thread, to which each of the client threads pass messages through a shared queue).
+</p>
+<p>
+<b>Design for safe concurrency.</b> In general, making an argument that an implementation is free of concurrency bugs (like race conditions and deadlocks) is very difficult and error-prone. The best strategy therefore is to design your program to allow a very simple argument, by limiting your use of concurrency and especially avoiding shared state wherever possible. For example, one approach is to use concurrency only for reading sockets, and to make the rest of the design single-threaded.
+And recall that even though user interfaces are concurrent by nature, Swing is not thread-safe. Recommended reading: <a href="http://docs.oracle.com/javase/tutorial/essential/concurrency/threads.html">  Threads </a> and <a href="http://docs.oracle.com/javase/tutorial/uiswing/concurrency/">Swing. </a>
+</p>
+<p>
+<b>Design for testability.</b> To make it possible to write unit tests without having to open socket connections and parse streams of responses, you should design your components so that they can be driven directly by a test driver — e.g. by calling methods or by putting messages into a queue.</p><p>
+Testing GUIs is particularly challenging. Follow good design practice and separate as much functionality as possible into modules you can test using automated mechanisms. You should maximize the amount of your system you can test with complete independence from any GUI.</p>
+<p></p>
+
+<p>
+<b>Use classtime wisely</b>. Lecture and recitation are being replaced with
+time for team/TA meetings on November 26 and 27, December 2,4,5,6,9 and 10.
+You should use the time to work on the project, or meet up with your TA.</p>
+
+</body></html>
